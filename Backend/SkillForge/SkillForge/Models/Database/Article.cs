@@ -1,16 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using SkillForge.Attributes;
 
 namespace SkillForge.Models.Database;
 
 public class Article : BaseEntity
 {
     [DeleteBehavior(DeleteBehavior.NoAction)]
+    [TableColumn]
     public User? Author { get; set; }
 
     public int AuthorId { get; set; }
 
+    [TableColumn]
     public Category? Category { get; set; }
 
     public int CategoryId { get; set; }
@@ -19,9 +22,11 @@ public class Article : BaseEntity
     [Column(TypeName = "varchar")]
     public string? Image { get; set; }
 
+    [TableColumn]
     [StringLength(64)]
     public string Title { get; set; }
 
+    [TableColumn]
     [StringLength(8000)]
     public string Content { get; set; }
 

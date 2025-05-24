@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SkillForge.Models.Database;
 
+[SelectOption(LabelProperty = nameof(DisplayedName))]
 public class Category : BaseEntity
 {
     [StringLength(32, MinimumLength = 1)]

@@ -50,6 +50,9 @@ builder.Services.AddScoped<IAdminNavigationService, AdminNavigationService>();
 
 builder.Services.AddScoped<IAdminRoleSeeder, AdminRoleSeeder>();
 
+builder.Services.AddScoped<IArticleService, ArticleService>();
+builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

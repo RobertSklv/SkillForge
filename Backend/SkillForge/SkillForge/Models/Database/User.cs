@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using SkillForge.Attributes;
 
 namespace SkillForge.Models.Database;
 
+[SelectOption]
 public class User : BaseEntity
 {
     [StringLength(16)]

@@ -1,0 +1,12 @@
+﻿@using SkillForge.Areas.Admin.Models.DTOs
+@using SkillForge.Models.Database
+
+@model ListingModel<Article>
+
+@{
+    Layout = "_AdminPageLayout";
+    ViewData["Title"] = "All Articles";
+    ViewData["PageHeading"] = "All Articles";
+}
+
+<partial name="_Table" model="@Model.Table" />
