@@ -14,6 +14,13 @@ public class User : BaseEntity
     [Column(TypeName = "varchar")]
     public string Email { get; set; }
 
+    [StringLength(64)]
+    [Column(TypeName = "varchar")]
+    public string? AvatarPath { get; set; }
+
+    [StringLength(256)]
+    public string? Bio { get; set; }
+
     [StringLength(60)]
     [Column(TypeName = "varchar")]
     public string PasswordHash { get; set; }
@@ -25,4 +32,6 @@ public class User : BaseEntity
     public DateTime? DateOfBirth { get; set; }
 
     public List<Article>? Articles { get; set; }
+
+    public List<FavoriteArticle>? FavouriteArticles { get; set; }
 }

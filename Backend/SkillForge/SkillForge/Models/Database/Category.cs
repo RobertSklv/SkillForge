@@ -15,5 +15,12 @@ public class Category : BaseEntity
     [Column(TypeName = "varchar")]
     public string DisplayedName { get; set; }
 
+    [StringLength(64)]
+    [Column(TypeName = "varchar")]
+    public string? Image { get; set; }
+
+    [StringLength(256)]
+    public string? Description { get; set; }
+
     public List<Article>? Articles { get; set; }
 }

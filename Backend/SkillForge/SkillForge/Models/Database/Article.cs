@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace SkillForge.Models.Database;
@@ -13,6 +14,10 @@ public class Article : BaseEntity
     public Category? Category { get; set; }
 
     public int CategoryId { get; set; }
+
+    [StringLength(64)]
+    [Column(TypeName = "varchar")]
+    public string? Image { get; set; }
 
     [StringLength(64)]
     public string Title { get; set; }

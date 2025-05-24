@@ -14,6 +14,10 @@ public class AdminUser : BaseEntity
     [Column(TypeName = "varchar")]
     public string Email { get; set; }
 
+    [StringLength(64)]
+    [Column(TypeName = "varchar")]
+    public string? AvatarPath { get; set; }
+
     [StringLength(60)]
     [Column(TypeName = "varchar")]
     public string PasswordHash { get; set; }
