@@ -2,6 +2,7 @@
 
 namespace SkillForge.Attributes;
 
+[AttributeUsage(AttributeTargets.Property)]
 public class CodeAttribute : RegularExpressionAttribute
 {
     public CodeAttribute()

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using SkillForge.Data.Seeders;
 using SkillForge.Models.Database;
 
 namespace SkillForge.Data;
@@ -22,9 +23,19 @@ public class AppDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<FavoriteArticle> FavoriteArticles { get; set; }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options)
+    private readonly IAdminRoleSeeder adminRoleSeeder;
+
+    public AppDbContext(DbContextOptions<AppDbContext> options, IAdminRoleSeeder adminRoleSeeder)
         : base(options)
     {
+        this.adminRoleSeeder = adminRoleSeeder;
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        adminRoleSeeder.Seed(modelBuilder);
     }
 
     private void SetTimestamps()

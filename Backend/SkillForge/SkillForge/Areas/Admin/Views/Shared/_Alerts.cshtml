@@ -1,0 +1,10 @@
+﻿@using SkillForge.Areas.Admin.Models.Components.Common
+
+@model IEnumerable<Alert>
+
+@foreach (Alert alert in Model)
+{
+    <div class="alert alert-@(alert.ColorAsString)" role="alert">
+        @alert.Content
+    </div>
+}

@@ -1,0 +1,42 @@
+@using SkillForge.Areas.Admin.Models.Components.Common
+@using SkillForge.Areas.Admin.Models.DTOs
+@using SkillForge.Extensions
+
+@model AdminUserRegisterDTO
+
+@{
+    ViewData["Title"] = "Create Admin User";
+    Layout = "_Layout";
+    List<Alert>? messages = TempData.Get<List<Alert>>("Alerts") ?? new();
+}
+
+<div class="card position-absolute start-50 top-50 translate-middle w-25">
+    <div class="card-body">
+        <h1 class="card-title text-center mb-4">Create Admin User</h1>
+        <partial name="_Alerts" model="@messages" />
+        <form asp-action="CreateAdminAccount">
+            <div class="input-group mb-3">
+                <label asp-for=@Model.Username class="mb-2"></label>
+                <input asp-for=@Model.Username class="form-control d-block w-100" />
+                <span asp-validation-for=@Model.Username class="text-danger"></span>
+            </div>
+            <div class="input-group mb-3">
+                <label asp-for=@Model.Email class="mb-2"></label>
+                <input asp-for=@Model.Email class="form-control d-block w-100" />
+                <span asp-validation-for=@Model.Email class="text-danger"></span>
+            </div>
+            <div class="input-group mb-3">
+                <label asp-for=@Model.Password class="mb-2"></label>
+                <input asp-for=@Model.Password class="form-control d-block w-100" />
+                <span asp-validation-for=@Model.Password class="text-danger"></span>
+            </div>
+            <div class="input-group mb-3">
+                <label asp-for=@Model.ConfirmPassword class="mb-2"></label>
+                <input asp-for=@Model.ConfirmPassword class="form-control d-block w-100" />
+                <span asp-validation-for=@Model.ConfirmPassword class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-4 px-4">Create</button>
+        </form>
+    </div>
+</div>

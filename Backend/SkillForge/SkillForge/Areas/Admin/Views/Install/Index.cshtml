@@ -1,0 +1,27 @@
+﻿@using SkillForge.Areas.Admin.Models.Components.Common
+@using SkillForge.Areas.Admin.Models.DTOs
+@using SkillForge.Extensions
+
+@model AdminInstallDTO
+
+@{
+    ViewData["Title"] = "Administration Panel Installation";
+    Layout = "_Layout";
+    List<Alert>? messages = TempData.Get<List<Alert>>("Alerts") ?? new();
+}
+
+<div class="card position-absolute start-50 top-50 translate-middle w-25">
+    <div class="card-body">
+        <h1 class="card-title text-center mb-4">Authenticate</h1>
+        <partial name="_Alerts" model="@messages" />
+        <form asp-action="Auth">
+            <div class="input-group">
+                <label asp-for=@Model.Key class="mb-2"></label>
+                <input asp-for=@Model.Key class="form-control d-block w-100" />
+                <span asp-validation-for=@Model.Key class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-4 px-4">Authenticate</button>
+        </form>
+    </div>
+</div>

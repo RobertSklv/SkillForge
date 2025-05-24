@@ -1,0 +1,32 @@
+﻿@using SkillForge.Areas.Admin.Models.Components.Common
+@using SkillForge.Areas.Admin.Models.DTOs
+@using SkillForge.Extensions
+
+@model AdminUserLoginDTO
+
+@{
+    ViewData["Title"] = "Admin Login";
+    Layout = "_Layout";
+    List<Alert>? messages = TempData.Get<List<Alert>>("Alerts") ?? new();
+}
+
+<div class="card position-absolute start-50 top-50 translate-middle">
+    <div class="card-body">
+        <h1 class="card-title text-center mb-4">Login</h1>
+        <partial name="_Alerts" model="@messages" />
+        <form asp-action="Auth" asp-route-returnUrl="@ViewData["ReturnUrl"]">
+            <div class="input-group mb-3">
+                <label asp-for=@Model.UsernameOrEmail></label>
+                <input asp-for=@Model.UsernameOrEmail class="form-control d-block w-100" />
+                <span asp-validation-for=@Model.UsernameOrEmail class="text-danger"></span>
+            </div>
+            <div class="input-group">
+                <label asp-for=@Model.Password></label>
+                <input asp-for=@Model.Password class="form-control d-block w-100" />
+                <span asp-validation-for=@Model.Password class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-4 px-4">Login</button>
+        </form>
+    </div>
+</div>
