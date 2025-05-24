@@ -1,4 +1,6 @@
 ﻿using SkillForge.Areas.Admin.Models;
+using SkillForge.Areas.Admin.Models.Components.Common;
+using SkillForge.Areas.Admin.Models.Components.Grid;
 using SkillForge.Areas.Admin.Models.DTOs;
 using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Models.Database;
@@ -15,8 +17,20 @@ public class ArticleService : CrudService<Article>, IArticleService
         this.repository = repository;
     }
 
-    public Task<PaginatedList<Article>> ListPending(ListingModel listingModel)
+    public virtual async Task<ListingModel<Article>> CreatePendingArticlesListing(ListingModel listingQuery)
     {
-        return repository.ListPending(listingModel);
+        ListingModel<Article> model = new();
+        model = InitializeListingModel(model, listingQuery);
+
+        PaginatedList<Article> items = await repository.ListPending(model);
+
+        model.Table = new Table<Article>(model, items)
+            .AddRowAction("View", RequestMethod.Get, null)
+            .SetFilterable(true)
+            .SetOrderable(true)
+            .SetSearchable(true)
+            .AddPagination(true);
+
+        return model;
     }
 }

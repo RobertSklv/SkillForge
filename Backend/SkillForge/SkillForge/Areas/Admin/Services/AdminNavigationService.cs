@@ -112,10 +112,32 @@ public class AdminNavigationService : IAdminNavigationService
             menus.Add(menu.Code, menu);
         }
 
+        NavLinkDefinition? activeNavLink = navLinkDefs
+            .Where(def =>
+            {
+                string? route = GetActionRoute(def);
+
+                return route == currentRoute;
+            })
+            .FirstOrDefault();
+
         foreach (NavLinkDefinition def in navLinkDefs)
         {
             string? route = GetActionRoute(def);
             AdminNavLinkAttribute navLinkAttr = def.Attribute;
+
+            bool isActive;
+
+            if (activeNavLink != null)
+            {
+                isActive = def == activeNavLink;
+            }
+            else
+            {
+                isActive = currentRoute != null &&
+                    route != null &&
+                    currentRoute.StartsWith(AddTrailingSlash(route));
+            }
 
             NavLink link = new()
             {
@@ -126,10 +148,7 @@ public class AdminNavigationService : IAdminNavigationService
                     IconClass = navLinkAttr.IconClass
                 },
                 Url = route,
-                IsActive = route == currentRoute ||
-                    currentRoute != null &&
-                    route != null &&
-                    currentRoute.StartsWith(AddTrailingSlash(route))
+                IsActive = isActive
             };
 
             if (navLinkAttr.Menu == null)

@@ -6,5 +6,5 @@ namespace SkillForge.Areas.Admin.Services;
 
 public interface IArticleService : ICrudService<Article>
 {
-    Task<PaginatedList<Article>> ListPending(ListingModel listingModel);
+    Task<ListingModel<Article>> CreatePendingArticlesListing(ListingModel listingQuery);
 }

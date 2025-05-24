@@ -427,35 +427,7 @@ public class Table<T> : Table
         string? bootstrapIconClass = null,
         Func<RowAction, RowAction>? customizationCallback = null)
     {
-        Type entityType = typeof(T);
         RowAction rowAction = new()
-        {
-            ActionName = action,
-            ControllerName = ListingModel.ControllerName,
-            AreaName = ListingModel.AreaName,
-            Method = method,
-            BootstrapIconClass = bootstrapIconClass,
-            Content = action
-        };
-
-        if (customizationCallback != null)
-        {
-            rowAction = customizationCallback(rowAction);
-        }
-
-        RowActions.Add(rowAction);
-
-        return this;
-    }
-
-    public Table<T> AddRowAction(
-        string action,
-        RequestMethod method = default,
-        string? bootstrapIconClass = null,
-        Func<RowAction<T>, RowAction<T>>? customizationCallback = null)
-    {
-        Type entityType = typeof(T);
-        RowAction<T> rowAction = new()
         {
             ActionName = action,
             ControllerName = ListingModel.ControllerName,
