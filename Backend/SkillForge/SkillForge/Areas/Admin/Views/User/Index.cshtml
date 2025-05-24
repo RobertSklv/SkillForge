@@ -1,12 +1,12 @@
 ﻿@using SkillForge.Areas.Admin.Models.DTOs
 @using SkillForge.Models.Database
 
-@model ListingModel<Article>
+@model ListingModel<User>
 
 @{
     Layout = "_AdminPageLayout";
-    ViewData["Title"] = "Pending Articles";
-    ViewData["PageHeading"] = "Pending Articles";
+    ViewData["Title"] = "All Users";
+    ViewData["PageHeading"] = "All Users";
 }
 
 <partial name="_Table" model="@Model.Table" />

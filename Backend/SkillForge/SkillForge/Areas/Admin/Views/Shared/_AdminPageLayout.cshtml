@@ -25,15 +25,18 @@
 
 <partial name="_Alerts" model="@alerts" />
 
-<div class="actions mb-4 d-flex justify-content-end gap-3 bg-body-tertiary p-3 border-bottom border-top">
-    @if (actions != null)
-    {
-        foreach (PageActionButton action in actions)
+@if (actions != null && actions.Any())
+{
+    <div class="actions mb-4 d-flex justify-content-end gap-3 bg-body-tertiary p-3 border-bottom border-top">
+        @if (actions != null)
         {
-            <partial name="_PageActionButton" model="@action" />
+            foreach (PageActionButton action in actions)
+            {
+                <partial name="_PageActionButton" model="@action" />
+            }
         }
-    }
-</div>
+    </div>
+}
 
 @RenderBody()
 

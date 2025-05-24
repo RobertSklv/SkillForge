@@ -39,8 +39,8 @@
     }
     else if (item is NavLink link)
     {
-        <li class="nav-item">
-            <a class="nav-link @(link.IsActive ? "active" : string.Empty)" href="@link.Url">
+        <li class="nav-item w-100">
+            <a class="nav-link w-100 @(link.IsActive ? "bg-secondary" : string.Empty)" href="@link.Url">
                 <span>
                     <partial name="_BootstrapIcon" model="@link.Icon" />
                 </span>
