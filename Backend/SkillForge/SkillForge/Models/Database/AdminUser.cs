@@ -1,0 +1,28 @@
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace SkillForge.Models.Database;
+
+public class AdminUser : BaseEntity
+{
+    [StringLength(16)]
+    [Column(TypeName = "varchar")]
+    public string Name { get; set; }
+
+    [StringLength(32)]
+    [EmailAddress]
+    [Column(TypeName = "varchar")]
+    public string Email { get; set; }
+
+    [StringLength(60)]
+    [Column(TypeName = "varchar")]
+    public string PasswordHash { get; set; }
+
+    [MinLength(16)]
+    [MaxLength(16)]
+    public byte[] PasswordHashSalt { get; set; }
+
+    public AdminRole? Role { get; set; }
+
+    public int RoleId { get; set; }
+}

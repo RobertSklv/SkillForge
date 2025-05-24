@@ -1,7 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using SkillForge.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
+
+string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(connectionString, p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
 var app = builder.Build();
 
