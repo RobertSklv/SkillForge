@@ -1,0 +1,45 @@
+﻿@using SkillForge.Areas.Admin.Models.Components.Pages
+@using SkillForge.Extensions
+
+@model PageActionButton
+
+@{
+    string _class = $"btn btn-lg btn-{Model.ColorAsString}";
+}
+
+<div class="admin-page-action @(@Model.AlignToLeft ? "me-auto" : "")">
+    @if (Model.IsLink)
+    {
+        if (Model.Route != null)
+        {
+            <a href="@Model.GetRoute()" class="@_class">
+                @Model.Content
+            </a>
+        }
+        else
+        {
+            <a asp-area="@Model.AreaName"
+               asp-controller="@Model.ControllerName"
+               asp-action="@Model.ActionName"
+               asp-all-route-data="@Model.RequestParameters?.ToStringDictionary()"
+               class="@_class">
+                @Model.Content
+            </a>
+        }
+    }
+    else
+    {
+        <form action="@Model.GetRoute()" method="post">
+            @if (Model.RequestParameters != null)
+            {
+                foreach (KeyValuePair<string, object> kvp in Model.RequestParameters)
+                {
+                    <input type="hidden" name="@kvp.Key" value="@kvp.Value" />
+                }
+            }
+            <button type="submit" class="@_class">
+                @Model.Content
+            </button>
+        </form>
+    }
+</div>

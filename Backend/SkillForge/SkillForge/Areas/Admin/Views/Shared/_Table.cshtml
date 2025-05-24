@@ -1,0 +1,160 @@
+﻿@using SkillForge.Areas.Admin.Models.Components.Common
+@using SkillForge.Areas.Admin.Models.Components.Grid
+@using SkillForge.Areas.Admin.Models.DTOs
+@using SkillForge.Models.Database
+
+@model Table
+
+@{
+    bool hasMassActions = Model.MassActionContext.Actions.Any();
+    string modelTypeName = Model.ModelType.Name;
+    string tableId = $"table-{modelTypeName}";
+    string massActionFormId = $"massActionForm-{tableId}";
+
+    Model.ColumnDatas.Sort((d1, d2) => d1.SortOrder - d2.SortOrder);
+}
+
+<div id="@tableId" class="table-wrapper admin-crud-table">
+    <div class="filters-wrapper">
+        <form method="get"
+              action="@Model.ListingModel.Route"
+              class="filters-form">
+            <div class="d-flex justify-content-start flex-wrap w-100">
+                @if (Model.IsOrderable)
+                {
+                    if (Model.ListingModel.OrderBy != ListingModel.DEFAULT_ORDER_BY)
+                    {
+                        <input type="hidden" name="OrderBy" value="@Model.ListingModel.OrderBy" />
+                    }
+                    if (Model.ListingModel.Direction != ListingModel.DEFAULT_DIRECTION)
+                    {
+                        <input type="hidden" name="Direction" value="@Model.ListingModel.Direction" />
+                    }
+                }
+
+                @if (Model.IsFilterable)
+                {
+                    <partial name="_TableFilters" model="@Model.FilterContext" />
+                }
+
+                @if (Model.IsSearchable)
+                {
+                    <partial name="_TableSearchBar" model="@Model.ListingModel" />
+                }
+
+                <div class="order-4 ms-auto d-flex">
+
+                    @if (Model.Pagination != null)
+                    {
+                        if (Model.ListingModel.Page != ListingModel.DEFAULT_PAGE)
+                        {
+                            <input type="hidden" name="Page" value="@Model.ListingModel.Page" />
+                        }
+
+                        @if (Model.IsPageSizeAdjustable)
+                        {
+                            <div class="ms-2">
+                                <label for="PageSize">Show per page:</label>
+                                <select id="PageSize" name="PageSize" class="form-select form-select-sm d-inline-block w-auto">
+                                    @foreach (Option option in Model.GetPageSizeOptions())
+                                    {
+                                        <option value="@option.Value" selected="@option.Selected">
+                                            @option.Content
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </form>
+
+        @if (hasMassActions)
+        {
+            <form id="@massActionFormId" method="post">
+                <partial name="_MassActions" model="@Model.MassActionContext" />
+                <div class="inputs"></div>
+            </form>
+        }
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped admin-grid-table">
+            <thead>
+                <tr>
+                    @if (hasMassActions)
+                    {
+                        <th>
+                            <input class="form-check-input mass-action-check-all" type="checkbox">
+                        </th>
+                    }
+                    @foreach (TableHeadingCell heading in Model.GenerateHeadingCells())
+                    {
+                        if (heading.Element is TableLink link)
+                        {
+                            <th title="@heading.Element.Title">
+                                <partial name="_TableLink" model="@link" />
+                                @if (heading.State == HeadingFilterState.Descending)
+                                {
+                                    <i class="bi bi-caret-down-fill"></i>
+                                }
+                                else if (heading.State == HeadingFilterState.Ascending)
+                                {
+                                    <i class="bi bi-caret-up-fill"></i>
+                                }
+                            </th>
+                        }
+                        else
+                        {
+                            <th title="@heading.Element.Title">@heading.Element.Content</th>
+                        }
+                    }
+                    @if (Model.RowActions.Any())
+                    {
+                        <th class="text-center">Actions</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.HasItems)
+                {
+                    foreach (IBaseEntity item in Model.GetItems())
+                    {
+                        <tr>
+                            @if (hasMassActions)
+                            {
+                                <td>
+                                    <input class="form-check-input mass-action-check" type="checkbox" value="@item.Id" data-select-item="@item.Id">
+                                </td>
+                            }
+                            @foreach (TableCellData cellData in Model.GetRowData(item))
+                            {
+                                <partial name="_TableCell" model="@cellData" />
+                            }
+                            @if (Model.RowActions.Any())
+                            {
+                                <partial name="_RowActions" model="@Model.GenerateRowActions(item)" />
+                            }
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="@(Model.ColumnDatas.Count + (Model.RowActions.Any() ? 1 : 0) + 1)">
+                            No results were found.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <script>
+            window.createTableComponent("@(tableId)");
+        </script>
+    </div>
+</div>
+@if (Model.Pagination != null)
+{
+    <partial name="_Pagination" model="@Model.Pagination" />
+}

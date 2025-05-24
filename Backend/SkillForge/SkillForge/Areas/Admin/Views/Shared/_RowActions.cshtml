@@ -1,0 +1,121 @@
+﻿@using SkillForge.Areas.Admin.Models.Components.Common
+@using SkillForge.Areas.Admin.Models.Components.Grid
+
+@model TableRowActions
+
+@{
+    Model.Actions.Sort((a1, a2) => a1.SortOrder - a2.SortOrder);
+}
+
+<td class="text-center">
+    <div class="d-flex">
+        @foreach (RowAction action in Model.Actions)
+        {
+            if (!action.IsDisplayedCallback(Model.Item))
+            {
+                continue;
+            }
+
+            BootstrapIcon icon = new()
+            {
+                IconClass = action.BootstrapIconClass
+            };
+            icon.ClassList.Add("me-1");
+            string confirmModalId = $"{action.ActionName}ConfirmModal-{Model.Item.Id}";
+            string confirmModalLabelId = $"{action.ActionName}ConfirmModalLabel-{Model.Item.Id}";
+            string actionId = string.Join('-', action.Id, Model.Item.Id);
+
+            if (action.HasConfirmationPopup)
+            {
+                string confirmationMessage = action.ConfirmMessageCallback != null
+                    ? action.ConfirmMessageCallback(Model.Item)
+                    : action.ConfirmationMessage;
+
+                <button type="button" data-bs-toggle="modal" data-bs-target="#@confirmModalId" class="btn btn-sm mx-2 btn-@(action.ColorAsString)">
+                    @if (action.BootstrapIconClass != null)
+                    {
+                        <partial name="_BootstrapIcon" model="@icon" />
+                    }
+                    @action.Content
+                </button>
+                <div class="modal fade" id="@confirmModalId" tabindex="-1" aria-labelledby="@confirmModalLabelId" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title fs-5" id="@confirmModalLabelId">@action.ConfirmationTitle</h2>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-start">@confirmationMessage</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                @if (action.Method == RequestMethod.Get)
+                                {
+                                    <a href="@action.GetRoute(Model.Item)"
+                                        id="@actionId"
+                                        data-row-action="@action.ActionName"
+                                        data-item-id="@Model.Item.Id"
+                                        class="btn btn-@(action.ColorAsString) text-decoration-none">
+                                        @if (action.BootstrapIconClass != null)
+                                        {
+                                            <partial name="_BootstrapIcon" model="@icon" />
+                                        }
+                                        @action.Content
+                                    </a>
+                                }
+                                else
+                                {
+                                    <form action="@action.GetRoute(Model.Item)"
+                                            id="@actionId"
+                                            data-row-action="@action.ActionName"
+                                            data-item-id="@Model.Item.Id"
+                                            method="@action.Method">
+                                        <button type="submit" class="btn btn-@(action.ColorAsString)">
+                                            @if (action.BootstrapIconClass != null)
+                                            {
+                                                <partial name="_BootstrapIcon" model="@icon" />
+                                            }
+                                            @action.Content
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (action.Method == RequestMethod.Get)
+            {
+                <a href="@action.GetRoute(Model.Item)"
+                    id="@(action.Id)-@(Model.Item.Id)"
+                    data-row-action="@action.ActionName"
+                    data-item-id="@Model.Item.Id"
+                    class="btn btn-sm mx-2 btn-@(action.ColorAsString) text-decoration-none">
+                    @if (action.BootstrapIconClass != null)
+                    {
+                        <partial name="_BootstrapIcon" model="@icon" />
+                    }
+                    @action.Content
+                </a>
+            }
+            else
+            {
+                <form action="@action.GetRoute(Model.Item)"
+                        id="@(action.Id)-@(Model.Item.Id)"
+                        data-row-action="@action.ActionName"
+                        data-item-id="@Model.Item.Id"
+                        method="@action.Method"
+                        class="d-inline">
+                    <button type="submit" class="btn btn-sm mx-2 btn-@(action.ColorAsString)">
+                        @if (action.BootstrapIconClass != null)
+                        {
+                            <partial name="_BootstrapIcon" model="@icon" />
+                        }
+                        @action.Content
+                    </button>
+                </form>
+            }
+        }
+    </div>
+</td>

@@ -1,9 +1,9 @@
-﻿namespace SkillForge.Models.Database;
+﻿using SkillForge.Areas.Admin.Models;
 
-public interface IBaseEntity
+namespace SkillForge.Models.Database;
+
+public interface IBaseEntity : IModel
 {
-    int Id { get; set; }
-
     DateTime? UpdatedAt { get; set; }
 
     DateTime? CreatedAt { get; set; }

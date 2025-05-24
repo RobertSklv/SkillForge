@@ -1,0 +1,26 @@
+﻿
+@using Microsoft.AspNetCore.Html
+@using SkillForge.Areas.Admin.Models.Components.Grid
+
+@model TableCellData
+
+@{
+    object? value = Model.GetValue();
+    string? formattedValue = Model.GetFormattedValue(Model.ColumnData.Format);
+    string? href = Model.GetLink();
+}
+
+<td>
+    @if (string.IsNullOrEmpty(href))
+    {
+        <span>
+            @formattedValue
+        </span>
+    }
+    else
+    {
+        <a href="@href" target="_blank">
+            @formattedValue
+        </a>
+    }
+</td>

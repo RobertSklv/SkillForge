@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Areas.Admin.Services;
@@ -39,6 +40,13 @@ builder.Services.AddScoped<IAdminUserRepository, AdminUserRepository>();
 builder.Services.AddScoped<IAdminAuthService, AdminAuthService>();
 builder.Services.AddScoped<IAdminRoleService, AdminRoleService>();
 builder.Services.AddScoped<IAdminRoleRepository, AdminRoleRepository>();
+
+builder.Services.AddScoped<IEntityFilterService, EntityFilterService>();
+builder.Services.AddScoped<IEntityHelperService, EntityHelperService>();
+builder.Services.AddScoped<IEntitySearchService, EntitySearchService>();
+builder.Services.AddScoped<IEntitySortService, EntitySortService>();
+builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+builder.Services.AddScoped<IAdminNavigationService, AdminNavigationService>();
 
 builder.Services.AddScoped<IAdminRoleSeeder, AdminRoleSeeder>();
 

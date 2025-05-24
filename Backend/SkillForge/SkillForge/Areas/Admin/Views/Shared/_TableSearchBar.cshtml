@@ -1,0 +1,20 @@
+﻿@using SkillForge.Areas.Admin.Models.DTOs
+
+@model ListingModel
+
+@{
+    bool hasActiveSearchPhrase = !string.IsNullOrEmpty(Model.SearchPhrase);
+}
+
+<div class="search-bar-wrapper order-2">
+    <div class="input-group mb-3" data-filter="SearchPhrase">
+        <input
+            type="search"
+            class="form-control form-control-sm filter-value @(hasActiveSearchPhrase ? "active-search" : "")"
+            asp-for="@Model.SearchPhrase" placeholder="Search..."
+        />
+        <button class="btn btn-sm btn-secondary" type="submit" id="search-button" disabled="@(!hasActiveSearchPhrase)">
+            <i class="bi bi-search me-1"></i>Search
+        </button>
+    </div>
+</div>

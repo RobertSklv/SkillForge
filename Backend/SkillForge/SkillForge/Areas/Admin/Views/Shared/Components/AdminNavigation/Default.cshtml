@@ -1,0 +1,53 @@
+@using SkillForge.Areas.Admin.Models.Components.Navigation
+
+@model Nav
+
+@{
+    int index = 0;
+}
+
+@foreach (NavItem item in Model.Items)
+{
+    if (item is NavMenu menu)
+    {
+        <li class="nav-item dropdown w-100">
+            <a class="nav-link dropdown-toggle @(menu.IsActive ? "show" : string.Empty)"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="false"
+                aria-expanded="false">
+                <span>
+                    <partial name="_BootstrapIcon" model="@menu.Icon" />
+                </span>
+                <span>@menu.Name</span>
+            </a>
+            <ul class="dropdown-menu position-static bg-transparent border-0 mx-3 @(menu.IsActive ? "show" : string.Empty)">
+                @foreach (NavLink link in menu.Links)
+                {
+                    <li>
+                        <a class="dropdown-item p-1 @(link.IsActive ? "active" : string.Empty)" href="@link.Url">
+                            <span>
+                                <partial name="_BootstrapIcon" model="@link.Icon" />
+                            </span>
+                            <span>@link.Name</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+    else if (item is NavLink link)
+    {
+        <li class="nav-item">
+            <a class="nav-link @(link.IsActive ? "active" : string.Empty)" href="@link.Url">
+                <span>
+                    <partial name="_BootstrapIcon" model="@link.Icon" />
+                </span>
+                <span>@link.Name</span>
+            </a>
+        </li>
+    }
+
+    index++;
+}

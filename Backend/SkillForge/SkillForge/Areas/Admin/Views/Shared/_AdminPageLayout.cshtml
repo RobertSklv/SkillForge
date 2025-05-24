@@ -1,0 +1,53 @@
+﻿@using Microsoft.AspNetCore.Http
+@using SkillForge.Areas.Admin.Models.Components.Common
+@using SkillForge.Areas.Admin.Models.Components.Pages
+@using SkillForge.Extensions
+
+@{
+    Layout = "_AdminLayout";
+    List<PageActionButton>? actions = ViewData["PageActions"] as List<PageActionButton>;
+    actions?.Sort((a1, a2) => a1.SortOrder - a2.SortOrder);
+    List<Alert>? alerts = TempData.Get<List<Alert>>("Alerts") ?? new();
+}
+
+<div class="headings mb-5">
+    <h1>
+        @ViewData["PageHeading"]
+    </h1>
+
+    @if (ViewData["PageSubHeading"] != null)
+    {
+        <h2 class="h4">
+            @ViewData["PageSubHeading"]
+        </h2>
+    }
+</div>
+
+<partial name="_Alerts" model="@alerts" />
+
+<div class="actions mb-4 d-flex justify-content-end gap-3 bg-body-tertiary p-3 border-bottom border-top">
+    @if (actions != null)
+    {
+        foreach (PageActionButton action in actions)
+        {
+            <partial name="_PageActionButton" model="@action" />
+        }
+    }
+</div>
+
+@RenderBody()
+
+@section Styles
+{
+    @await RenderSectionAsync("Styles", required: false)
+}
+
+@section ScriptsHead
+{
+    @await RenderSectionAsync("ScriptsHead", required: false)
+}
+
+@section Scripts
+{
+    @await RenderSectionAsync("Scripts", required: false)
+}
