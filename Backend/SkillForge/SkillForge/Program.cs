@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Areas.Admin.Services;
 using SkillForge.Data;
@@ -11,7 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews().AddNewtonsoftJson();
+builder.Services.AddControllersWithViews().AddNewtonsoftJson(o =>
+{
+    o.SerializerSettings.ContractResolver = new DefaultContractResolver();
+});
 
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -70,6 +74,19 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserAuthService, UserAuthService>();
 
+// Frontend config
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost",
+        policy =>
+        {
+            policy.WithOrigins(builder.Configuration["FrontendDomain"])
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -78,6 +95,10 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Dashboard/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+else
+{
+    app.UseCors("AllowLocalhost");
 }
 
 app.UseHttpsRedirection();

@@ -1,0 +1,1 @@
+export type BootstrapColor = 'primary' | 'secondary' | 'tertiary' | 'success' | 'danger' | 'warning' | 'info'

@@ -71,7 +71,7 @@ public class UserController : ApiController
 
         if (user == null)
         {
-            return Unauthorized("Invalid credentials.");
+            return ValidationProblem("Invalid credentials.");
         }
 
         ClaimsPrincipal principal = userAuthService.CreateClaimsPrincipal(user);
