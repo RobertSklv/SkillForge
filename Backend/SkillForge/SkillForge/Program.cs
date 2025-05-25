@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddNewtonsoftJson();
 
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -34,6 +34,20 @@ builder.Services.AddAuthentication()
         options.LoginPath = "/Admin/Install";
     });
 
+//Frontend Authentication
+builder.Services.AddAuthentication()
+    .AddCookie("FrontendCookie", options =>
+    {
+        options.Cookie.Name = "FrontendCookieAuth";
+        options.Events.OnRedirectToLogin = context =>
+        {
+            // Prevent redirect to login page
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+
+            return Task.CompletedTask;
+        };
+    });
+
 builder.Services.AddScoped<IInstallService, InstallService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAdminUserRepository, AdminUserRepository>();
@@ -54,6 +68,7 @@ builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserAuthService, UserAuthService>();
 
 var app = builder.Build();
 

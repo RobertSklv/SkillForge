@@ -17,4 +17,19 @@ public class UserRepository : CrudRepository<User>, IUserRepository
         : base(db, filterService, sortService, searchService)
     {
     }
+
+    public Task<User?> FindUser(string usernameOrEmail)
+    {
+        return DbSet.FirstOrDefaultAsync(u => u.Name == usernameOrEmail || u.Email == usernameOrEmail);
+    }
+
+    public async Task<bool> IsUsernameTaken(string username)
+    {
+        return await DbSet.AnyAsync(u => u.Name == username);
+    }
+
+    public async Task<bool> IsEmailTaken(string email)
+    {
+        return await DbSet.AnyAsync(u => u.Email == email);
+    }
 }
