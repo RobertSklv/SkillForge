@@ -60,7 +60,7 @@ public class UserAuthService : IUserAuthService
         return await userRepository.IsEmailTaken(email);
     }
 
-    public async Task<bool> Register(UserRegisterCredentials creds, ModelStateDictionary modelState)
+    public async Task<User?> Register(UserRegisterCredentials creds, ModelStateDictionary modelState)
     {
         bool isValid = true;
 
@@ -89,9 +89,12 @@ public class UserAuthService : IUserAuthService
                 PasswordHashSalt = passwordHashSalt
             };
 
-            return await userRepository.Upsert(user) > 0;
+            if (await userRepository.Upsert(user) > 0)
+            {
+                return user;
+            }
         }
 
-        return false;
+        return null;
     }
 }

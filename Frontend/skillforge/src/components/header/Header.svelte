@@ -1,13 +1,16 @@
 <script lang="ts">
-	import { getContext } from "svelte";
 	import Icon from "../../icon/Icon.svelte";
 	import Navbar from "../navbar/Navbar.svelte";
+	import NavLink from "../navbar/NavLink.svelte";
+	import { currentUserStore, logoutUser } from "$lib/stores/currentUserStore";
 	import NavDropdown from "../navbar/NavDropdown.svelte";
 	import NavDropdownLink from "../navbar/NavDropdownLink.svelte";
-	import NavLink from "../navbar/NavLink.svelte";
-	import type UserInfo from "$lib/types/UserInfo";
+	import Form from "../form/Form.svelte";
+	import Button from "../button/Button.svelte";
 
-  const currentUser: UserInfo | null = getContext('currentUser');
+  function logout() {
+    logoutUser();
+  }
 </script>
 
 <Navbar logoLink="/">
@@ -24,31 +27,23 @@
   <NavLink href="#" isActive={false}>
     Contact us
   </NavLink>
-  {#if !!currentUser}
+  {#if $currentUserStore}
     <NavDropdown>
       {#snippet buttonSnippet()}
-        <span>{currentUser?.Name}</span>
+        <span>{$currentUserStore.Name}</span>
         <Icon type="person-circle" />
       {/snippet}
-      <NavDropdownLink href="#">
+      <NavDropdownLink href="/account">
         Account
       </NavDropdownLink>
-      <NavDropdownLink href="#">
-        Logout
+      <NavDropdownLink isButton={true} onclick={logout}>
+          Logout
       </NavDropdownLink>
     </NavDropdown>
   {:else}
-    <NavDropdown>
-      {#snippet buttonSnippet()}
-        <span>Sign in</span>
+    <NavLink href="/join" isActive={false}>
+        <span>Join us</span>
         <Icon type="person-circle" />
-      {/snippet}
-      <NavDropdownLink href="/signin">
-        Sign in
-      </NavDropdownLink>
-      <NavDropdownLink href="/register">
-        Register
-      </NavDropdownLink>
-    </NavDropdown>
+    </NavLink>
   {/if}
 </Navbar>

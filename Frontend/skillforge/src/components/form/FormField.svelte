@@ -1,5 +1,6 @@
 <script lang="ts" generics="T">
 	import type FormContext from '$lib/types/FormContext';
+	import type FormFieldType from '$lib/types/FormFieldType';
 	import type { InputType } from '$lib/types/InputType';
 	import type ValidationRule from '$lib/types/ValidationRule';
 	import { getContext, onMount } from 'svelte';
@@ -12,6 +13,7 @@
         value: T,
         placeholder?: string,
         disabled?: boolean,
+        validateTogether?: FormFieldType[]
     }
 
     var {
@@ -22,22 +24,41 @@
         value = $bindable(),
         placeholder,
         disabled,
+        validateTogether,
     }: Props = $props();
 
     let errorMessages = $state<string[]>([]);
     let isInvalid = $derived<boolean>(!!errorMessages.length);
+    let isVisited = $state<boolean>();
 
     const formContext = getContext<FormContext>('form');
 
-    function validate(): string[] {
+    export function validate(onlyVisited: boolean = true): string[] | null {
+        if (onlyVisited && !isVisited) {
+            return null;
+        }
+
         errorMessages = [];
         let rules: ValidationRule[] = formContext.getValidationRules(name);
 
         for (let rule of rules) {
             let isValid = rule.validate(value);
 
-            if (!isValid) {
+            if (isValid instanceof Promise) {
+                isValid.then(r => {
+                    if (!r) {
+                        errorMessages.push(rule.message(label));
+                        formContext.updateField(name, errorMessages);
+                    }
+                })
+            } else if (!isValid) {
                 errorMessages.push(rule.message(label));
+            }
+        }
+
+        if (validateTogether) {
+            for (let field of validateTogether) {
+                field.validate(true);
             }
         }
 
@@ -49,9 +70,21 @@
     }
 
     function oninput() {
-        errorMessages = validate();
+        let errors = validate();
+
+        if (errors != null) {
+            errorMessages = errors;
+        }
 
         formContext.updateField(name, errorMessages);
+    }
+
+    function onfocus() {
+        isVisited = true;
+    }
+
+    function onfocusout() {
+        validate();
     }
 
     onMount(() => {
@@ -69,10 +102,12 @@
             class:is-invalid={isInvalid}
             bind:value
             {oninput}
+            {onfocus}
+            {onfocusout}
             {disabled}>
-    {#if isInvalid}
-        <div class="invalid-feedback">
+    <div class="invalid-feedback">
+        {#if isInvalid}
             {errorMessages[0]}
-        </div>
-    {/if}
+        {/if}
+    </div>
 </div>

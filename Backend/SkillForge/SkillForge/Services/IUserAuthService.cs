@@ -15,5 +15,5 @@ public interface IUserAuthService
 
     Task<bool> IsEmailTaken(string email);
 
-    Task<bool> Register(UserRegisterCredentials creds, ModelStateDictionary modelState);
+    Task<User?> Register(UserRegisterCredentials creds, ModelStateDictionary modelState);
 }

@@ -10,13 +10,14 @@
         action: string,
         method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
         formData: T,
+        onSuccess: (response: any) => void,
         children: Snippet,
-        validationRules: ValidationRules
+        validationRules?: ValidationRules
     }
 
     interface Fields {
         [key: string]: {
-            validate: () => string[],
+            validate: (onlyVisited: boolean) => string[] | null,
             setErrors: (errors: string[]) => void,
             errors: string[]
         }
@@ -26,13 +27,18 @@
         action,
         method = 'GET',
         formData,
+        onSuccess,
         children,
         validationRules
     }: Props = $props();
 
     let fields: Fields = {};
 
-    function registerField(name: string, validate: () => string[], setErrors: (errors: string[]) => void): void {
+    function registerField(
+            name: string,
+            validate: (onlyVisited: boolean) => string[] | null,
+            setErrors: (errors: string[]) => void): void {
+
         fields[name] = {
             validate,
             setErrors,
@@ -45,7 +51,7 @@
     }
 
     function getValidationRules(name: string): ValidationRule[] {
-        if (!(name in validationRules)) {
+        if (typeof validationRules === 'undefined' || !(name in validationRules)) {
             return [];
         }
 
@@ -55,14 +61,21 @@
     setContext<FormContext>('form', {
         registerField,
         updateField,
-        getValidationRules
+        getValidationRules,
+        submit,
     });
 
     export function validate(): boolean {
         let isValid = true;
 
         for (let fieldName in fields) {
-            let fieldErrors = fields[fieldName].validate();
+            let fieldErrors = fields[fieldName].validate(false);
+
+            if (fieldErrors == null) {
+                // should never happen because onlyVisited argument is false in the validate function call.
+                continue;
+            }
+
             fields[fieldName].errors = fieldErrors;
 
             if (isValid && !!fieldErrors.length) {
@@ -74,6 +87,10 @@
     }
 
     export function submit() {
+        if (!validate()) {
+            return;
+        }
+
         let init: RequestInit = {
             method,
             credentials: 'include',
@@ -90,6 +107,7 @@
         fetchApi(action, init)
             .then(r => {
                 console.log(r);
+                onSuccess(r);
             })
             .catch((e: ErrorResponse) => {
                 for (let fieldName in e.errors) {

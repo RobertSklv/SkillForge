@@ -6,41 +6,52 @@
 	import type UserLoginCredentials from "$lib/types/UserLoginCredentials";
 	import { writable } from "svelte/store";
 	import Button from "../../components/button/Button.svelte";
+	import type UserInfo from "$lib/types/UserInfo";
+	import { currentUserStore } from "$lib/stores/currentUserStore";
+	import { goto } from "$app/navigation";
 
     let formData = writable<UserLoginCredentials>({
         UsernameOrEmail: '',
         Password: ''
     });
 
-    let formComponent = null;
-
     let validationRules: ValidationRules = {
-        usernameOrEmail: [
+        UsernameOrEmail: [
             {
                 validate: required,
                 message: (label) => `The ${label} field is required.`
             }
         ],
-        password: [
+        Password: [
             {
                 validate: required,
                 message: (label) => `The ${label} field is required.`
             }
         ]
     };
+
+    function onLoginSuccess(userInfo: UserInfo) {
+        currentUserStore.set(userInfo);
+
+        //TODO goto account page
+        goto('/');
+    }
 </script>
 
-<h1>Sign in</h1>
-
-<Form action="/User/Auth" method="POST" formData={$formData} {validationRules} bind:this={formComponent}>
+<h2>Sign in</h2>
+<Form action="/User/Auth"
+    method="POST"
+    formData={$formData}
+    onSuccess={onLoginSuccess}
+    {validationRules}>
     <div class="row">
-        <div class="col-12 col-md-6">
+        <div class="col-12">
             <FormField id="UsernameOrEmail" type="text" label="Username or e-mail" bind:value={$formData.UsernameOrEmail} />
         </div>
-        <div class="col-12 col-md-6">
+        <div class="col-12">
             <FormField id="Password" type="password" label="Password" bind:value={$formData.Password} />
         </div>
     </div>
 
-    <Button size="lg" onclick={formComponent?.submit}>Sign in</Button>
+    <Button size="lg" isSubmitButton={true}>Sign in</Button>
 </Form>

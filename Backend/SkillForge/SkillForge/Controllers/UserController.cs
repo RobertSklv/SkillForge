@@ -74,8 +74,7 @@ public class UserController : ApiController
             return ValidationProblem("Invalid credentials.");
         }
 
-        ClaimsPrincipal principal = userAuthService.CreateClaimsPrincipal(user);
-        await HttpContext.SignInAsync("FrontendCookie", principal);
+        await AttemptAuthenticate(user);
 
         return Ok(service.GetUserInfo(user));
     }
@@ -84,17 +83,19 @@ public class UserController : ApiController
     [HttpPost]
     public async Task<IActionResult> Register([FromBody] UserRegisterCredentials creds)
     {
-        bool success = await userAuthService.Register(creds, ModelState);
+        User? user = await userAuthService.Register(creds, ModelState);
 
         if (!ModelState.IsValid)
         {
             return ValidationProblem(ModelState);
         }
 
-        if (!success)
+        if (user == null)
         {
             return BadRequest("Registration unsuccessful.");
         }
+
+        await AttemptAuthenticate(user);
 
         return Ok("Registration successful.");
     }
@@ -105,5 +106,23 @@ public class UserController : ApiController
         await HttpContext.SignOutAsync("FrontendCookie");
 
         return Ok("Logged out successfully.");
+    }
+
+    private async Task AttemptAuthenticate(User user)
+    {
+        ClaimsPrincipal principal = userAuthService.CreateClaimsPrincipal(user);
+        await HttpContext.SignInAsync("FrontendCookie", principal);
+    }
+
+    [AllowAnonymous]
+    public async Task<IActionResult> VerifyUniqueUsername(string name)
+    {
+        return Json(!await service.IsUsernameTaken(name));
+    }
+
+    [AllowAnonymous]
+    public async Task<IActionResult> VerifyUniqueEmail(string email)
+    {
+        return Json(!await service.IsEmailTaken(email));
     }
 }

@@ -43,6 +43,7 @@ builder.Services.AddAuthentication()
     .AddCookie("FrontendCookie", options =>
     {
         options.Cookie.Name = "FrontendCookieAuth";
+        options.Cookie.SameSite = SameSiteMode.None;
         options.Events.OnRedirectToLogin = context =>
         {
             // Prevent redirect to login page

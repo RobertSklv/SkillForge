@@ -1,10 +1,18 @@
 <script lang="ts">
+	import { onMount, type Snippet } from "svelte";
 	import Footer from "../components/footer/Footer.svelte";
 	import Header from "../components/header/Header.svelte";
+	import { loadCurrentUser } from "$lib/stores/currentUserStore";
 
     const {
         children
+    }: {
+        children: Snippet
     } = $props();
+
+    onMount(() => {
+        loadCurrentUser();
+    });
 </script>
 
 <Header />
