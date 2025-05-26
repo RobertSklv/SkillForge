@@ -39,6 +39,10 @@
             {
                 validate: email,
                 message: () => 'Invalid e-mail format.'
+            },
+            {
+                validate: (val) => remote('/User/VerifyUniqueEmail', 'email', val),
+                message: () => 'E-mail is already taken.'
             }
         ],
         Password: [
