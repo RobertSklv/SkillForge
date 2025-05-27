@@ -10,17 +10,21 @@ public class Category : BaseEntity
     [StringLength(32, MinimumLength = 1)]
     [Column(TypeName = "varchar")]
     [Code]
+    [TableColumn]
     public string Code { get; set; }
 
     [StringLength(32, MinimumLength = 1)]
     [Column(TypeName = "varchar")]
+    [TableColumn]
+    [Display(Name = "Displayed name")]
     public string DisplayedName { get; set; }
 
     [StringLength(64)]
     [Column(TypeName = "varchar")]
+    [TableColumn]
     public string? Image { get; set; }
 
-    [StringLength(256)]
+    [TableColumn]
     public string? Description { get; set; }
 
     public List<Article>? Articles { get; set; }

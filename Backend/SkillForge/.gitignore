@@ -1,7 +1,9 @@
-**/.vs
+/.vs
 **/appsettings.json
 **/appsettings.Development.json
 **/Properties/launchSettings.json
 **/bin
 **/obj
 *.user
+**/wwwroot/images/categories/*
+!**/wwwroot/images/categories/.gitkeep
