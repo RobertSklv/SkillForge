@@ -1,6 +1,6 @@
 <script lang="ts">
     import Form from "../form/Form.svelte";
-    import FormField from "../form/FormField.svelte";
+    import InputField from "../form/InputField.svelte";
 	import type ValidationRules from "$lib/types/ValidationRules";
 	import { compare, email, password, remote, required } from "$lib/validation/rules";
 	import type UserRegisterCredentials from "$lib/types/UserRegisterCredentials";
@@ -86,16 +86,16 @@
     {validationRules}>
     <div class="row">
         <div class="col-12">
-            <FormField id="Username" type="text" label="Username" bind:value={$formData.Username} />
+            <InputField id="Username" type="text" label="Username" bind:value={$formData.Username} />
         </div>
         <div class="col-12">
-            <FormField id="Email" type="text" label="E-mail" bind:value={$formData.Email} />
+            <InputField id="Email" type="email" label="E-mail" bind:value={$formData.Email} />
         </div>
         <div class="col-12">
-            <FormField id="RegistrationPassword" name="Password" type="password" label="Password" bind:value={$formData.Password} validateTogether={["ConfirmPassword"]} />
+            <InputField id="RegistrationPassword" name="Password" type="password" label="Password" bind:value={$formData.Password} validateTogether={["ConfirmPassword"]} />
         </div>
         <div class="col-12">
-            <FormField id="ConfirmPassword" type="password" label="Confirm password" bind:value={$formData.ConfirmPassword} />
+            <InputField id="ConfirmPassword" type="password" label="Confirm password" bind:value={$formData.ConfirmPassword} />
         </div>
     </div>
 

@@ -1,6 +1,6 @@
 <script lang="ts">
     import Form from "../../components/form/Form.svelte";
-    import FormField from "../../components/form/FormField.svelte";
+    import InputField from "../form/InputField.svelte";
 	import type ValidationRules from "$lib/types/ValidationRules";
 	import { required } from "$lib/validation/rules";
 	import type UserLoginCredentials from "$lib/types/UserLoginCredentials";
@@ -46,10 +46,10 @@
     {validationRules}>
     <div class="row">
         <div class="col-12">
-            <FormField id="UsernameOrEmail" type="text" label="Username or e-mail" bind:value={$formData.UsernameOrEmail} />
+            <InputField id="UsernameOrEmail" type="text" label="Username or e-mail" bind:value={$formData.UsernameOrEmail} />
         </div>
         <div class="col-12">
-            <FormField id="Password" type="password" label="Password" bind:value={$formData.Password} />
+            <InputField id="Password" type="password" label="Password" bind:value={$formData.Password} />
         </div>
     </div>
 

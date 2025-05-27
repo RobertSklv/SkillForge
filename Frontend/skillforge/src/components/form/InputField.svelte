@@ -6,7 +6,7 @@
     interface Props {
         id: string,
         name?: string,
-        label: string,
+        label?: string,
         type?: InputType,
         value: any,
         placeholder?: string,
@@ -17,7 +17,7 @@
     var {
         id,
         name = id,
-        label,
+        label = name,
         type = 'text',
         value = $bindable(),
         placeholder,
