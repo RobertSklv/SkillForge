@@ -62,6 +62,7 @@
         registerField,
         updateField,
         getValidationRules,
+        validateFields,
         submit,
     });
 
@@ -76,14 +77,18 @@
                 continue;
             }
 
-            fields[fieldName].errors = fieldErrors;
-
             if (isValid && !!fieldErrors.length) {
                 isValid = false;
             }
         }
 
         return isValid;
+    }
+
+    export function validateFields(fieldNames: string[]) {
+        for (let fieldName of fieldNames) {
+            fields[fieldName].validate(true);
+        }
     }
 
     export function submit() {

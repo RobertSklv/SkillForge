@@ -9,7 +9,6 @@
 	import type UserInfo from "$lib/types/UserInfo";
 	import { currentUserStore } from "$lib/stores/currentUserStore";
 	import { goto } from "$app/navigation";
-	import type FormFieldType from "$lib/types/FormFieldType";
 
     let formData = writable<UserRegisterCredentials>({
         Username: '',
@@ -17,8 +16,6 @@
         Password: '',
         ConfirmPassword: '',
     });
-
-    let confirmPasswordField: FormFieldType;
 
     let validationRules: ValidationRules = {
         Username: [
@@ -95,10 +92,10 @@
             <FormField id="Email" type="text" label="E-mail" bind:value={$formData.Email} />
         </div>
         <div class="col-12">
-            <FormField id="RegistrationPassword" name="Password" type="password" label="Password" bind:value={$formData.Password} validateTogether={[confirmPasswordField]} />
+            <FormField id="RegistrationPassword" name="Password" type="password" label="Password" bind:value={$formData.Password} validateTogether={["ConfirmPassword"]} />
         </div>
         <div class="col-12">
-            <FormField id="ConfirmPassword" type="password" label="Confirm password" bind:value={$formData.ConfirmPassword} bind:this={confirmPasswordField} />
+            <FormField id="ConfirmPassword" type="password" label="Confirm password" bind:value={$formData.ConfirmPassword} />
         </div>
     </div>
 

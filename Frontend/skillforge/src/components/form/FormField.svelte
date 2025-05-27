@@ -1,19 +1,17 @@
-<script lang="ts" generics="T">
-	import type FormContext from '$lib/types/FormContext';
-	import type FormFieldType from '$lib/types/FormFieldType';
+<script lang="ts">
+	import type ValidatedField from '$lib/types/ValidatedField';
 	import type { InputType } from '$lib/types/InputType';
-	import type ValidationRule from '$lib/types/ValidationRule';
-	import { getContext, onMount } from 'svelte';
+	import FieldValidation from './FieldValidation.svelte';
 
     interface Props {
         id: string,
         name?: string,
         label: string,
         type?: InputType,
-        value: T,
+        value: any,
         placeholder?: string,
         disabled?: boolean,
-        validateTogether?: FormFieldType[]
+        validateTogether?: string[],
     }
 
     var {
@@ -27,56 +25,12 @@
         validateTogether,
     }: Props = $props();
 
-    let errorMessages = $state<string[]>([]);
-    let isInvalid = $derived<boolean>(!!errorMessages.length);
-    let isVisited = $state<boolean>();
+    let isValid = $state<boolean>(true);
+    let isVisited = $state<boolean>(false);
 
-    const formContext = getContext<FormContext>('form');
-
-    export function validate(onlyVisited: boolean = true): string[] | null {
-        if (onlyVisited && !isVisited) {
-            return null;
-        }
-
-        errorMessages = [];
-        let rules: ValidationRule[] = formContext.getValidationRules(name);
-
-        for (let rule of rules) {
-            let isValid = rule.validate(value);
-
-            if (isValid instanceof Promise) {
-                isValid.then(r => {
-                    if (!r) {
-                        errorMessages.push(rule.message(label));
-                        formContext.updateField(name, errorMessages);
-                    }
-                })
-            } else if (!isValid) {
-                errorMessages.push(rule.message(label));
-            }
-        }
-
-        if (validateTogether) {
-            for (let field of validateTogether) {
-                field.validate(true);
-            }
-        }
-
-        return errorMessages;
-    }
-
-    function setErrors(errors: string[]) {
-        errorMessages = errors;
-    }
-
+    let fieldValidation: ValidatedField;
     function oninput() {
-        let errors = validate();
-
-        if (errors != null) {
-            errorMessages = errors;
-        }
-
-        formContext.updateField(name, errorMessages);
+        fieldValidation?.validate();
     }
 
     function onfocus() {
@@ -84,12 +38,8 @@
     }
 
     function onfocusout() {
-        validate();
+        fieldValidation?.validate();
     }
-
-    onMount(() => {
-        formContext.registerField(name, validate, setErrors);
-    });
 </script>
 
 <div class="mb-3">
@@ -99,15 +49,11 @@
             {name}
             {placeholder}
             class="form-control"
-            class:is-invalid={isInvalid}
+            class:is-invalid={!isValid}
             bind:value
             {oninput}
             {onfocus}
             {onfocusout}
             {disabled}>
-    <div class="invalid-feedback">
-        {#if isInvalid}
-            {errorMessages[0]}
-        {/if}
-    </div>
+    <FieldValidation {name} {label} {value} shouldValidate={isVisited} bind:isValid bind:this={fieldValidation} {validateTogether} />
 </div>
