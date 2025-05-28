@@ -10,6 +10,7 @@
         label?: string,
         value: any,
         size?: any,
+        mod?: string,
         disabled?: boolean,
         multiple?: boolean,
         validateTogether?: string[],
@@ -28,6 +29,7 @@
         label = name,
         value = $bindable(),
         size,
+        mod,
         disabled,
         multiple,
         validateTogether,
@@ -83,7 +85,7 @@
     <select {id}
             {name}
             {size}
-            class="form-select"
+            class="form-select {mod}"
             class:is-invalid={!isValid}
             {oninput}
             {onfocus}

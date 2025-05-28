@@ -68,6 +68,7 @@ builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddScoped<IAdminNavigationService, AdminNavigationService>();
 
 builder.Services.AddScoped<IAdminRoleSeeder, AdminRoleSeeder>();
+builder.Services.AddScoped<IImageService, ImageService>();
 
 builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();

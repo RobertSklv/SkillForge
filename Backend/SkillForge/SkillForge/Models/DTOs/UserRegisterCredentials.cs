@@ -23,5 +23,6 @@ public class UserRegisterCredentials
     [Display(Name = "Confirm Password")]
     [DataType(DataType.Password)]
     [Compare(nameof(Password), ErrorMessage = "Passwords don't match")]
+    [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\W).{8,}$", ErrorMessage = "The password must be at least 8 characters long, contain at least one lowercase and letter, and at least one symbol.")]
     public string ConfirmPassword { get; set; }
 }

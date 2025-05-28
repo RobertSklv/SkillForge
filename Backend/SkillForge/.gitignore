@@ -5,5 +5,6 @@
 **/bin
 **/obj
 *.user
-**/wwwroot/images/categories/*
-!**/wwwroot/images/categories/.gitkeep
+**/wwwroot/images/**/*.png
+**/wwwroot/images/**/*.jpg
+**/wwwroot/images/**/*.jpeg

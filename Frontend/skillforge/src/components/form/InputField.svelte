@@ -15,6 +15,7 @@
         minlength?: any,
         maxlength?: any,
         step?: any,
+        mod?: string,
         disabled?: boolean,
         validateTogether?: string[],
     }
@@ -31,6 +32,7 @@
         minlength,
         maxlength,
         step,
+        mod,
         disabled,
         validateTogether,
     }: Props = $props();
@@ -59,7 +61,7 @@
             {type}
             {name}
             {placeholder}
-            class="{formClass}"
+            class="{formClass} {mod}"
             class:is-invalid={!isValid}
             bind:value
             {min}

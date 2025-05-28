@@ -1,4 +1,4 @@
-import { fetchApi } from "$lib/api/client";
+import { requestApi } from "$lib/api/client";
 
 
 export function required(value: any): boolean {
@@ -34,7 +34,7 @@ export async function remote(url: string, paramName: any, value: any): Promise<b
         return true;
     }
 
-    let res = await fetchApi<boolean>(url + `?${paramName}=${value}`);
+    let res = await requestApi<boolean>(url + `?${paramName}=${value}`);
 
     return res;
 }

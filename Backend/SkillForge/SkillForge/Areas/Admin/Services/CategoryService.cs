@@ -7,13 +7,13 @@ namespace SkillForge.Areas.Admin.Services;
 public class CategoryService : CrudService<Category, CategoryVM>, ICategoryService
 {
     private readonly ICategoryRepository repository;
-    private readonly IWebHostEnvironment webHostEnvironment;
+    private readonly IImageService imageService;
 
-    public CategoryService(ICategoryRepository repository, IWebHostEnvironment webHostEnvironment)
+    public CategoryService(ICategoryRepository repository, IImageService imageService)
         : base(repository)
     {
         this.repository = repository;
-        this.webHostEnvironment = webHostEnvironment;
+        this.imageService = imageService;
     }
 
     public override Category ViewModelToEntity(CategoryVM model)
@@ -48,14 +48,14 @@ public class CategoryService : CrudService<Category, CategoryVM>, ICategoryServi
         {
             if (model.CurrentImageFilename != null)
             {
-                RemoveImage(model.CurrentImageFilename);
+                imageService.RemoveImage("categories", model.CurrentImageFilename);
             }
 
             entity.Image = await UploadImageAsync(model.Image);
         }
         else if (model.RemoveImage && model.CurrentImageFilename != null)
         {
-            RemoveImage(model.CurrentImageFilename);
+            imageService.RemoveImage("categories", model.CurrentImageFilename);
 
             entity.Image = null;
         }
@@ -63,50 +63,8 @@ public class CategoryService : CrudService<Category, CategoryVM>, ICategoryServi
         return await UpsertEntity(entity);
     }
 
-    public string GetImagesPath()
-    {
-        string wwwRootPath = webHostEnvironment.WebRootPath;
-        string imagesPath = Path.Combine(wwwRootPath, @"images\categories");
-
-        return imagesPath;
-    }
-
-    public void RemoveImage(string filename)
-    {
-        try
-        {
-            string path = Path.Combine(GetImagesPath(), filename);
-            File.Delete(path);
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
-    public async Task<string> UploadImageAsync(IFormFile image, string imagesPath)
-    {
-        string extension = Path.GetExtension(image.FileName);
-        string filename = $"{DateTime.Now:yyyyMMddhhmmssfff}{extension}";
-        string path = Path.Combine(imagesPath, filename);
-
-        try
-        {
-            using FileStream stream = new(path, FileMode.Create);
-            await image.CopyToAsync(stream);
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-
-        return filename;
-    }
-
     public async Task<string> UploadImageAsync(IFormFile image)
     {
-        string imagesPath = GetImagesPath();
-
-        return await UploadImageAsync(image, imagesPath);
+        return await imageService.UploadImageAsync(image, "categories");
     }
 }

@@ -4,12 +4,13 @@
 	import type ValidationRule from "$lib/types/ValidationRule";
 	import type ValidationRules from "$lib/types/ValidationRules";
 	import { setContext, type Snippet } from "svelte";
-	import { fetchApi } from "$lib/api/client";
+	import { requestApi } from "$lib/api/client";
 
     interface Props {
         action: string,
         method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
         formData: T,
+        isMultipartFormData?: boolean,
         onSuccess: (response: any) => void,
         children: Snippet,
         validationRules?: ValidationRules
@@ -27,6 +28,7 @@
         action,
         method = 'GET',
         formData,
+        isMultipartFormData = false,
         onSuccess,
         children,
         validationRules
@@ -100,25 +102,38 @@
             method,
             credentials: 'include',
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
             }
         };
 
-        if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
+        if (!isMultipartFormData) {
+            init.headers = {
+                ...init.headers,
+                'Content-Type': 'application/json',
+            };
+
             init.body = JSON.stringify(formData);
+        } else {
+            let fd = new FormData();
+            for (let fieldName in formData) {
+                fd.append(fieldName, formData[fieldName] as string | Blob);
+            }
+
+            init.body = fd;
         }
 
-        fetchApi(action, init)
+        requestApi(action, init)
             .then(r => {
-                console.log(r);
                 onSuccess(r);
             })
             .catch((e: ErrorResponse) => {
                 for (let fieldName in e.errors) {
                     let errors = e.errors[fieldName];
-                    fields[fieldName].errors = errors;
-                    fields[fieldName].setErrors(errors);
+
+                    if (fields[fieldName]) {
+                        fields[fieldName].errors = errors;
+                        fields[fieldName].setErrors(errors);
+                    }
                 }
 
                 if (e.detail) {
