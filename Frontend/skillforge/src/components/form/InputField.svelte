@@ -10,6 +10,11 @@
         type?: InputType,
         value: any,
         placeholder?: string,
+        min?: any,
+        max?: any,
+        minlength?: any,
+        maxlength?: any,
+        step?: any,
         disabled?: boolean,
         validateTogether?: string[],
     }
@@ -21,12 +26,18 @@
         type = 'text',
         value = $bindable(),
         placeholder,
+        min,
+        max,
+        minlength,
+        maxlength,
+        step,
         disabled,
         validateTogether,
     }: Props = $props();
 
     let isValid = $state<boolean>(true);
     let isVisited = $state<boolean>(false);
+    let formClass = $derived<string>(type === 'range' ? 'form-range' : 'form-control');
 
     let fieldValidation: ValidatedField;
     function oninput() {
@@ -42,15 +53,20 @@
     }
 </script>
 
-<div class="mb-3">
+<div class="mb-4">
     <label for={id} class="form-label">{label}:</label>
     <input {id}
             {type}
             {name}
             {placeholder}
-            class="form-control"
+            class="{formClass}"
             class:is-invalid={!isValid}
             bind:value
+            {min}
+            {max}
+            {minlength}
+            {maxlength}
+            {step}
             {oninput}
             {onfocus}
             {onfocusout}

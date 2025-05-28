@@ -9,7 +9,7 @@
         name?: string,
         label?: string,
         value: any,
-        size?: number,
+        size?: any,
         disabled?: boolean,
         multiple?: boolean,
         validateTogether?: string[],
@@ -78,7 +78,7 @@
     }
 </script>
 
-<div class="mb-3">
+<div class="mb-4">
     <label for={id} class="form-label">{label}:</label>
     <select {id}
             {name}

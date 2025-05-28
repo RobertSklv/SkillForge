@@ -1,0 +1,13 @@
+
+
+.radio-group {
+    &.is-invalid {
+        .form-check-input {
+            border-color: var(--bs-form-invalid-border-color);
+        }
+
+        .form-check-label {
+            color: var(--bs-form-invalid-border-color);
+        }
+    }
+}
