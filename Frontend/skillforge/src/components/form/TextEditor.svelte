@@ -3,14 +3,16 @@
     import 'quill/dist/quill.snow.css';
 	import { browser } from '$app/environment';
 	import FieldValidation from './FieldValidation.svelte';
-	import { requestApi } from '$lib/api/client';
+	import { uploadImage } from '$lib/api/client';
 	import { PUBLIC_BACKEND_DOMAIN } from '$env/static/public';
+	import type { ImageUploadType } from '$lib/types/ImageUploadType';
 
     interface Props {
         id: string,
         label?: string,
         content: string,
-        height?: number
+        height?: number,
+        imageUploadType: ImageUploadType
     }
 
     let {
@@ -18,6 +20,7 @@
         label = id,
         content = $bindable(),
         height = 300,
+        imageUploadType,
     }: Props = $props();
 
     let isValid = $state<boolean>(true);
@@ -78,28 +81,17 @@
         quillEditor.on('text-change', onTextChange);
         quillEditor.on('selection-change', onSelectionChange);
 
-        // Handle image uploads
         quillEditor.getModule('toolbar').addHandler('image', () => {
             const input = document.createElement('input');
             input.setAttribute('type', 'file');
-            input.setAttribute('accept', 'image/*');
+            input.setAttribute('accept', '.jpg, .jpeg, .png');
             input.click();
 
             input.onchange = async () => {
                 const file = input.files?.[0];
                 if (file) {
-                    const formData = new FormData();
-                    formData.append('image', file);
+                    const url = PUBLIC_BACKEND_DOMAIN + (await uploadImage(file, imageUploadType));
 
-                    // Upload to your backend
-                    let url = await requestApi('/Image/Upload', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    url = PUBLIC_BACKEND_DOMAIN + '/images/articles/uploads/' + url;
-
-                    // Insert image in Quill using the uploaded URL
                     const range = quillEditor.getSelection();
                     if (range) {
                         quillEditor.insertEmbed(range.index, 'image', url);

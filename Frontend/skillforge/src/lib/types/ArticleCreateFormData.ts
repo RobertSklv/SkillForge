@@ -1,6 +1,6 @@
 export default interface ArticleCreateFormData {
     CategoryId: number,
-    Image?: FileList | null,
+    Image?: string | undefined,
     Title: string,
     Content: string
 }

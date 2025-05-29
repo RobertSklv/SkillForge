@@ -42,9 +42,11 @@ public class AdminAuthService : IAdminAuthService
     {
         List<Claim> claims = new()
         {
+            new Claim("Id", user.Id.ToString()),
             new Claim(ClaimTypes.NameIdentifier, user.Name),
             new Claim(ClaimTypes.Name, user.Name),
             new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.Role.Code),
         };
         ClaimsIdentity identity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         ClaimsPrincipal principal = new(identity);

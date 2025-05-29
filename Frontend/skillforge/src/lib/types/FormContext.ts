@@ -5,5 +5,5 @@ export default interface FormContext {
     updateField: (name: string, errors: string[]) => void,
     getValidationRules: (name: string) => ValidationRule[],
     validateFields: (fieldNames: string[]) => void,
-    submit: () => void,
+    submit: () => Promise<void>,
 }

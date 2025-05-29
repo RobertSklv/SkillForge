@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SkillForge.Controllers;
 
@@ -7,4 +8,21 @@ namespace SkillForge.Controllers;
 [Route("/Api/[controller]/[action]")]
 public abstract class ApiController : Controller
 {
+    public int UserId => int.Parse(User.Claims.Where(c => c.Type == "Id").First().Value);
+
+    public bool TryGetUserId([NotNullWhen(true)] out int? userId)
+    {
+        userId = null;
+
+        try
+		{
+			userId = UserId;
+		}
+		catch (Exception)
+		{
+			return false;
+		}
+
+		return true;
+    }
 }

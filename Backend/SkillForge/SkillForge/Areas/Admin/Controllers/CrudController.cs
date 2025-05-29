@@ -55,11 +55,11 @@ public abstract class CrudController<TEntity, TViewModel> : AdminController
     {
         TViewModel? viewModel = await GetViewModel(id);
 
-        return await View(viewModel);
+        return await ViewWithBackAction(viewModel);
     }
 
     [NonAction]
-    public virtual async Task<IActionResult> View(TViewModel? viewModel)
+    public virtual async Task<IActionResult> ViewWithBackAction(TViewModel? viewModel)
     {
         if (viewModel != null)
         {

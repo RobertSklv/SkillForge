@@ -10,6 +10,7 @@
         size?: BootstrapSize,
         mod?: string,
         isSubmitButton?: boolean,
+        disabled?: boolean,
         onclick?: MouseEventHandler<HTMLButtonElement>,
         children: Snippet
     }
@@ -19,21 +20,33 @@
         size,
         mod,
         isSubmitButton,
+        disabled,
         onclick,
         children
     }: Props = $props();
 
+    let isLoading = $state<boolean>(false);
+
     let formContext = getContext<FormContext>('form');
 
-    function onclickPrivate(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement; }) {
+    async function onclickPrivate(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement; }) {
+        isLoading = true;
+
         if (isSubmitButton) {
-            formContext?.submit();
+            await formContext?.submit();
         }
 
-        onclick?.(event);
+        await onclick?.(event);
+
+        isLoading = false;
     }
 </script>
 
-<button type="button" class="btn btn-{color} {mod} {size ? 'btn-' + size : ''}" onclick={onclickPrivate}>
-    {@render children()}
+<button type="button" class="btn btn-{color} {mod} {size ? 'btn-' + size : ''}" onclick={onclickPrivate} disabled={disabled || isLoading}>
+    {#if isLoading}
+        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        <span role="status">Processing...</span>
+    {:else}
+        {@render children()}
+    {/if}
 </button>

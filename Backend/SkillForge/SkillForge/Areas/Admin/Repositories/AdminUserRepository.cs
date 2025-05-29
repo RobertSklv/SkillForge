@@ -22,7 +22,9 @@ public class AdminUserRepository : IAdminUserRepository
 
     public Task<AdminUser?> FindUser(string usernameOrEmail)
     {
-        return db.AdminUsers.FirstOrDefaultAsync(u => u.Name == usernameOrEmail || u.Email == usernameOrEmail);
+        return db.AdminUsers
+            .Include(e => e.Role)
+            .FirstOrDefaultAsync(u => u.Name == usernameOrEmail || u.Email == usernameOrEmail);
     }
 
     public async Task<bool> IsUsernameTaken(string username)

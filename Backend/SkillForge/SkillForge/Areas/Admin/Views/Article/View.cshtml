@@ -1,0 +1,13 @@
+﻿@using SkillForge.Models.Database
+
+@model Article
+
+@{
+    Layout = "_AdminPageLayout";
+    ViewData["PageHeading"] = "Article #" + Model.Id;
+    ViewData["Title"] = ViewData["PageHeading"];
+
+    bool approvalMode = ViewData["ApprovalMode"] as bool? ?? false;
+}
+
+<partial name="_View" model="@Model" />

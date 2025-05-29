@@ -40,6 +40,7 @@ public class UserAuthService : IUserAuthService
     {
         List<Claim> claims = new()
         {
+            new Claim("Id", user.Id.ToString()),
             new Claim(ClaimTypes.NameIdentifier, user.Name),
             new Claim(ClaimTypes.Name, user.Name),
             new Claim(ClaimTypes.Email, user.Email),

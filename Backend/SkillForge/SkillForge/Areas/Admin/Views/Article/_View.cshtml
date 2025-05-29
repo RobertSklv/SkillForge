@@ -1,0 +1,41 @@
+﻿@using SkillForge.Models.Database
+
+@model Article
+
+<div class="row mb-4">
+    <div class="col-12 col-lg-4">
+        <span>Author:</span>
+    </div>
+    <div class="col-12 col-lg-8">
+        <span>@Model.Author?.Name</span>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12 col-lg-4">
+        <span>Title:</span>
+    </div>
+    <div class="col-12 col-lg-8">
+        <span>@Model.Title</span>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12 col-lg-4">
+        <span>Cover image:</span>
+    </div>
+    <div class="col-12 col-lg-8">
+        <img src="@Model.Image" alt="Cover image" class="w-50" />
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12 col-lg-4">
+        <span>Content:</span>
+    </div>
+    <div class="col-12 col-lg-8">
+        <div class="card p-3">
+            @Html.Raw(@Model.Content)
+        </div>
+    </div>
+</div>

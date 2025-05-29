@@ -8,7 +8,7 @@
 
     interface Props {
         action: string,
-        method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
+        method?: 'GET' | 'POST' | 'DIALOG',
         formData: T,
         isMultipartFormData?: boolean,
         onSuccess: (response: any) => void,
@@ -93,7 +93,7 @@
         }
     }
 
-    export function submit() {
+    export async function submit() {
         if (!validate()) {
             return;
         }
@@ -122,7 +122,7 @@
             init.body = fd;
         }
 
-        requestApi(action, init)
+        return requestApi(action, init)
             .then(r => {
                 onSuccess(r);
             })
@@ -143,6 +143,6 @@
     }
 </script>
 
-<form>
+<form {action} {method} enctype={isMultipartFormData ? 'multipart/form-data' : undefined}>
     {@render children()}
 </form>

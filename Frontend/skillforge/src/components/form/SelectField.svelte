@@ -3,6 +3,8 @@
 	import { setContext, type Snippet } from 'svelte';
 	import FieldValidation from './FieldValidation.svelte';
 	import type SelectFieldContext from '$lib/types/SelectFieldContext';
+    import type OptionType from '$lib/types/Option';
+	import Option from './Option.svelte';
 
     interface Props {
         id: string,
@@ -14,6 +16,7 @@
         disabled?: boolean,
         multiple?: boolean,
         validateTogether?: string[],
+        options?: OptionType[],
         children: Snippet,
     }
 
@@ -33,19 +36,20 @@
         disabled,
         multiple,
         validateTogether,
+        options,
         children,
     }: Props = $props();
 
     let isValid = $state<boolean>(true);
     let isVisited = $state<boolean>(false);
     let fieldValidation: ValidatedField;
-    let options: Options = {};
+    let opts: Options = {};
 
     $effect(() => {
         let valueArray: any[] = multiple ? value : [value];
 
-        for (let optionKey in options) {
-            options[optionKey].setSelected(valueArray.includes(optionKey));
+        for (let optionKey in opts) {
+            opts[optionKey].setSelected(valueArray.includes(optionKey));
         }
     })
 
@@ -54,7 +58,7 @@
     });
     
     function registerField(name: string, setSelected: (isSelected: boolean) => void) {
-        options[name] = {
+        opts[name] = {
             setSelected
         }
     }
@@ -93,6 +97,11 @@
             {disabled}
             {multiple}>
         {@render children()}
+        {#if options}
+            {#each options as o}
+                <Option value={o.Value} selected={o.Value == value}>{o.Label}</Option>
+            {/each}
+        {/if}
     </select>
     <FieldValidation {name} {label} {value} shouldValidate={isVisited} bind:isValid bind:this={fieldValidation} {validateTogether} />
 </div>

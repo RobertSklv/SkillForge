@@ -8,7 +8,7 @@ public class ArticleCreateDTO
     public int CategoryId { get; set; }
 
     [StringLength(64)]
-    public IFormFile? Image { get; set; }
+    public string? Image { get; set; }
 
     [StringLength(64)]
     public string Title { get; set; }

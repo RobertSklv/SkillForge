@@ -51,8 +51,8 @@
             <strong class="d-inline-block mb-2">{label}:</strong>
         {/if}
         {#if options}
-            {#each options as { value, label }}
-                <RadioField id="{name}-{value}" {name} {label} {value} {isSwitch} {isInline} {isReverse} bind:group />
+            {#each options as { Value, Label }}
+                <RadioField id="{name}-{Value}" {name} label={Label} value={Value} {isSwitch} {isInline} {isReverse} bind:group />
             {/each}
         {/if}
         {@render children?.()}

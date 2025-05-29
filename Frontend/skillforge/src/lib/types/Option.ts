@@ -1,4 +1,4 @@
 export default interface Option {
-    value: any,
-    label?: string
+    Value: any,
+    Label?: string
 }
