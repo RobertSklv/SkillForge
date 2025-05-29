@@ -2,7 +2,6 @@
 	import { writable } from "svelte/store";
 	import type ArticleCreateFormData from "$lib/types/ArticleCreateFormData";
 	import Form from "../form/Form.svelte";
-	import FileInputField from "../form/FileInputField.svelte";
 	import Button from "../button/Button.svelte";
 	import InputField from "../form/InputField.svelte";
 	import SelectField from "../form/SelectField.svelte";

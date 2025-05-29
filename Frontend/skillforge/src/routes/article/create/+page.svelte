@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type ArticleCreatePageModel from "$lib/types/ArticleCreatePageModel";
 	import { setContext } from "svelte";
-	import ArticleCreateForm from "../../../components/article/ArticleCreateForm.svelte";
+	import ArticleCreateForm from "$components/article/ArticleCreateForm.svelte";
 
 	interface Props {
 		data: ArticleCreatePageModel
