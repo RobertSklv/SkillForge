@@ -22,7 +22,7 @@ public interface ICrudRepository<TEntity>
 
     Task<int> Update(TEntity entity);
 
-    Task<int> SaveMultiple(List<TEntity> entities);
+    Task<int> UpsertMultiple(List<TEntity> entities);
 
     Task<int> Delete(int id);
 

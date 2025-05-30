@@ -27,7 +27,7 @@ public interface ICrudService<TEntity, TViewModel>
 
     Task<bool> Update(TEntity entity);
 
-    Task<bool> SaveMultiple(List<TEntity> entities);
+    Task<bool> UpsertMultiple(List<TEntity> entities);
 
     Task<bool> Delete(int id);
 

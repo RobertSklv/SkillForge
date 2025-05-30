@@ -35,6 +35,7 @@ public class ArticleService : CrudService<Article>, IArticleService
         model.Table = new Table<Article>(model, items)
             .AddRowAction("Preview")
             .AddChainCall(CreateDeleteRowAction)
+            .AddMassAction("MassApprove", "Approve selected")
             .SetFilterable(true)
             .SetOrderable(true)
             .SetSearchable(true)
@@ -55,6 +56,23 @@ public class ArticleService : CrudService<Article>, IArticleService
         article.Approval = approval;
 
         return await Upsert(article);
+    }
+
+    public async Task<bool> MassApprove(List<int> ids, int adminId)
+    {
+        List<Article> articles = await GetByIds(ids);
+
+        foreach (Article a in articles)
+        {
+            ArticleApproval approval = new()
+            {
+                ModeratorId = adminId
+            };
+
+            a.Approval = approval;
+        }
+
+        return await UpsertMultiple(articles);
     }
 
     public async Task UserCreate(ArticleCreateDTO model, int userId)

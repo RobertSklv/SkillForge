@@ -67,4 +67,29 @@ public class ArticleController : CrudController<Article>
 
         return RedirectToAction(nameof(Pending));
     }
+
+    protected override async Task<string> MassAction(string massAction, List<int> selectedItemIds)
+    {
+        if (massAction == "MassApprove")
+        {
+            if (!TryGetUserId(out int? adminId))
+            {
+                throw new Exception("Admin User Id not found!");
+            }
+
+            bool success = await service.MassApprove(selectedItemIds, (int)adminId);
+
+            if (success)
+            {
+                Alert("Articles approved", ColorClass.Success);
+            }
+            else
+            {
+                Alert("An error ocurred", ColorClass.Danger);
+            }
+        }
+        else throw new Exception("Action not defined");
+
+        return nameof(Pending);
+    }
 }

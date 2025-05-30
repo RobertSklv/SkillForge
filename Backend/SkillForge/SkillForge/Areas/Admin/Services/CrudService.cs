@@ -168,9 +168,9 @@ public abstract class CrudService<TEntity, TViewModel> : ICrudService<TEntity, T
         return await repository.Upsert(entity) > 0;
     }
 
-    public async Task<bool> SaveMultiple(List<TEntity> entities)
+    public async Task<bool> UpsertMultiple(List<TEntity> entities)
     {
-        return await repository.SaveMultiple(entities) > 0;
+        return await repository.UpsertMultiple(entities) > 0;
     }
 
     public Task<bool> HasAny()

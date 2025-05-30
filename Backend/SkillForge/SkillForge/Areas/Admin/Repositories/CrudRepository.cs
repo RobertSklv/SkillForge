@@ -80,9 +80,19 @@ public abstract class CrudRepository<TEntity> : ICrudRepository<TEntity>
         return await db.SaveChangesAsync();
     }
 
-    public virtual async Task<int> SaveMultiple(List<TEntity> entities)
+    public virtual async Task<int> UpsertMultiple(List<TEntity> entities)
     {
-        DbSet.AddRange(entities);
+        foreach (TEntity e in entities)
+        {
+            if (e.Id > 0)
+            {
+                DbSet.Update(e);
+            }
+            else
+            {
+                DbSet.Add(e);
+            }
+        }
 
         return await db.SaveChangesAsync();
     }

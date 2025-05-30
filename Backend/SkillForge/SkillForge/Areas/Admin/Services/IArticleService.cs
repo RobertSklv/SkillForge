@@ -12,5 +12,7 @@ public interface IArticleService : ICrudService<Article>
 
     Task<bool> Approve(int id, int adminId);
 
+    Task<bool> MassApprove(List<int> ids, int adminId);
+
     Task<List<ArticleCard>> GetLatest(int batchIndex, int batchSize);
 }
