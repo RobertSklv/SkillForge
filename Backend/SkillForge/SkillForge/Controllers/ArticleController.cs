@@ -47,4 +47,12 @@ public class ArticleController : ApiController
 
         return Ok(pageModel);
     }
+
+    [AllowAnonymous]
+    public async Task<IActionResult> Latest(int batchIndex, int batchSize = 10)
+    {
+        List<ArticleCard> cards = await service.GetLatest(batchIndex, batchSize);
+
+        return Ok(cards);
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using SkillForge.Areas.Admin.Models;
 using SkillForge.Areas.Admin.Models.Components.Grid;
 using SkillForge.Areas.Admin.Models.DTOs;
+using SkillForge.Areas.Admin.Models.DTOs.Article;
 using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Models.Database;
 
@@ -68,5 +69,25 @@ public class ArticleService : CrudService<Article>, IArticleService
         };
 
         await repository.Upsert(entity);
+    }
+
+    public async Task<List<ArticleCard>> GetLatest(int batchIndex, int batchSize)
+    {
+        return (await repository.GetLatest(batchIndex, batchSize)).ConvertAll(x => new ArticleCard()
+        {
+            Author = new UserLink()
+            {
+                Id = x.Author!.Id,
+                Name = x.Author.Name,
+                AvatarImage = x.Author.AvatarPath,
+            },
+            ArticleId = x.Id,
+            Title = x.Title,
+            CategoryCode = x.Category!.Code,
+            CategoryName = x.Category.DisplayedName,
+            CoverImage = x.Image,
+            DatePublished = (DateTime)x.CreatedAt!,
+            Rating = 0, // temp
+        });
     }
 }

@@ -7,4 +7,6 @@ namespace SkillForge.Areas.Admin.Repositories;
 public interface IArticleRepository : ICrudRepository<Article>
 {
     Task<PaginatedList<Article>> ListPending(ListingModel listingModel, Func<IQueryable<Article>, IQueryable<Article>>? queryCallback = null);
+
+    Task<List<Article>> GetLatest(int batchIndex, int batchSize);
 }

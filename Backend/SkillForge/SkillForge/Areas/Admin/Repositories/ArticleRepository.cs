@@ -57,4 +57,17 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
             return query;
         });
     }
+
+    public Task<List<Article>> GetLatest(int batchIndex, int batchSize)
+    {
+        return DbSet
+            .Include(e => e.Author)
+            .Include(e => e.Category)
+            .Include(e => e.Approval)
+            .Where(e => e.ApprovalId != null)
+            .OrderByDescending(e => e.CreatedAt)
+            .Skip(batchIndex * batchSize)
+            .Take(batchSize)
+            .ToListAsync();
+    }
 }
