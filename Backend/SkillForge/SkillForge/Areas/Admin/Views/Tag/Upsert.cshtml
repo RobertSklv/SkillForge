@@ -1,0 +1,19 @@
+﻿@using SkillForge.Models.Database
+
+@model Tag
+
+@{
+    Layout = "_AdminPageLayout";
+}
+
+@section Styles
+{
+    <link href="~/lib/quill/quill.css" rel="stylesheet" />
+}
+
+@section ScriptsHead
+{
+    <script src="~/lib/quill/quill.js"></script>
+}
+
+<partial name="_General" model="@Model" />

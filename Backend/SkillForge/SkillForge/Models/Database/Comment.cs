@@ -18,4 +18,8 @@ public class Comment : BaseEntity
     public string Content { get; set; }
 
     public List<CommentRating>? Ratings { get; set; }
+
+    public int ThumbsUp { get; set; }
+
+    public int ThumbsDown { get; set; }
 }

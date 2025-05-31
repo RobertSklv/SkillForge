@@ -42,5 +42,15 @@ public class User : BaseEntity
 
     public List<Article>? Articles { get; set; }
 
-    public List<FavoriteArticle>? FavouriteArticles { get; set; }
+    public List<FavoriteArticle>? FavoriteArticles { get; set; }
+
+    public List<UserFollow>? Followings { get; set; }
+
+    public List<UserFollow>? Followers { get; set; }
+
+    public List<TagFollow>? TagsFollowed { get; set; }
+
+    public int FollowersCount { get; set; }
+
+    public int FollowingsCount { get; set; }
 }

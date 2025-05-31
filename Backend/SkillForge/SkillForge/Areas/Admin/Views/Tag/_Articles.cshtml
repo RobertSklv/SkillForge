@@ -1,0 +1,11 @@
+﻿@using SkillForge.Areas.Admin.Models.DTOs
+@using SkillForge.Models.Database
+
+@model ListingModel<Article>
+
+@{
+    Layout = "_FieldsetLayout";
+    ViewData["Legend"] = "Articles";
+}
+
+<partial name="_Table" model="@Model.Table" />

@@ -20,11 +20,65 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
     {
     }
 
+    public async Task<Article> GetWithComments(int id)
+    {
+        return await GetIncludes(DbSet)
+            .Include(e => e.Comments!)
+                .ThenInclude(e => e.User)
+            .FirstOrDefaultAsync(e => e.Id == id)
+            ?? throw new Exception($"No article with Id {id} exists.");
+    }
+
+    public Task<ArticleRating?> GetUserRating(int userId, int articleId)
+    {
+        return db.ArticleRatings.FirstOrDefaultAsync(e => e.UserId == userId && e.ArticleId == articleId);
+    }
+
+    public Task UpsertUserRating(ArticleRating rating)
+    {
+        if (rating.Id == 0)
+        {
+            db.ArticleRatings.Add(rating);
+        }
+        else
+        {
+            db.ArticleRatings.Update(rating);
+        }
+
+        return db.SaveChangesAsync();
+    }
+
+    public Task<RegisteredArticleView?> GetView(int userId, int articleId)
+    {
+        return db.RegisteredArticleViews.FirstOrDefaultAsync(e => e.UserId == userId && e.ArticleId == articleId);
+    }
+
+    public Task<GuestArticleView?> GetView(string guestId, int articleId)
+    {
+        return db.GuestArticleViews.FirstOrDefaultAsync(e => e.GuestId == guestId && e.ArticleId == articleId);
+    }
+
+    public Task RecordView(RegisteredArticleView view)
+    {
+        db.RegisteredArticleViews.Add(view);
+
+        return db.SaveChangesAsync();
+    }
+
+    public Task RecordView(GuestArticleView view)
+    {
+        db.GuestArticleViews.Add(view);
+
+        return db.SaveChangesAsync();
+    }
+
     public override IQueryable<Article> GetIncludes(IQueryable<Article> query)
     {
         return base.GetIncludes(query)
             .Include(e => e.Author)
-            .Include(e => e.Category);
+            .Include(e => e.Category)
+            .Include(e => e.Tags!)
+                .ThenInclude(e => e.Tag);
     }
 
     public override Task<PaginatedList<Article>> List(ListingModel listingModel, Func<IQueryable<Article>, IQueryable<Article>>? queryCallback = null)
@@ -55,6 +109,14 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
             }
 
             return query;
+        });
+    }
+
+    public Task<PaginatedList<Article>> ListByTag(ListingModel listingModel, int tagId)
+    {
+        return base.List(listingModel, query =>
+        {
+            return query.Where(e => e.Tags!.Any(e => e.TagId == tagId));
         });
     }
 

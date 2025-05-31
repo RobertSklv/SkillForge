@@ -1,4 +1,6 @@
-﻿namespace SkillForge.Areas.Admin.Models.DTOs.Article;
+﻿using SkillForge.Areas.Admin.Models.DTOs.Rating;
+
+namespace SkillForge.Areas.Admin.Models.DTOs.Article;
 
 public class ArticleCard
 {
@@ -16,5 +18,5 @@ public class ArticleCard
 
     public DateTime DatePublished { get; set; }
 
-    public byte Rating { get; set; }
+    public RatingData RatingData { get; set; }
 }

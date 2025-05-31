@@ -1,4 +1,5 @@
 ﻿@using SkillForge.Areas.Admin.Models.DTOs
+@using SkillForge.Models.Database
 
 @model CategoryVM
 
@@ -10,6 +11,8 @@
         ? "Create New Category"
         : $"Edit Category #{Model.Id}";
     ViewData["PageHeading"] = ViewData["Title"];
+
+    List<Category> parentCategoryOptions = ViewData["ParentCategoryOptions"] as List<Category> ?? new();
 }
 
 @section Styles
@@ -29,10 +32,26 @@
 
         <div class="row mb-4">
             <div class="col-12 col-lg-4">
+                <label asp-for=@Model.ParentId></label>
+            </div>
+            <div class="col-12 col-lg-8">
+                <select asp-for=@Model.ParentId
+                        class="form-select d-block w-100"
+                        asp-items="new SelectList(
+                                parentCategoryOptions,
+                                nameof(Category.Id),
+                                nameof(Category.Code))">
+                    <option value="0">None</option>
+                </select>
+                <span asp-validation-for=@Model.ParentId class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12 col-lg-4">
                 <label asp-for=@Model.Code></label>
             </div>
             <div class="col-12 col-lg-8">
-                <input asp-for=@Model.Code class="form-control d-block w-100" />
+                <input asp-for=@Model.Code class="form-control" />
                 <span asp-validation-for=@Model.Code class="text-danger"></span>
             </div>
         </div>
@@ -41,7 +60,7 @@
                 <label asp-for=@Model.DisplayedName></label>
             </div>
             <div class="col-12 col-lg-8">
-                <input asp-for=@Model.DisplayedName class="form-control d-block w-100" />
+                <input asp-for=@Model.DisplayedName class="form-control" />
                 <span asp-validation-for=@Model.DisplayedName class="text-danger"></span>
             </div>
         </div>
@@ -50,7 +69,7 @@
                 <label asp-for=@Model.Image></label>
             </div>
             <div class="col-12 col-lg-8">
-                <input asp-for=@Model.Image class="form-control d-block w-100" accept="image/*" />
+                <input asp-for=@Model.Image class="form-control" accept="image/*" />
                 <span asp-validation-for=@Model.Image class="text-danger"></span>
 
                 @if (Model.CurrentImageFilename != null)

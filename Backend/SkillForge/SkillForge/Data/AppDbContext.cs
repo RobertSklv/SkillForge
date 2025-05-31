@@ -22,6 +22,8 @@ public class AppDbContext : DbContext
     public DbSet<Tag> Tags { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<FavoriteArticle> FavoriteArticles { get; set; }
+    public DbSet<UserFollow> UserFollows { get; set; }
+    public DbSet<TagFollow> TagFollows { get; set; }
 
     private readonly IAdminRoleSeeder adminRoleSeeder;
 
@@ -36,6 +38,72 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         adminRoleSeeder.Seed(modelBuilder);
+
+        modelBuilder.Entity<User>()
+            .HasMany(e => e.Followers)
+            .WithOne(e => e.FollowedUser);
+
+        modelBuilder.Entity<User>()
+            .HasMany(e => e.Followings)
+            .WithOne(e => e.Follower);
+
+        modelBuilder.Entity<User>()
+            .HasIndex(nameof(User.Name))
+            .IsUnique();
+
+        modelBuilder.Entity<User>()
+            .HasIndex(nameof(User.Email))
+            .IsUnique();
+
+        modelBuilder.Entity<UserFollow>()
+            .ToTable(t => t.HasCheckConstraint(
+                "CK_UserFollows_NoSelfReference",
+                nameof(UserFollow.FollowerId) + " <> " + nameof(UserFollow.FollowedUserId)));
+
+        modelBuilder.Entity<UserFollow>()
+            .HasIndex(nameof(UserFollow.FollowerId), nameof(UserFollow.FollowedUserId))
+            .IsUnique();
+
+        modelBuilder.Entity<TagFollow>()
+            .HasIndex(nameof(TagFollow.UserId), nameof(TagFollow.TagId))
+            .IsUnique();
+
+        modelBuilder.Entity<CommentRating>()
+            .HasIndex(nameof(CommentRating.UserId), nameof(CommentRating.CommentId))
+            .IsUnique();
+
+        modelBuilder.Entity<ArticleTag>()
+            .HasIndex(nameof(ArticleTag.ArticleId), nameof(ArticleTag.TagId))
+            .IsUnique();
+
+        modelBuilder.Entity<FavoriteArticle>()
+            .HasIndex(nameof(FavoriteArticle.UserId), nameof(FavoriteArticle.ArticleId))
+            .IsUnique();
+
+        modelBuilder.Entity<Category>()
+            .ToTable(t => t.HasCheckConstraint(
+                "CK_Categories_NoSelfReference",
+                nameof(Category.Id) + " <> " + nameof(Category.ParentId)));
+
+        modelBuilder.Entity<AdminUser>()
+            .HasIndex(nameof(AdminUser.Name))
+            .IsUnique();
+
+        modelBuilder.Entity<AdminUser>()
+            .HasIndex(nameof(AdminUser.Email))
+            .IsUnique();
+
+        modelBuilder.Entity<AdminRole>()
+            .HasIndex(nameof(AdminRole.Code))
+            .IsUnique();
+
+        modelBuilder.Entity<Category>()
+            .HasIndex(nameof(Category.Code))
+            .IsUnique();
+
+        modelBuilder.Entity<Tag>()
+            .HasIndex(nameof(Tag.Name))
+            .IsUnique();
     }
 
     private void SetTimestamps()

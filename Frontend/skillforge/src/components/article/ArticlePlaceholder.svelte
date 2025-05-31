@@ -1,4 +1,4 @@
-<div class="card mb-3 placeholder-glow">
+<div class="card mb-4 placeholder-glow">
 	<div class="placeholder" style="height: 250px"></div>
 	<div class="card-body">
 		<p class="card-title h2">

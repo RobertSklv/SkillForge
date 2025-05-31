@@ -2,6 +2,7 @@
 using SkillForge.Areas.Admin.Models.Components.Grid;
 using SkillForge.Areas.Admin.Models.DTOs;
 using SkillForge.Areas.Admin.Models.DTOs.Article;
+using SkillForge.Areas.Admin.Models.DTOs.Rating;
 using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Models.Database;
 
@@ -36,12 +37,36 @@ public class ArticleService : CrudService<Article>, IArticleService
             .AddRowAction("Preview")
             .AddChainCall(CreateDeleteRowAction)
             .AddMassAction("MassApprove", "Approve selected")
+            .SetAdjustablePageSize(true)
             .SetFilterable(true)
             .SetOrderable(true)
             .SetSearchable(true)
             .AddPagination(true);
 
         return model;
+    }
+
+    public async Task<ListingModel<Article>> CreateListingByTag(ListingModel listingQuery, int tagId)
+    {
+        ListingModel<Article> listing = new();
+        listing.CopyFrom(listingQuery);
+
+        PaginatedList<Article> items = await ListByTag(listing, tagId);
+
+        listing.Table = new Table<Article>(listing, items)
+            .AddRowActionGeneric("View", customizationCallback: e => e.SetRoute(article =>
+                $"/Admin/Article/View/{article.Id}"))
+            .AddPagination(true)
+            .SetOrderable(true)
+            .SetSearchable(true)
+            .SetFilterable(true);
+
+        return listing;
+    }
+
+    public Task<PaginatedList<Article>> ListByTag(ListingModel listingModel, int tagId)
+    {
+        return repository.ListByTag(listingModel, tagId);
     }
 
     public async Task<bool> Approve(int id, int adminId)
@@ -91,7 +116,9 @@ public class ArticleService : CrudService<Article>, IArticleService
 
     public async Task<List<ArticleCard>> GetLatest(int batchIndex, int batchSize)
     {
-        return (await repository.GetLatest(batchIndex, batchSize)).ConvertAll(x => new ArticleCard()
+        return (await repository
+            .GetLatest(batchIndex, batchSize))
+            .ConvertAll(x => new ArticleCard()
         {
             Author = new UserLink()
             {
@@ -105,7 +132,180 @@ public class ArticleService : CrudService<Article>, IArticleService
             CategoryName = x.Category.DisplayedName,
             CoverImage = x.Image,
             DatePublished = (DateTime)x.CreatedAt!,
-            Rating = 0, // temp
+            RatingData = new RatingData
+            {
+                ThumbsUp = x.ThumbsUp,
+                ThumbsDown = x.ThumbsDown,
+                UserRating = 0, //temp
+            }
         });
+    }
+
+    public async Task<ArticlePageModel> View(int id)
+    {
+        Article article = await GetWithComments(id);
+
+        return new ArticlePageModel
+        {
+            ArticleId = article.Id,
+            Author = new UserLink
+            {
+                Id = article.Author!.Id,
+                Name = article.Author.Name,
+                AvatarImage = article.Author.AvatarPath,
+            },
+            Title = article.Title,
+            CategoryCode = article.Category!.Code,
+            CategoryName = article.Category.DisplayedName,
+            Content = article.Content,
+            CoverImage = article.Image,
+            Tags = article.Tags!.ConvertAll(t => t.Tag!.Name).ToList(),
+            DatePublished = (DateTime)article.CreatedAt!,
+            RatingData = new RatingData
+            {
+                ThumbsUp = article.ThumbsUp,
+                ThumbsDown = article.ThumbsDown,
+            },
+            Views = article.ViewCount,
+            Comments = article.Comments!.ConvertAll(c => new CommentModel
+            {
+                User = new UserLink
+                {
+                    Id = c.User!.Id,
+                    Name = c.User.Name,
+                    AvatarImage = c.User.AvatarPath,
+                },
+                Content = c.Content,
+                DateWritten = (DateTime)c.CreatedAt!,
+                RatingData = new RatingData
+                {
+                    ThumbsUp = c.ThumbsUp,
+                    ThumbsDown = c.ThumbsDown,
+                },
+            })
+        };
+    }
+
+    public async Task<ArticlePageModel> View(int userId, int articleId)
+    {
+        RegisteredArticleView? viewRecord = await GetView(userId, articleId);
+
+        if (viewRecord == null)
+        {
+            viewRecord = new RegisteredArticleView
+            {
+                UserId = userId,
+                ArticleId = articleId,
+            };
+
+            await RecordView(viewRecord);
+        }
+
+        ArticlePageModel model = await View(articleId);
+        ArticleRating? userRating = await GetUserRating(userId, articleId);
+
+        if (userRating != null)
+        {
+            model.RatingData.UserRating = userRating.Rate;
+        }
+
+        // TODO comment user ratings
+
+        return model;
+    }
+
+    public async Task<ArticlePageModel> View(string guestId, int articleId)
+    {
+        GuestArticleView? viewRecord = await GetView(guestId, articleId);
+
+        if (viewRecord == null)
+        {
+            viewRecord = new GuestArticleView
+            {
+                GuestId = guestId,
+                ArticleId = articleId,
+            };
+
+            await RecordView(viewRecord);
+        }
+
+        ArticlePageModel model = await View(articleId);
+
+        return model;
+    }
+
+    public async Task Rate(int userId, int articleId, UserRatingData rate)
+    {
+        ArticleRating? rating = await GetUserRating(userId, articleId);
+
+        short oldRate = 0;
+
+        if (rating != null)
+        {
+            oldRate = rating.Rate;
+        }
+
+        rating ??= new ArticleRating()
+        {
+            UserId = userId,
+            ArticleId = articleId,
+        };
+
+        rating.Rate = Math.Clamp(rate.Rate, (short)-1, (short)1);
+
+        Article article = await GetStrict(articleId);
+
+        if (rating.Rate != oldRate)
+        {
+            if (oldRate > 0)
+            {
+                article.ThumbsUp--;
+            }
+            else if (oldRate < 0)
+            {
+                article.ThumbsDown--;
+            }
+
+            if (rating.Rate > 0)
+            {
+                article.ThumbsUp++;
+            }
+            else if (rating.Rate < 0)
+            {
+                article.ThumbsDown++;
+            }
+        }
+
+        await repository.UpsertUserRating(rating);
+    }
+
+    public Task<Article> GetWithComments(int id)
+    {
+        return repository.GetWithComments(id);
+    }
+
+    public Task<ArticleRating?> GetUserRating(int userId, int articleId)
+    {
+        return repository.GetUserRating(userId, articleId);
+    }
+
+    public Task<RegisteredArticleView?> GetView(int userId, int articleId)
+    {
+        return repository.GetView(userId, articleId);
+    }
+
+    public Task<GuestArticleView?> GetView(string guestId, int articleId)
+    {
+        return repository.GetView(guestId, articleId);
+    }
+
+    public Task RecordView(RegisteredArticleView view)
+    {
+        return repository.RecordView(view);
+    }
+
+    public Task RecordView(GuestArticleView view)
+    {
+        return repository.RecordView(view);
     }
 }

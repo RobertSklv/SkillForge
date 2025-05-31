@@ -41,4 +41,10 @@ public class Article : BaseEntity
     public List<Comment>? Comments { get; set; }
 
     public List<ArticleTag>? Tags { get; set; }
+
+    public int ViewCount { get; set; }
+
+    public int ThumbsUp { get; set; }
+
+    public int ThumbsDown { get; set; }
 }

@@ -69,7 +69,9 @@
         <div class="position-relative m-4">
             <img src={filename} alt={imageAlt} class="w-100 rounded" />
             <div class="d-flex justify-content-end position-absolute start-0 top-0 end-0">
-                <Button color="danger" onclick={onRemoveClick}>Remove</Button>
+                <Button color="danger" onclick={onRemoveClick}>
+                    <i class="bi bi-trash-fill"></i>
+                </Button>
             </div>
         </div>
     {/if}

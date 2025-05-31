@@ -7,6 +7,9 @@ public class CategoryVM : IModel
 {
     public int Id { get; set; }
 
+    [Display(Name = "Parent")]
+    public int? ParentId { get; set; }
+
     [StringLength(32, MinimumLength = 1)]
     [Code]
     public string Code { get; set; }

@@ -2,13 +2,13 @@
 	import ArticleCard from "$components/article/ArticleCard.svelte";
 	import ArticlePlaceholder from "$components/article/ArticlePlaceholder.svelte";
 	import InfiniteScroll from "$components/infinite-scroll/InfiniteScroll.svelte";
-	import { requestApi } from "$lib/api/client";
+	import { getLatestArticles } from "$lib/api/client";
 	import type ArticleCardType from "$lib/types/ArticleCardType";
 
     const BATCH_SIZE: number = 10;
 
     function loadMore(batchIndex: number): Promise<ArticleCardType[]> {
-        return requestApi<ArticleCardType[]>(`/Article/Latest?batchIndex=${batchIndex}&batchSize=${BATCH_SIZE}`);
+        return getLatestArticles(batchIndex, BATCH_SIZE);
     }
 </script>
 

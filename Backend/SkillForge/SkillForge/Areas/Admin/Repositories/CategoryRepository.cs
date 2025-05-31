@@ -17,4 +17,23 @@ public class CategoryRepository : CrudRepository<Category>, ICategoryRepository
         : base(db, filterService, sortService, searchService)
     {
     }
+
+    public async Task<List<Category>> GetPossibleParents(int id)
+    {
+        if (await DbSet.AnyAsync(e => e.ParentId == id))
+        {
+            return new();
+        }
+
+        return await DbSet
+            .Where(e => e.Id != id && e.ParentId == null)
+            .ToListAsync();
+    }
+
+    public async Task<List<Category>> GetPossibleParents()
+    {
+        return await DbSet
+            .Where(e => e.ParentId == null)
+            .ToListAsync();
+    }
 }

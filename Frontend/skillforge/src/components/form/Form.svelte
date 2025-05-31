@@ -26,7 +26,7 @@
 
     const {
         action,
-        method = 'GET',
+        method = 'POST',
         formData,
         isMultipartFormData = false,
         onSuccess,

@@ -9,7 +9,7 @@
 
     interface Props {
         id: string,
-        label?: string,
+        label?: string | null,
         content: string,
         height?: number,
         imageUploadType: ImageUploadType
@@ -109,9 +109,11 @@
 </script>
 
 <div class="mb-4">
-    <p class="form-label">{label}:</p>
+    {#if label}
+        <p class="form-label">{label}:</p>
+    {/if}
     <div class="quill-editor-wrapper" class:is-invalid={!isValid} bind:this={editorWrapperElement}>
         <div {id} style="height: {height}px"></div>
     </div>
-    <FieldValidation name={id} {label} value={content} shouldValidate={isVisited} bind:isValid />
+    <FieldValidation name={id} label={label ?? id} value={content} shouldValidate={isVisited} bind:isValid />
 </div>

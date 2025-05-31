@@ -1,3 +1,4 @@
+import type RatingData from "./RatingData";
 import type UserLink from "./UserLink";
 
 export default interface ArticleCardType {
@@ -8,5 +9,5 @@ export default interface ArticleCardType {
     CategoryName: string,
     CategoryCode: string,
     DatePublished: string,
-    Rating: number,
+    RatingData: RatingData,
 }

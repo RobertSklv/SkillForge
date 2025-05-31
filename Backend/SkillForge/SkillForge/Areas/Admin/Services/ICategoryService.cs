@@ -5,4 +5,7 @@ namespace SkillForge.Areas.Admin.Services;
 
 public interface ICategoryService : ICrudService<Category, CategoryVM>
 {
+    Task<List<Category>> GetPossibleParents(int id);
+
+    Task<List<Category>> GetPossibleParents();
 }

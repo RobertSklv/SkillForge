@@ -154,4 +154,14 @@ public abstract class AdminController : Controller
 
         return errors;
     }
+
+    protected SidebarLinkGroup GetOrCreateSidebarLinkGroup()
+    {
+        if (ViewData["SidebarLinks"] == null)
+        {
+            ViewData["SidebarLinks"] = new SidebarLinkGroup();
+        }
+
+        return (SidebarLinkGroup)ViewData["SidebarLinks"]!;
+    }
 }

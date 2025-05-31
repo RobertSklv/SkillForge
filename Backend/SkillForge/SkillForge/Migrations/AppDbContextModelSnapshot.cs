@@ -51,6 +51,9 @@ namespace SkillForge.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.ToTable("AdminRoles");
 
                     b.HasData(
@@ -114,6 +117,12 @@ namespace SkillForge.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.HasIndex("RoleId");
 
                     b.ToTable("AdminUsers");
@@ -150,6 +159,12 @@ namespace SkillForge.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("varchar");
 
+                    b.Property<int>("ThumbsDown")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ThumbsUp")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(64)
@@ -158,6 +173,9 @@ namespace SkillForge.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnOrder(98);
+
+                    b.Property<int>("ViewCount")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -213,8 +231,8 @@ namespace SkillForge.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnOrder(99);
 
-                    b.Property<byte>("Rate")
-                        .HasColumnType("tinyint");
+                    b.Property<short>("Rate")
+                        .HasColumnType("smallint");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
@@ -257,9 +275,10 @@ namespace SkillForge.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArticleId");
-
                     b.HasIndex("TagId");
+
+                    b.HasIndex("ArticleId", "TagId")
+                        .IsUnique();
 
                     b.ToTable("ArticleTags");
                 });
@@ -312,7 +331,8 @@ namespace SkillForge.Migrations
                         .HasColumnOrder(99);
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
 
                     b.Property<string>("DisplayedName")
                         .IsRequired()
@@ -323,13 +343,24 @@ namespace SkillForge.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("varchar");
 
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnOrder(98);
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("Categories", t =>
+                        {
+                            t.HasCheckConstraint("CK_Categories_NoSelfReference", "Id <> ParentId");
+                        });
                 });
 
             modelBuilder.Entity("SkillForge.Models.Database.Comment", b =>
@@ -352,6 +383,12 @@ namespace SkillForge.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnOrder(99);
+
+                    b.Property<int>("ThumbsDown")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ThumbsUp")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
@@ -385,8 +422,8 @@ namespace SkillForge.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnOrder(99);
 
-                    b.Property<byte>("Rate")
-                        .HasColumnType("tinyint");
+                    b.Property<short>("Rate")
+                        .HasColumnType("smallint");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
@@ -399,7 +436,8 @@ namespace SkillForge.Migrations
 
                     b.HasIndex("CommentId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "CommentId")
+                        .IsUnique();
 
                     b.ToTable("CommentRatings");
                 });
@@ -431,7 +469,8 @@ namespace SkillForge.Migrations
 
                     b.HasIndex("ArticleId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "ArticleId")
+                        .IsUnique();
 
                     b.ToTable("FavoriteArticles");
                 });
@@ -449,6 +488,13 @@ namespace SkillForge.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnOrder(99);
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar");
+
+                    b.Property<int>("FollowersCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(32)
@@ -460,7 +506,43 @@ namespace SkillForge.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("SkillForge.Models.Database.TagFollow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(99);
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(98);
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TagId");
+
+                    b.HasIndex("UserId", "TagId")
+                        .IsUnique();
+
+                    b.ToTable("TagFollows");
                 });
 
             modelBuilder.Entity("SkillForge.Models.Database.User", b =>
@@ -492,6 +574,12 @@ namespace SkillForge.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("varchar");
 
+                    b.Property<int>("FollowersCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FollowingsCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(16)
@@ -507,13 +595,60 @@ namespace SkillForge.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("varbinary(16)");
 
+                    b.Property<int?>("TagId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnOrder(98);
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("TagId");
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("SkillForge.Models.Database.UserFollow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(99);
+
+                    b.Property<int>("FollowedUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FollowerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(98);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FollowedUserId");
+
+                    b.HasIndex("FollowerId", "FollowedUserId")
+                        .IsUnique();
+
+                    b.ToTable("UserFollows", t =>
+                        {
+                            t.HasCheckConstraint("CK_UserFollows_NoSelfReference", "FollowerId <> FollowedUserId");
+                        });
                 });
 
             modelBuilder.Entity("SkillForge.Models.Database.GuestArticleView", b =>
@@ -636,6 +771,16 @@ namespace SkillForge.Migrations
                     b.Navigation("Article");
                 });
 
+            modelBuilder.Entity("SkillForge.Models.Database.Category", b =>
+                {
+                    b.HasOne("SkillForge.Models.Database.Category", "Parent")
+                        .WithMany("SubCategories")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Parent");
+                });
+
             modelBuilder.Entity("SkillForge.Models.Database.Comment", b =>
                 {
                     b.HasOne("SkillForge.Models.Database.Article", "Article")
@@ -683,7 +828,7 @@ namespace SkillForge.Migrations
                         .IsRequired();
 
                     b.HasOne("SkillForge.Models.Database.User", "User")
-                        .WithMany("FavouriteArticles")
+                        .WithMany("FavoriteArticles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -691,6 +836,51 @@ namespace SkillForge.Migrations
                     b.Navigation("Article");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SkillForge.Models.Database.TagFollow", b =>
+                {
+                    b.HasOne("SkillForge.Models.Database.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SkillForge.Models.Database.User", "User")
+                        .WithMany("TagsFollowed")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tag");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SkillForge.Models.Database.User", b =>
+                {
+                    b.HasOne("SkillForge.Models.Database.Tag", null)
+                        .WithMany("Followers")
+                        .HasForeignKey("TagId");
+                });
+
+            modelBuilder.Entity("SkillForge.Models.Database.UserFollow", b =>
+                {
+                    b.HasOne("SkillForge.Models.Database.User", "FollowedUser")
+                        .WithMany("Followers")
+                        .HasForeignKey("FollowedUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SkillForge.Models.Database.User", "Follower")
+                        .WithMany("Followings")
+                        .HasForeignKey("FollowerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("FollowedUser");
+
+                    b.Navigation("Follower");
                 });
 
             modelBuilder.Entity("SkillForge.Models.Database.GuestArticleView", b =>
@@ -738,6 +928,8 @@ namespace SkillForge.Migrations
             modelBuilder.Entity("SkillForge.Models.Database.Category", b =>
                 {
                     b.Navigation("Articles");
+
+                    b.Navigation("SubCategories");
                 });
 
             modelBuilder.Entity("SkillForge.Models.Database.Comment", b =>
@@ -745,11 +937,22 @@ namespace SkillForge.Migrations
                     b.Navigation("Ratings");
                 });
 
+            modelBuilder.Entity("SkillForge.Models.Database.Tag", b =>
+                {
+                    b.Navigation("Followers");
+                });
+
             modelBuilder.Entity("SkillForge.Models.Database.User", b =>
                 {
                     b.Navigation("Articles");
 
-                    b.Navigation("FavouriteArticles");
+                    b.Navigation("FavoriteArticles");
+
+                    b.Navigation("Followers");
+
+                    b.Navigation("Followings");
+
+                    b.Navigation("TagsFollowed");
                 });
 #pragma warning restore 612, 618
         }

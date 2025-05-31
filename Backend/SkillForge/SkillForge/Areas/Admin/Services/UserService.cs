@@ -33,6 +33,7 @@ public class UserService : CrudService<User>, IUserService
     {
         return new UserInfo
         {
+            Id = user.Id,
             Name = user.Name,
             Email = user.Email,
             AvatarPath = user.AvatarPath

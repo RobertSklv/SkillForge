@@ -10,5 +10,5 @@ public class CommentRating : BaseEntity
 
     public int CommentId { get; set; }
 
-    public byte Rate { get; set; }
+    public short Rate { get; set; }
 }

@@ -10,5 +10,5 @@ public class ArticleRating : BaseEntity
 
     public int ArticleId { get; set; }
 
-    public byte Rate { get; set; }
+    public short Rate { get; set; }
 }

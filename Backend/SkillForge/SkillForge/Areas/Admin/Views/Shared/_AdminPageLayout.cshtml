@@ -6,6 +6,7 @@
 @{
     Layout = "_AdminLayout";
     List<PageActionButton>? actions = ViewData["PageActions"] as List<PageActionButton>;
+    SidebarLinkGroup? sidebarLinks = ViewData["SidebarLinks"] as SidebarLinkGroup;
     actions?.Sort((a1, a2) => a1.SortOrder - a2.SortOrder);
     List<Alert>? alerts = TempData.Get<List<Alert>>("Alerts") ?? new();
 }
@@ -37,6 +38,32 @@
         }
     </div>
 }
+
+<div class="row">
+    @if (sidebarLinks != null && sidebarLinks.Any())
+    {
+        <div class="col-2">
+            <div class="list-group">
+                @foreach (SidebarLink link in sidebarLinks)
+                {
+                    string route = link.GetRoute();
+                    if (link.RequestParameters != null)
+                    {
+                        route += QueryString.Create(link.RequestParameters?.ToStringDictionary());
+                    }
+
+                    <a href="@route"
+                       class="list-group-item list-group-item-action @(sidebarLinks.IsActive(link.Id) ? "active" : "") @(link.Disabled ? "disabled" : "")">
+                        @link.Content
+                    </a>
+                }
+            </div>
+        </div>
+    }
+    <div class="col">
+        @RenderBody()
+    </div>
+</div>
 
 @RenderBody()
 

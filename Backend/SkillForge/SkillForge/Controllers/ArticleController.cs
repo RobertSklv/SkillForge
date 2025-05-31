@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SkillForge.Areas.Admin.Models.DTOs;
 using SkillForge.Areas.Admin.Models.DTOs.Article;
+using SkillForge.Areas.Admin.Models.DTOs.Rating;
 using SkillForge.Areas.Admin.Services;
 using SkillForge.Models.Database;
 
@@ -32,6 +33,7 @@ public class ArticleController : ApiController
         return Ok("Article created successfully.");
     }
 
+    [HttpGet]
     public async Task<IActionResult> LoadPage()
     {
         List<Category> categories = await categoryService.GetAll();
@@ -49,10 +51,40 @@ public class ArticleController : ApiController
     }
 
     [AllowAnonymous]
+    [HttpGet]
     public async Task<IActionResult> Latest(int batchIndex, int batchSize = 10)
     {
         List<ArticleCard> cards = await service.GetLatest(batchIndex, batchSize);
 
         return Ok(cards);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("/Api/Article/View/{id}")]
+    public async Task<IActionResult> View(int id)
+    {
+        ArticlePageModel model;
+
+        if (TryGetUserId(out int? _))
+        {
+            model = await service.View(UserId, id);
+        }
+        else
+        {
+            string guestId = ""; //temp
+            model = await service.View(guestId, id);
+        }
+
+        return Ok(model);
+    }
+
+    [HttpPost]
+    [Route("/Api/Article/Rate/{id}")]
+    public async Task<IActionResult> Rate([FromRoute] int id, [FromBody] UserRatingData rate)
+    {
+        await service.Rate(UserId, id, rate);
+
+        return Ok();
     }
 }
