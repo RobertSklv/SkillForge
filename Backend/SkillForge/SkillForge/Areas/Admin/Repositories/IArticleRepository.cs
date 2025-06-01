@@ -10,6 +10,10 @@ public interface IArticleRepository : ICrudRepository<Article>
 
     Task<ArticleRating?> GetUserRating(int userId, int articleId);
 
+    Task<List<ArticleRating>> GetUserRating(int userId, List<int> articleIds);
+
+    Task<List<CommentRating>> GetUserCommentRating(int userId, List<int> commentIds);
+
     Task UpsertUserRating(ArticleRating rating);
 
     Task<RegisteredArticleView?> GetView(int userId, int articleId);

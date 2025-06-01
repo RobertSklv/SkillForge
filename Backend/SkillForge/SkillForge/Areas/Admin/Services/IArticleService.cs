@@ -20,6 +20,10 @@ public interface IArticleService : ICrudService<Article>
 
     Task<ArticleRating?> GetUserRating(int userId, int articleId);
 
+    Task<List<ArticleRating>> GetUserRating(int userId, List<int> articleIds);
+
+    Task<List<CommentRating>> GetUserCommentRating(int userId, List<int> commentIds);
+
     Task<RegisteredArticleView?> GetView(int userId, int articleId);
 
     Task<GuestArticleView?> GetView(string guestId, int articleId);
@@ -33,6 +37,8 @@ public interface IArticleService : ICrudService<Article>
     Task<bool> MassApprove(List<int> ids, int adminId);
 
     Task<List<ArticleCard>> GetLatest(int batchIndex, int batchSize);
+
+    Task<List<ArticleCard>> GetLatest(int userId, int batchIndex, int batchSize);
 
     Task<ArticlePageModel> View(int userId, int articleId);
 

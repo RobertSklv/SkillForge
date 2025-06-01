@@ -36,6 +36,7 @@
         }
 
         let comment: CommentModel = {
+            CommentId: 0,
             Content: $commentFormData.Content,
             User: {
                 Id: $currentUserStore.Id,
@@ -106,9 +107,9 @@
             </div>
         </div>
 
-        <!-- {#snippet footer()}
+        {#snippet footer()}
             <RateButtons data={comment.RatingData} subjectId={comment.CommentId} type="comment" readonly={!$currentUserStore} />
-        {/snippet} -->
+        {/snippet}
     </Block>
 {/each}
 

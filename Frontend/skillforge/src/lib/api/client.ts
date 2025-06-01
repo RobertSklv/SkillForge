@@ -53,7 +53,9 @@ export function rate(id: number, rate: -1 | 0 | 1, type: 'article' | 'comment') 
 }
 
 export function getLatestArticles(batchIndex: number, batchSize: number): Promise<ArticleCardType[]> {
-  return requestApi<ArticleCardType[]>(`/Article/Latest?batchIndex=${batchIndex}&batchSize=${batchSize}`);
+  return requestApi<ArticleCardType[]>(`/Article/Latest?batchIndex=${batchIndex}&batchSize=${batchSize}`, {
+    credentials: 'include'
+  });
 }
 
 export function viewArticle(
@@ -65,7 +67,7 @@ export function viewArticle(
 }
 
 export function loadArticleCreatePage(fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>): Promise<ArticleCreatePageModel> {
-  return requestApiRaw<ArticleCreatePageModel>(fetch, '/Article/LoadPage');
+  return requestApiRaw<ArticleCreatePageModel>(fetch, '/Article/LoadCreatePage');
 }
 
 export async function requestApi<T>(url: string, init?: RequestInit): Promise<T> {

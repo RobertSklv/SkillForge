@@ -17,4 +17,23 @@ public class CommentRepository : CrudRepository<Comment>, ICommentRepository
         : base(db, filterService, sortService, searchService)
     {
     }
+
+    public Task<CommentRating?> GetUserRating(int userId, int commentId)
+    {
+        return db.CommentRatings.FirstOrDefaultAsync(e => e.UserId == userId && e.CommentId == commentId);
+    }
+
+    public Task UpsertUserRating(CommentRating rating)
+    {
+        if (rating.Id == 0)
+        {
+            db.CommentRatings.Add(rating);
+        }
+        else
+        {
+            db.CommentRatings.Update(rating);
+        }
+
+        return db.SaveChangesAsync();
+    }
 }

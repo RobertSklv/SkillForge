@@ -34,7 +34,7 @@ public class ArticleController : ApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> LoadPage()
+    public async Task<IActionResult> LoadCreatePage()
     {
         List<Category> categories = await categoryService.GetAll();
 
@@ -54,7 +54,16 @@ public class ArticleController : ApiController
     [HttpGet]
     public async Task<IActionResult> Latest(int batchIndex, int batchSize = 10)
     {
-        List<ArticleCard> cards = await service.GetLatest(batchIndex, batchSize);
+        List<ArticleCard> cards;
+
+        if (TryGetUserId(out int? _))
+        {
+            cards = await service.GetLatest(UserId, batchIndex, batchSize);
+        }
+        else
+        {
+            cards = await service.GetLatest(batchIndex, batchSize);
+        }
 
         return Ok(cards);
     }

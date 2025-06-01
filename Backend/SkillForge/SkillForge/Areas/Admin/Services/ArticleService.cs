@@ -116,29 +116,49 @@ public class ArticleService : CrudService<Article>, IArticleService
 
     public async Task<List<ArticleCard>> GetLatest(int batchIndex, int batchSize)
     {
-        return (await repository
-            .GetLatest(batchIndex, batchSize))
+        return (await repository.GetLatest(batchIndex, batchSize))
             .ConvertAll(x => new ArticleCard()
+            {
+                Author = new UserLink()
+                {
+                    Id = x.Author!.Id,
+                    Name = x.Author.Name,
+                    AvatarImage = x.Author.AvatarPath,
+                },
+                ArticleId = x.Id,
+                Title = x.Title,
+                CategoryCode = x.Category!.Code,
+                CategoryName = x.Category.DisplayedName,
+                CoverImage = x.Image,
+                DatePublished = (DateTime)x.CreatedAt!,
+                RatingData = new RatingData
+                {
+                    ThumbsUp = x.ThumbsUp,
+                    ThumbsDown = x.ThumbsDown,
+                    UserRating = 0,
+                }
+            });
+    }
+
+    public async Task<List<ArticleCard>> GetLatest(int userId, int batchIndex, int batchSize)
+    {
+        List<ArticleCard> latest = await GetLatest(batchIndex, batchSize);
+        List<int> articleIds = latest.ConvertAll(a => a.ArticleId);
+        List<ArticleRating> userRatings = await GetUserRating(userId, articleIds);
+
+        foreach (ArticleCard a in latest)
         {
-            Author = new UserLink()
+            ArticleRating? rating = userRatings
+                .Where(e => e.ArticleId == a.ArticleId)
+                .FirstOrDefault();
+
+            if (rating != null)
             {
-                Id = x.Author!.Id,
-                Name = x.Author.Name,
-                AvatarImage = x.Author.AvatarPath,
-            },
-            ArticleId = x.Id,
-            Title = x.Title,
-            CategoryCode = x.Category!.Code,
-            CategoryName = x.Category.DisplayedName,
-            CoverImage = x.Image,
-            DatePublished = (DateTime)x.CreatedAt!,
-            RatingData = new RatingData
-            {
-                ThumbsUp = x.ThumbsUp,
-                ThumbsDown = x.ThumbsDown,
-                UserRating = 0, //temp
+                a.RatingData.UserRating = rating.Rate;
             }
-        });
+        }
+
+        return latest;
     }
 
     public async Task<ArticlePageModel> View(int id)
@@ -169,6 +189,7 @@ public class ArticleService : CrudService<Article>, IArticleService
             Views = article.ViewCount,
             Comments = article.Comments!.ConvertAll(c => new CommentModel
             {
+                CommentId = c.Id,
                 User = new UserLink
                 {
                     Id = c.User!.Id,
@@ -203,13 +224,25 @@ public class ArticleService : CrudService<Article>, IArticleService
 
         ArticlePageModel model = await View(articleId);
         ArticleRating? userRating = await GetUserRating(userId, articleId);
+        List<int> commentIds = model.Comments.ConvertAll(c => c.CommentId);
+        List<CommentRating> commentUserRatings = await GetUserCommentRating(userId, commentIds);
 
         if (userRating != null)
         {
             model.RatingData.UserRating = userRating.Rate;
         }
 
-        // TODO comment user ratings
+        foreach (CommentModel comment in model.Comments)
+        {
+            CommentRating? rating = commentUserRatings
+                .Where(e => e.CommentId == comment.CommentId)
+                .FirstOrDefault();
+
+            if (rating != null)
+            {
+                comment.RatingData.UserRating = rating.Rate;
+            }
+        }
 
         return model;
     }
@@ -287,6 +320,16 @@ public class ArticleService : CrudService<Article>, IArticleService
     public Task<ArticleRating?> GetUserRating(int userId, int articleId)
     {
         return repository.GetUserRating(userId, articleId);
+    }
+
+    public Task<List<ArticleRating>> GetUserRating(int userId, List<int> articleIds)
+    {
+        return repository.GetUserRating(userId, articleIds);
+    }
+
+    public Task<List<CommentRating>> GetUserCommentRating(int userId, List<int> commentIds)
+    {
+        return repository.GetUserCommentRating(userId, commentIds);
     }
 
     public Task<RegisteredArticleView?> GetView(int userId, int articleId)

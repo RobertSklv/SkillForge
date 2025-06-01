@@ -34,6 +34,20 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         return db.ArticleRatings.FirstOrDefaultAsync(e => e.UserId == userId && e.ArticleId == articleId);
     }
 
+    public Task<List<ArticleRating>> GetUserRating(int userId, List<int> articleIds)
+    {
+        return db.ArticleRatings
+            .Where(e => e.UserId == userId && articleIds.Contains(e.ArticleId))
+            .ToListAsync();
+    }
+
+    public Task<List<CommentRating>> GetUserCommentRating(int userId, List<int> commentIds)
+    {
+        return db.CommentRatings
+            .Where(e => e.UserId == userId && commentIds.Contains(e.CommentId))
+            .ToListAsync();
+    }
+
     public Task UpsertUserRating(ArticleRating rating)
     {
         if (rating.Id == 0)
