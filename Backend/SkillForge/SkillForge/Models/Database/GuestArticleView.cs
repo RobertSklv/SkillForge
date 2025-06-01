@@ -6,6 +6,7 @@ namespace SkillForge.Models.Database;
 [Table("GuestArticleViews")]
 public class GuestArticleView : ArticleView
 {
-    [StringLength(32)]
+    [StringLength(36)]
+    [Column(TypeName = "varchar")]
     public string GuestId { get; set; }
 }

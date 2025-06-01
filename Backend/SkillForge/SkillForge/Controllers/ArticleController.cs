@@ -81,8 +81,7 @@ public class ArticleController : ApiController
         }
         else
         {
-            string guestId = ""; //temp
-            model = await service.View(guestId, id);
+            model = await service.View(GuestId, id);
         }
 
         return Ok(model);

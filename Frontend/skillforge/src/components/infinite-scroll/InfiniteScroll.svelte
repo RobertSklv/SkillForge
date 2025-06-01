@@ -50,7 +50,6 @@
 	}
 
 	onMount(async () => {
-        console.log('add listener to', window);
 		window.addEventListener('scroll', onScroll);
 
 		await loadMoreAndUpdateItemList();
@@ -58,7 +57,6 @@
 
 	onDestroy(() => {
         if (typeof window !== 'undefined') {
-            console.log('remove listener from', window);
 		    window.removeEventListener('scroll', onScroll);
         }
 	});

@@ -161,10 +161,8 @@ public class ArticleService : CrudService<Article>, IArticleService
         return latest;
     }
 
-    public async Task<ArticlePageModel> View(int id)
+    public async Task<ArticlePageModel> View(Article article)
     {
-        Article article = await GetWithComments(id);
-
         return new ArticlePageModel
         {
             ArticleId = article.Id,
@@ -209,6 +207,7 @@ public class ArticleService : CrudService<Article>, IArticleService
 
     public async Task<ArticlePageModel> View(int userId, int articleId)
     {
+        Article article = await GetWithComments(articleId);
         RegisteredArticleView? viewRecord = await GetView(userId, articleId);
 
         if (viewRecord == null)
@@ -219,10 +218,12 @@ public class ArticleService : CrudService<Article>, IArticleService
                 ArticleId = articleId,
             };
 
+            article.ViewCount++;
+
             await RecordView(viewRecord);
         }
 
-        ArticlePageModel model = await View(articleId);
+        ArticlePageModel model = await View(article);
         ArticleRating? userRating = await GetUserRating(userId, articleId);
         List<int> commentIds = model.Comments.ConvertAll(c => c.CommentId);
         List<CommentRating> commentUserRatings = await GetUserCommentRating(userId, commentIds);
@@ -249,6 +250,7 @@ public class ArticleService : CrudService<Article>, IArticleService
 
     public async Task<ArticlePageModel> View(string guestId, int articleId)
     {
+        Article article = await GetWithComments(articleId);
         GuestArticleView? viewRecord = await GetView(guestId, articleId);
 
         if (viewRecord == null)
@@ -259,10 +261,12 @@ public class ArticleService : CrudService<Article>, IArticleService
                 ArticleId = articleId,
             };
 
+            article.ViewCount++;
+
             await RecordView(viewRecord);
         }
 
-        ArticlePageModel model = await View(articleId);
+        ArticlePageModel model = await View(article);
 
         return model;
     }

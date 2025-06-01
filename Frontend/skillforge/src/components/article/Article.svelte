@@ -55,77 +55,89 @@
     }
 </script>
 
-<Block>
-    {#snippet header()}
-        <div class="row mb-3">
-            <div class="col">
-                <a href="/user/{data.Author.Id}" class="text-primary">
-                    {data.Author.Name}
-                </a>
-                {#each data.Tags as tag}
-                    <a href="/tag/{tag}" class="me-2">#{tag}</a>
-                {/each}
-            </div>
-            <div class="col text-end">
-                <small class="text-tertiary">
-                    {data.DatePublished}
-                </small>
-            </div>
-        </div>
-    {/snippet}
-
-    <div class="cover-image" style="background-image: url('{PUBLIC_BACKEND_DOMAIN + data.CoverImage}')"></div>
-    <div class="card-body">
-        <h1 class="card-title mb-4">{data.Title}</h1>
-        <div class="card-text text-break">
-            {@html data.Content}
-        </div>
-    </div>
-
-    {#snippet footer()}
-        <RateButtons data={data.RatingData} subjectId={data.ArticleId} type="article" readonly={!$currentUserStore} />
-    {/snippet}
-</Block>
-
-{#each comments as comment}
+<div class="d-flex flex-column gap-5">
     <Block>
-        <div class="card-body">
+        {#snippet header()}
             <div class="row mb-3">
                 <div class="col">
-                    <a href="/user/{comment.User.Id}" class="text-primary">
-                        {comment.User.Name}
+                    <a href="/user/{data.Author.Id}" class="text-primary">
+                        {data.Author.Name}
                     </a>
+                    {#each data.Tags as tag}
+                        <a href="/tag/{tag}" class="me-2">#{tag}</a>
+                    {/each}
                 </div>
                 <div class="col text-end">
                     <small class="text-tertiary">
-                        {comment.DateWritten}
+                        {data.DatePublished}
                     </small>
                 </div>
             </div>
-            <div class="text-break">
-                {@html comment.Content}
+        {/snippet}
+
+        <div class="cover-image" style="background-image: url('{PUBLIC_BACKEND_DOMAIN + data.CoverImage}')"></div>
+        <div class="card-body">
+            <h1 class="card-title mb-4">{data.Title}</h1>
+            <div class="card-text text-break">
+                {@html data.Content}
             </div>
         </div>
 
         {#snippet footer()}
-            <RateButtons data={comment.RatingData} subjectId={comment.CommentId} type="comment" readonly={!$currentUserStore} />
+            <div class="row">
+                <div class="col fs-5 d-flex align-items-center">
+                    <i class="bi bi-eye me-1"></i>
+                    <small class="text-muted">{data.Views}</small>
+                </div>
+                <div class="col">
+            <RateButtons data={data.RatingData} subjectId={data.ArticleId} type="article" readonly={!$currentUserStore} />
+                </div>
+            </div>
         {/snippet}
     </Block>
-{/each}
 
-<Block>
-    <div class="card-body">
-        {#if $currentUserStore}
-            <Form action="/Comment/Add" formData={$commentFormData} onSuccess={addComment}>
-                <TextEditor id="Content" label={null} height={200} bind:content={$commentFormData.Content} imageUploadType="comment" />
+    <div class="d-flex flex-column gap-3">
+        {#each comments as comment}
+            <Block>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <a href="/user/{comment.User.Id}" class="text-primary">
+                                {comment.User.Name}
+                            </a>
+                        </div>
+                        <div class="col text-end">
+                            <small class="text-tertiary">
+                                {comment.DateWritten}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="text-break">
+                        {@html comment.Content}
+                    </div>
+                </div>
 
-                <Button isSubmitButton={true}>Comment</Button>
-            </Form>
-        {:else}
-            <p><a href="/join">Log in</a> to comment.</p>
-        {/if}
+                {#snippet footer()}
+                    <RateButtons data={comment.RatingData} subjectId={comment.CommentId} type="comment" readonly={!$currentUserStore} />
+                {/snippet}
+            </Block>
+        {/each}
     </div>
-</Block>
+
+    <Block>
+        <div class="card-body">
+            {#if $currentUserStore}
+                <Form action="/Comment/Add" formData={$commentFormData} onSuccess={addComment}>
+                    <TextEditor id="Content" label={null} height={200} bind:content={$commentFormData.Content} imageUploadType="comment" />
+
+                    <Button isSubmitButton={true}>Comment</Button>
+                </Form>
+            {:else}
+                <p><a href="/join">Log in</a> to comment.</p>
+            {/if}
+        </div>
+    </Block>
+</div>
 
 <style>
     .cover-image {

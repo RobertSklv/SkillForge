@@ -5,6 +5,7 @@
 	import { loadCurrentUser } from "$lib/stores/currentUserStore";
     import 'bootswatch/dist/vapor/bootstrap.min.css';
     import 'bootstrap-icons/font/bootstrap-icons.min.css';
+	import CookieConsentBanner from "$components/cookie-consent/CookieConsentBanner.svelte";
 
     const {
         children
@@ -24,6 +25,8 @@
 </main>
 
 <Footer />
+
+<CookieConsentBanner />
 
 <style>
     #main-content {

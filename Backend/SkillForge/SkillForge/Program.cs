@@ -7,6 +7,7 @@ using SkillForge.Areas.Admin.Services;
 using SkillForge.BackgroundTasks;
 using SkillForge.Data;
 using SkillForge.Data.Seeders;
+using SkillForge.Middleware;
 using SkillForge.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -123,6 +124,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<GuestIdMiddleware>();
 
 app.MapControllerRoute(
     name: "Admin",
