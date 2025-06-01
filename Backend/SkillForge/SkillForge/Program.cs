@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Areas.Admin.Services;
+using SkillForge.BackgroundTasks;
 using SkillForge.Data;
 using SkillForge.Data.Seeders;
 using SkillForge.Services;
@@ -94,6 +95,12 @@ builder.Services.AddCors(options =>
                   .AllowCredentials();
         });
 });
+
+builder.Services.AddHostedService<AggregateArticleViewService>();
+builder.Services.AddHostedService<AggregateArticleRatingService>();
+builder.Services.AddHostedService<AggregateCommentRatingService>();
+builder.Services.AddHostedService<AggregateUserFollowService>();
+builder.Services.AddHostedService<AggregateTagFollowService>();
 
 var app = builder.Build();
 
