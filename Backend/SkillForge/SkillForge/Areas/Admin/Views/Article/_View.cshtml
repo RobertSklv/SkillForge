@@ -25,7 +25,30 @@
         <span>Cover image:</span>
     </div>
     <div class="col-12 col-lg-8">
-        <img src="@Model.Image" alt="Cover image" class="w-50" />
+        @if (Model.Image != null)
+        {
+            <img src="@Model.Image" alt="Cover image" class="w-50" />
+        }
+        else
+        {
+            <span>No image.</span>
+        }
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12 col-lg-4">
+        <span>Tags:</span>
+    </div>
+    <div class="col-12 col-lg-8">
+        @if (Model.Tags != null)
+        {
+            <span>@(string.Join(", ", Model.Tags.ConvertAll(t => t.Tag.Name)))</span>
+        }
+        else
+        {
+            <span>No image.</span>
+        }
     </div>
 </div>
 

@@ -14,7 +14,7 @@ public interface IArticleService : ICrudService<Article>
 
     Task<PaginatedList<Article>> ListByTag(ListingModel listingModel, int tagId);
 
-    Task UserCreate(ArticleCreateDTO model, int userId);
+    Task UserUpsert(ArticleUpsertDTO model, int userId);
 
     Task<Article> GetWithComments(int id);
 

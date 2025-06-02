@@ -155,6 +155,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
     {
         return DbSet
             .Include(e => e.Comments)
+            .Where(e => e.ApprovalId != null)
             .OrderByDescending(e => e.ViewCount)
             .Take(5)
             .ToListAsync();

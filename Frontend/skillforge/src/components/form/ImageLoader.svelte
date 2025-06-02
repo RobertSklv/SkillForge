@@ -24,8 +24,7 @@
     }: Props = $props();
 
     let isLoading = $state<boolean>(false);
-    let filename = $state<string | undefined>();
-    let hasFile = $derived<boolean>(!!filename);
+    let hasFile = $derived<boolean>(!!url);
     let files = $state<FileList>();
     let fileInputValue = $state<any>();
 
@@ -36,13 +35,10 @@
             isLoading = true;
             url = await uploadImage(file, imageUploadType);
             isLoading = false;
-
-            filename = PUBLIC_BACKEND_DOMAIN + url;
         }
     }
 
     function onRemoveClick() {
-        filename = undefined;
         url = undefined;
         fileInputValue = '';
     }
@@ -67,7 +63,7 @@
         </div>
     {:else if hasFile}
         <div class="position-relative m-4">
-            <img src={filename} alt={imageAlt} class="w-100 rounded" />
+            <img src={PUBLIC_BACKEND_DOMAIN + url} alt={imageAlt} class="w-100 rounded" />
             <div class="d-flex justify-content-end position-absolute start-0 top-0 end-0">
                 <Button color="danger" onclick={onRemoveClick}>
                     <i class="bi bi-trash-fill"></i>

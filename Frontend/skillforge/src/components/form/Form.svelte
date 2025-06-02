@@ -5,6 +5,7 @@
 	import type ValidationRules from "$lib/types/ValidationRules";
 	import { setContext, type Snippet } from "svelte";
 	import { requestApi } from "$lib/api/client";
+	import type FetchData from "$lib/types/FetchData";
 
     interface Props {
         action: string,
@@ -122,7 +123,9 @@
             init.body = fd;
         }
 
-        return requestApi(action, init)
+        return requestApi(action, {
+            init
+        })
             .then(r => {
                 onSuccess(r);
             })

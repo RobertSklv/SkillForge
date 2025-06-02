@@ -1,4 +1,5 @@
-export default interface ArticleCreateFormData {
+export default interface ArticleUpsertFormData {
+    Id?: number,
     CategoryId: number,
     Image?: string | undefined,
     Title: string,

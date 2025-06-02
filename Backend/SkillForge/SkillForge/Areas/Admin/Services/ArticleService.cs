@@ -104,15 +104,41 @@ public class ArticleService : CrudService<Article>, IArticleService
         return await UpsertMultiple(articles);
     }
 
-    public async Task UserCreate(ArticleCreateDTO model, int userId)
+    public async Task UserUpsert(ArticleUpsertDTO model, int userId)
     {
+        List<Tag> tags = await tagService.GetByNames(model.Tags);
+
         Article entity = new()
         {
+            Id = model.Id,
             CategoryId = model.CategoryId,
             AuthorId = userId,
             Image = model.Image,
             Title = model.Title,
             Content = model.Content,
+            Tags = model.Tags.ConvertAll(tagName =>
+            {
+                Tag? t = tags.Find(tt => tt.Name == tagName);
+
+                ArticleTag at = new()
+                {
+                    ArticleId = model.Id,
+                };
+
+                if (t != null)
+                {
+                    at.TagId = t.Id;
+                }
+                else
+                {
+                    at.Tag = new Tag
+                    {
+                        Name = tagName
+                    };
+                }
+
+                return at;
+            }).ToList()
         };
 
         await repository.Upsert(entity);

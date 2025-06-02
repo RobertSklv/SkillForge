@@ -21,24 +21,31 @@ public class ArticleController : ApiController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromForm] ArticleCreateDTO form)
+    public async Task<IActionResult> Upsert(ArticleUpsertDTO form)
     {
         if (!TryGetUserId(out int? userId))
         {
             throw new Exception("Server error.");
         }
 
-        await service.UserCreate(form, (int)userId);
+        await service.UserUpsert(form, (int)userId);
 
-        return Ok("Article created successfully.");
+        if (form.Id == 0)
+        {
+            return Ok("Article created successfully.");
+        }
+        else
+        {
+            return Ok("Article edited successfully.");
+        }
     }
 
     [HttpGet]
-    public async Task<IActionResult> LoadCreatePage()
+    public async Task<IActionResult> LoadUpsertPage(int? id)
     {
         List<Category> categories = await categoryService.GetAll();
 
-        ArticleCreatePageModel pageModel = new()
+        ArticleUpsertPageModel pageModel = new()
         {
             CategoryOptions = categories.ConvertAll(c => new EntityOption()
             {
@@ -46,6 +53,30 @@ public class ArticleController : ApiController
                 Label = c.DisplayedName
             })
         };
+
+        if (id != null)
+        {
+            Article article = await service.GetStrict((int)id);
+
+            if (article.AuthorId != UserId)
+            {
+                return Unauthorized();
+            }
+
+            pageModel.CurrentState = new ArticleState
+            {
+                Model = new ArticleUpsertDTO
+                {
+                    Id = article.Id,
+                    Image = article.Image,
+                    Title = article.Title,
+                    Content = article.Content,
+                    CategoryId = article.CategoryId,
+                    Tags = article.Tags!.ConvertAll(t => t.Tag!.Name).ToList(),
+                },
+                IsApproved = article.ApprovalId != null
+            };
+        }
 
         return Ok(pageModel);
     }

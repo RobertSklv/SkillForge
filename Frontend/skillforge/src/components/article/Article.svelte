@@ -74,7 +74,10 @@
             </div>
         {/snippet}
 
-        <div class="cover-image" style="background-image: url('{PUBLIC_BACKEND_DOMAIN + data.CoverImage}')"></div>
+        {#if data.CoverImage}
+            <div class="cover-image" style="background-image: url('{PUBLIC_BACKEND_DOMAIN + data.CoverImage}')"></div>
+        {/if}
+        
         <div class="card-body">
             <h1 class="card-title mb-4">{data.Title}</h1>
             <div class="card-text text-break">

@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SkillForge.Areas.Admin.Models.DTOs;
+namespace SkillForge.Areas.Admin.Models.DTOs.Article;
 
-public class ArticleCreateDTO
+public class ArticleUpsertDTO
 {
+    public int Id { get; set; }
+
     [Range(1, int.MaxValue, ErrorMessage = "The Category field is required.")]
     public int CategoryId { get; set; }
 
@@ -15,4 +17,7 @@ public class ArticleCreateDTO
 
     [StringLength(8000)]
     public string Content { get; set; }
+
+    [MaxLength(3, ErrorMessage = "Only up to 3 tags are allowed per article.")]
+    public List<string> Tags { get; set; }
 }

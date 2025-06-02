@@ -14,6 +14,16 @@ public class TagService : CrudService<Tag>, ITagService
         this.repository = repository;
     }
 
+    public Task<Tag?> GetByName(string name)
+    {
+        return repository.GetByName(name);
+    }
+
+    public Task<List<Tag>> GetByNames(List<string> names)
+    {
+        return repository.GetByNames(names);
+    }
+
     public Task<List<Tag>> GetMostPopular()
     {
         return repository.GetMostPopular();
@@ -33,5 +43,15 @@ public class TagService : CrudService<Tag>, ITagService
             Name = tag.Name,
             Description = tag.Description,
         };
+    }
+
+    public Task<List<Tag>> Search(string? phrase, List<string>? exclude)
+    {
+        return repository.Search(phrase, exclude);
+    }
+
+    public async Task<List<TagLink>> SearchLinks(string? phrase, List<string>? exclude)
+    {
+        return (await repository.Search(phrase, exclude)).ConvertAll(CreateTagLink);
     }
 }

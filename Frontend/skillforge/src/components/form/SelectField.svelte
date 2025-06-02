@@ -48,6 +48,8 @@
     $effect(() => {
         let valueArray: any[] = multiple ? value : [value];
 
+        valueArray = valueArray.map(v => v.toString());
+
         for (let optionKey in opts) {
             opts[optionKey].setSelected(valueArray.includes(optionKey));
         }
@@ -99,7 +101,7 @@
         {@render children()}
         {#if options}
             {#each options as o}
-                <Option value={o.Value} selected={o.Value == value}>{o.Label}</Option>
+                <Option value={o.Value}>{o.Label}</Option>
             {/each}
         {/if}
     </select>

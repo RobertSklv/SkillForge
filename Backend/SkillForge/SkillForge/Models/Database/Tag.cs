@@ -17,7 +17,11 @@ public class Tag : BaseEntity
     [TableColumn]
     public string? Description { get; set; }
 
+    public int FollowersCount { get; set; }
+
+    public int ArticlesCount { get; set; }
+
     public List<User>? Followers { get; set; }
 
-    public int FollowersCount { get; set; }
+    public List<ArticleTag>? Articles { get; set; }
 }
