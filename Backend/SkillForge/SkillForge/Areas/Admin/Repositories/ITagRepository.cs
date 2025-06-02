@@ -4,4 +4,5 @@ namespace SkillForge.Areas.Admin.Repositories;
 
 public interface ITagRepository : ICrudRepository<Tag>
 {
+    Task<List<Tag>> GetMostPopular();
 }

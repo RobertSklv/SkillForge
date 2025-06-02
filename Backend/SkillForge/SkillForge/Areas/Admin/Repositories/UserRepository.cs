@@ -32,4 +32,12 @@ public class UserRepository : CrudRepository<User>, IUserRepository
     {
         return await DbSet.AnyAsync(u => u.Email == email);
     }
+
+    public Task<List<User>> GetMostPopular()
+    {
+        return DbSet
+            .OrderByDescending(e => e.FollowersCount)
+            .Take(8)
+            .ToListAsync();
+    }
 }

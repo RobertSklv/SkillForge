@@ -1,4 +1,5 @@
-﻿using SkillForge.Areas.Admin.Repositories;
+﻿using SkillForge.Areas.Admin.Models.DTOs;
+using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Models.Database;
 using SkillForge.Models.DTOs;
 
@@ -38,5 +39,22 @@ public class UserService : CrudService<User>, IUserService
             Email = user.Email,
             AvatarPath = user.AvatarPath
         };
+    }
+
+    public Task<List<User>> GetMostPopular()
+    {
+        return repository.GetMostPopular();
+    }
+
+    public async Task<List<UserLink>> GetMostPopularLinks()
+    {
+        List<User> users = await GetMostPopular();
+
+        return users.ConvertAll(u => new UserLink
+        {
+            Id = u.Id,
+            Name = u.Name,
+            AvatarImage = u.AvatarPath,
+        });
     }
 }

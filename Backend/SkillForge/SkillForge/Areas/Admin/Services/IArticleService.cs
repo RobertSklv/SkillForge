@@ -36,6 +36,10 @@ public interface IArticleService : ICrudService<Article>
 
     Task<bool> MassApprove(List<int> ids, int adminId);
 
+    ArticleCard CreateArticleCard(Article article);
+
+    TopArticleItem CreateTopArticleItem(Article article);
+
     Task<List<ArticleCard>> GetLatest(int batchIndex, int batchSize);
 
     Task<List<ArticleCard>> GetLatest(int userId, int batchIndex, int batchSize);
@@ -45,4 +49,8 @@ public interface IArticleService : ICrudService<Article>
     Task<ArticlePageModel> View(string guestId, int articleId);
 
     Task Rate(int userId, int articleId, UserRatingData rate);
+
+    Task<List<Article>> GetMostPopular();
+
+    Task<List<TopArticleItem>> GetMostPopularItems();
 }

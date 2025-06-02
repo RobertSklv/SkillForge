@@ -1,6 +1,4 @@
-﻿using SkillForge.Areas.Admin.Models.Components.Grid;
-using SkillForge.Areas.Admin.Models.DTOs;
-using SkillForge.Areas.Admin.Models;
+﻿using SkillForge.Areas.Admin.Models.DTOs;
 using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Models.Database;
 
@@ -14,5 +12,21 @@ public class TagService : CrudService<Tag>, ITagService
         : base(repository)
     {
         this.repository = repository;
+    }
+
+    public Task<List<Tag>> GetMostPopular()
+    {
+        return repository.GetMostPopular();
+    }
+
+    public async Task<List<TagLink>> GetMostPopularLinks()
+    {
+        List<Tag> tags = await GetMostPopular();
+
+        return tags.ConvertAll(u => new TagLink
+        {
+            Name = u.Name,
+            Description = u.Description,
+        });
     }
 }

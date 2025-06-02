@@ -3,6 +3,8 @@
 	import Form from "$components/form/Form.svelte";
 	import TextEditor from "$components/form/TextEditor.svelte";
 	import Block from "$components/layout/Block.svelte";
+	import UserLink from "$components/link/UserLink.svelte";
+	import LoginCta from "$components/login-cta/LoginCta.svelte";
 	import RateButtons from "$components/rating/RateButtons.svelte";
 	import { PUBLIC_BACKEND_DOMAIN } from "$env/static/public";
 	import { currentUserStore } from "$lib/stores/currentUserStore";
@@ -39,7 +41,6 @@
             CommentId: 0,
             Content: $commentFormData.Content,
             User: {
-                Id: $currentUserStore.Id,
                 Name: $currentUserStore.Name,
                 AvatarImage: $currentUserStore.AvatarPath
             },
@@ -60,9 +61,7 @@
         {#snippet header()}
             <div class="row mb-3">
                 <div class="col">
-                    <a href="/user/{data.Author.Id}" class="text-primary">
-                        {data.Author.Name}
-                    </a>
+                    <UserLink data={data.Author} />
                     {#each data.Tags as tag}
                         <a href="/tag/{tag}" class="me-2">#{tag}</a>
                     {/each}
@@ -102,9 +101,7 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col">
-                            <a href="/user/{comment.User.Id}" class="text-primary">
-                                {comment.User.Name}
-                            </a>
+                            <UserLink data={data.Author} />
                         </div>
                         <div class="col text-end">
                             <small class="text-tertiary">
@@ -124,19 +121,19 @@
         {/each}
     </div>
 
-    <Block>
-        <div class="card-body">
-            {#if $currentUserStore}
+    {#if $currentUserStore}
+        <Block>
+            <div class="card-body">
                 <Form action="/Comment/Add" formData={$commentFormData} onSuccess={addComment}>
                     <TextEditor id="Content" label={null} height={200} bind:content={$commentFormData.Content} imageUploadType="comment" />
 
                     <Button isSubmitButton={true}>Comment</Button>
                 </Form>
-            {:else}
-                <p><a href="/join">Log in</a> to comment.</p>
-            {/if}
-        </div>
-    </Block>
+            </div>
+        </Block>
+    {/if}
+
+    <LoginCta ctaText="Log in" description="to comment and rate content." inline={true} />
 </div>
 
 <style>

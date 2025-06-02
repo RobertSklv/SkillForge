@@ -2,14 +2,20 @@
 	import { onDestroy, onMount, type Snippet } from 'svelte';
 
 	interface Props {
+		mod?: string,
 		batchSize: number;
+		autoLoadOnMount?: boolean,
+		scrollableElement: () => HTMLElement,
         loadMore: (batchIndex: number) => Promise<T[]>,
 		itemSnippet: Snippet<[T]>,
 		placeholderSnippet?: Snippet,
 	}
 
 	let {
+		mod,
         batchSize,
+		autoLoadOnMount,
+		scrollableElement,
         loadMore,
         itemSnippet,
 		placeholderSnippet,
@@ -21,6 +27,16 @@
 	let containerElement: HTMLElement;
 	let isLoading = $state<boolean>(false);
 
+	export function updateItemList(newItems: T[]) {
+		items = items.concat(newItems);
+
+		if (newItems.length < batchSize) {
+			outOfItems = true;
+		}
+
+		batchIndex++;
+	}
+
 	async function loadMoreAndUpdateItemList() {
 		if (isLoading) {
 			return;
@@ -29,13 +45,8 @@
 		isLoading = true;
 
 		let newItems = await loadMore(batchIndex);
-		items = items.concat(newItems);
+		updateItemList(newItems);
 
-		if (newItems.length < batchSize) {
-			outOfItems = true;
-		}
-
-		batchIndex++;
 		isLoading = false;
 	}
 
@@ -44,7 +55,7 @@
 			return;
 		}
 
-		if (containerElement.getBoundingClientRect().bottom <= document.documentElement.clientHeight) {
+		if (containerElement.getBoundingClientRect().bottom <= scrollableElement().clientHeight) {
             await loadMoreAndUpdateItemList();
 		}
 	}
@@ -52,7 +63,9 @@
 	onMount(async () => {
 		window.addEventListener('scroll', onScroll);
 
-		await loadMoreAndUpdateItemList();
+		if (autoLoadOnMount) {
+			await loadMoreAndUpdateItemList();
+		}
 	});
 
 	onDestroy(() => {
@@ -62,7 +75,7 @@
 	});
 </script>
 
-<div bind:this={containerElement}>
+<div bind:this={containerElement} class={mod}>
 	{#each items as item}
 		{@render itemSnippet(item)}
 	{/each}

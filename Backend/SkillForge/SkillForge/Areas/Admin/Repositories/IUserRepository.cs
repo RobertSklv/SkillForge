@@ -9,4 +9,6 @@ public interface IUserRepository : ICrudRepository<User>
     Task<bool> IsUsernameTaken(string username);
 
     Task<bool> IsEmailTaken(string email);
+
+    Task<List<User>> GetMostPopular();
 }

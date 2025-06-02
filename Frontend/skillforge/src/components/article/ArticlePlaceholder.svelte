@@ -1,4 +1,8 @@
-<div class="card mb-4 placeholder-glow">
+<script lang="ts">
+	import Block from "$components/layout/Block.svelte";
+</script>
+
+<Block mod="placeholder-glow">
 	<div class="placeholder" style="height: 250px"></div>
 	<div class="card-body">
 		<p class="card-title h2">
@@ -10,4 +14,4 @@
 			</small>
 		</p>
 	</div>
-</div>
+</Block>

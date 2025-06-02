@@ -114,30 +114,58 @@ public class ArticleService : CrudService<Article>, IArticleService
         await repository.Upsert(entity);
     }
 
-    public async Task<List<ArticleCard>> GetLatest(int batchIndex, int batchSize)
+    public ArticleCard CreateArticleCard(Article article)
     {
-        return (await repository.GetLatest(batchIndex, batchSize))
-            .ConvertAll(x => new ArticleCard()
+        return new ArticleCard()
             {
                 Author = new UserLink()
                 {
-                    Id = x.Author!.Id,
-                    Name = x.Author.Name,
-                    AvatarImage = x.Author.AvatarPath,
+                    Id = article.Author!.Id,
+                    Name = article.Author.Name,
+                    AvatarImage = article.Author.AvatarPath,
                 },
-                ArticleId = x.Id,
-                Title = x.Title,
-                CategoryCode = x.Category!.Code,
-                CategoryName = x.Category.DisplayedName,
-                CoverImage = x.Image,
-                DatePublished = (DateTime)x.CreatedAt!,
+                ArticleId = article.Id,
+                Title = article.Title,
+                CoverImage = article.Image,
+                CategoryCode = article.Category!.Code,
+                CategoryName = article.Category.DisplayedName,
+                DatePublished = (DateTime)article.CreatedAt!,
                 RatingData = new RatingData
                 {
-                    ThumbsUp = x.ThumbsUp,
-                    ThumbsDown = x.ThumbsDown,
+                    ThumbsUp = article.ThumbsUp,
+                    ThumbsDown = article.ThumbsDown,
                     UserRating = 0,
                 }
-            });
+            };
+    }
+
+    public TopArticleItem CreateTopArticleItem(Article article)
+    {
+        return new TopArticleItem()
+            {
+                Author = new UserLink()
+                {
+                    Id = article.Author!.Id,
+                    Name = article.Author.Name,
+                    AvatarImage = article.Author.AvatarPath,
+                },
+                ArticleId = article.Id,
+                Title = article.Title,
+                ViewCount = article.ViewCount,
+                CommentCount = article.Comments!.Count,
+                DatePublished = (DateTime)article.CreatedAt!,
+                RatingData = new RatingData
+                {
+                    ThumbsUp = article.ThumbsUp,
+                    ThumbsDown = article.ThumbsDown,
+                    UserRating = 0,
+                }
+            };
+    }
+
+    public async Task<List<ArticleCard>> GetLatest(int batchIndex, int batchSize)
+    {
+        return (await repository.GetLatest(batchIndex, batchSize)).ConvertAll(CreateArticleCard);
     }
 
     public async Task<List<ArticleCard>> GetLatest(int userId, int batchIndex, int batchSize)
@@ -354,5 +382,15 @@ public class ArticleService : CrudService<Article>, IArticleService
     public Task RecordView(GuestArticleView view)
     {
         return repository.RecordView(view);
+    }
+
+    public Task<List<Article>> GetMostPopular()
+    {
+        return repository.GetMostPopular();
+    }
+
+    public async Task<List<TopArticleItem>> GetMostPopularItems()
+    {
+        return (await GetMostPopular()).ConvertAll(CreateTopArticleItem);
     }
 }

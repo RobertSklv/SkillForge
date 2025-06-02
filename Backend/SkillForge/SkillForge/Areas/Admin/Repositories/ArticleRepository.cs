@@ -146,4 +146,13 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
             .Take(batchSize)
             .ToListAsync();
     }
+
+    public Task<List<Article>> GetMostPopular()
+    {
+        return DbSet
+            .Include(e => e.Comments)
+            .OrderByDescending(e => e.ViewCount)
+            .Take(5)
+            .ToListAsync();
+    }
 }

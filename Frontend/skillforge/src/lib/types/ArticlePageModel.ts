@@ -1,6 +1,6 @@
 import type CommentModel from "./CommentModel"
 import type RatingData from "./RatingData"
-import type UserLink from "./UserLink"
+import type UserLink from "./UserLinkType"
 
 export default interface ArticlePageModel {
     ArticleId: number,

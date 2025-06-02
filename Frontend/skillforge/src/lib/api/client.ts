@@ -2,6 +2,7 @@ import { PUBLIC_BACKEND_DOMAIN } from "$env/static/public";
 import type ArticleCardType from "$lib/types/ArticleCardType";
 import type ArticleCreatePageModel from "$lib/types/ArticleCreatePageModel";
 import type ArticlePageModel from "$lib/types/ArticlePageModel";
+import type HomePageData from "$lib/types/HomePageData";
 import type { ImageUploadType } from "$lib/types/ImageUploadType";
 import type SvelteFetch from "$lib/types/SvelteFetch";
 import type UserInfo from "$lib/types/UserInfo";
@@ -58,26 +59,25 @@ export function getLatestArticles(batchIndex: number, batchSize: number): Promis
   });
 }
 
-export function viewArticle(
-  fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>,
-  id: number): Promise<ArticlePageModel> {
+export function viewArticle(fetch: SvelteFetch, id: number): Promise<ArticlePageModel> {
   return requestApiRaw<ArticlePageModel>(fetch, `/Article/View/${id}`, {
     credentials: 'include'
   });
 }
 
-export function loadArticleCreatePage(fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>): Promise<ArticleCreatePageModel> {
+export function loadArticleCreatePage(fetch: SvelteFetch): Promise<ArticleCreatePageModel> {
   return requestApiRaw<ArticleCreatePageModel>(fetch, '/Article/LoadCreatePage');
+}
+
+export function loadHomePage(fetch: SvelteFetch): Promise<HomePageData> {
+  return requestApiRaw(fetch, '/Home/Load');
 }
 
 export async function requestApi<T>(url: string, init?: RequestInit): Promise<T> {
   return request<T>(PUBLIC_BACKEND_DOMAIN + '/Api' + url, init);
 }
 
-export async function requestApiRaw<T>(
-  fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>,
-  url: string,
-  init?: RequestInit): Promise<T> {
+export async function requestApiRaw<T>(fetch: SvelteFetch, url: string, init?: RequestInit): Promise<T> {
   return requestRaw<T>(fetch, PUBLIC_BACKEND_DOMAIN + '/Api' + url, init);
 }
 
@@ -86,7 +86,7 @@ export async function request<T>(url: string, init?: RequestInit): Promise<T> {
 }
 
 export async function requestRaw<T>(
-  fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>,
+  fetch: SvelteFetch,
   url: string,
   init?: RequestInit): Promise<T> {
 

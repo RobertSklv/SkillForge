@@ -17,4 +17,12 @@ public class TagRepository : CrudRepository<Tag>, ITagRepository
         : base(db, filterService, sortService, searchService)
     {
     }
+
+    public Task<List<Tag>> GetMostPopular()
+    {
+        return DbSet
+            .OrderByDescending(e => e.FollowersCount)
+            .Take(8)
+            .ToListAsync();
+    }
 }

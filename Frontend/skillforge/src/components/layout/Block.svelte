@@ -15,10 +15,10 @@
         footer,
     }: Props = $props();
 
-    const BORDER_RADIUS: 1 | 2 | 3 | 4 | 5 = 4;
+    const BORDER_RADIUS: 1 | 2 | 3 | 4 | 5 = 3;
 </script>
 
-<div class="card border-dark rounded-{BORDER_RADIUS} bg-dark {mod}">
+<div class="card border-dark border-1 rounded-{BORDER_RADIUS} bg-dark {mod}">
     {#if header}
         <div class="card-header border-bottom-0 rounded-top-{BORDER_RADIUS}">
             {@render header?.()}

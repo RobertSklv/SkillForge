@@ -72,6 +72,7 @@ builder.Services.AddScoped<IAdminNavigationService, AdminNavigationService>();
 builder.Services.AddScoped<IAdminRoleSeeder, AdminRoleSeeder>();
 builder.Services.AddScoped<IImageService, ImageService>();
 
+builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();

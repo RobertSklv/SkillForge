@@ -29,4 +29,6 @@ public interface IArticleRepository : ICrudRepository<Article>
     Task<PaginatedList<Article>> ListByTag(ListingModel listingModel, int tagId);
 
     Task<List<Article>> GetLatest(int batchIndex, int batchSize);
+
+    Task<List<Article>> GetMostPopular();
 }
