@@ -61,10 +61,10 @@
 <div class="text-end">
     <button type="button" class="rate-btn rate-btn__positive bg-transparent border-0 text-primary" aria-label="Thumbs up" onclick={toggleThumbsUp} disabled={readonly}>
         <i class="bi bi-hand-thumbs-up{currentUserRate == 1 ? '-fill' : ''} fs-4"></i>
-        <small class="text-muted">{thumbsUp}</small>
+        <small>{thumbsUp}</small>
     </button>
     <button type="button" class="rate-btn rate-btn__negative bg-transparent border-0 text-primary" aria-label="Thumbs down" onclick={toggleThumbsDown} disabled={readonly}>
         <i class="bi bi-hand-thumbs-down{currentUserRate == -1 ? '-fill' : ''} fs-4"></i>
-        <small class="text-muted">{thumbsDown}</small>
+        <small>{thumbsDown}</small>
     </button>
 </div>

@@ -1,21 +1,31 @@
 <script lang="ts">
+	import type { BootstrapColor } from "$lib/types/BootstrapColor";
 	import type UserLink from "$lib/types/UserLinkType";
+	import Link from "./Link.svelte";
 
-    interface Props {
-        data: UserLink
-    }
+	interface Props {
+		data: UserLink;
+		size?: 'normal' | 'small';
+		background?: 'outline' | 'fill';
+		color?: BootstrapColor;
+		muted?: boolean;
+	}
 
-    let {
-        data
-    }: Props = $props();
+	let {
+		data,
+		size,
+		background,
+		color,
+		muted
+	}: Props = $props();
 </script>
 
-<a href="/user/{data.Name}" class="user-link btn btn-outline-primary rounded-pill shadow-none py-1">
+<Link href="/user/{data.Name}" {size} {background} {color} borderRadius="pill" {muted}>
     <div class="d-flex align-items-center">
         <img src="{data.AvatarImage ?? '/user.png'}" class="user-link__image border border-1 rounded-circle me-1" alt="{data.Name} avatar">
         <span>{data.Name}</span>
     </div>
-</a>
+</Link>
 
 <style lang="scss">
     .user-link {

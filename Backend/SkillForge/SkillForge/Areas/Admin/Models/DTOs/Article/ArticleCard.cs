@@ -19,4 +19,8 @@ public class ArticleCard
     public DateTime DatePublished { get; set; }
 
     public RatingData RatingData { get; set; }
+
+    public List<TagLink> Tags { get; set; }
+
+    public List<CommentModel> Comments { get; set; }
 }

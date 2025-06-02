@@ -8,4 +8,6 @@ public interface ITagService : ICrudService<Tag>
     Task<List<Tag>> GetMostPopular();
 
     Task<List<TagLink>> GetMostPopularLinks();
+
+    TagLink CreateTagLink(Tag tag);
 }

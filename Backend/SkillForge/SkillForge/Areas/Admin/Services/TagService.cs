@@ -23,10 +23,15 @@ public class TagService : CrudService<Tag>, ITagService
     {
         List<Tag> tags = await GetMostPopular();
 
-        return tags.ConvertAll(u => new TagLink
+        return tags.ConvertAll(CreateTagLink);
+    }
+
+    public TagLink CreateTagLink(Tag tag)
+    {
+        return new TagLink
         {
-            Name = u.Name,
-            Description = u.Description,
-        });
+            Name = tag.Name,
+            Description = tag.Description,
+        };
     }
 }

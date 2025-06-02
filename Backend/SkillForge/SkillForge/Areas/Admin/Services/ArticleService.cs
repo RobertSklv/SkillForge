@@ -11,11 +11,15 @@ namespace SkillForge.Areas.Admin.Services;
 public class ArticleService : CrudService<Article>, IArticleService
 {
     private readonly IArticleRepository repository;
+    private readonly ICommentService commentService;
+    private readonly ITagService tagService;
 
-    public ArticleService(IArticleRepository repository)
+    public ArticleService(IArticleRepository repository, ICommentService commentService, ITagService tagService)
         : base(repository)
     {
         this.repository = repository;
+        this.commentService = commentService;
+        this.tagService = tagService;
     }
 
     public override Table<Article> CreateEditRowAction(Table<Article> table)
@@ -117,50 +121,52 @@ public class ArticleService : CrudService<Article>, IArticleService
     public ArticleCard CreateArticleCard(Article article)
     {
         return new ArticleCard()
+        {
+            Author = new UserLink()
             {
-                Author = new UserLink()
-                {
-                    Id = article.Author!.Id,
-                    Name = article.Author.Name,
-                    AvatarImage = article.Author.AvatarPath,
-                },
-                ArticleId = article.Id,
-                Title = article.Title,
-                CoverImage = article.Image,
-                CategoryCode = article.Category!.Code,
-                CategoryName = article.Category.DisplayedName,
-                DatePublished = (DateTime)article.CreatedAt!,
-                RatingData = new RatingData
-                {
-                    ThumbsUp = article.ThumbsUp,
-                    ThumbsDown = article.ThumbsDown,
-                    UserRating = 0,
-                }
-            };
+                Id = article.Author!.Id,
+                Name = article.Author.Name,
+                AvatarImage = article.Author.AvatarPath,
+            },
+            ArticleId = article.Id,
+            Title = article.Title,
+            CoverImage = article.Image,
+            CategoryCode = article.Category!.Code,
+            CategoryName = article.Category.DisplayedName,
+            DatePublished = (DateTime)article.CreatedAt!,
+            RatingData = new RatingData
+            {
+                ThumbsUp = article.ThumbsUp,
+                ThumbsDown = article.ThumbsDown,
+                UserRating = 0,
+            },
+            Comments = article.Comments!.ConvertAll(commentService.CreateCommentModel),
+            Tags = article.Tags!.ConvertAll(at => tagService.CreateTagLink(at.Tag!))
+        };
     }
 
     public TopArticleItem CreateTopArticleItem(Article article)
     {
         return new TopArticleItem()
+        {
+            Author = new UserLink()
             {
-                Author = new UserLink()
-                {
-                    Id = article.Author!.Id,
-                    Name = article.Author.Name,
-                    AvatarImage = article.Author.AvatarPath,
-                },
-                ArticleId = article.Id,
-                Title = article.Title,
-                ViewCount = article.ViewCount,
-                CommentCount = article.Comments!.Count,
-                DatePublished = (DateTime)article.CreatedAt!,
-                RatingData = new RatingData
-                {
-                    ThumbsUp = article.ThumbsUp,
-                    ThumbsDown = article.ThumbsDown,
-                    UserRating = 0,
-                }
-            };
+                Id = article.Author!.Id,
+                Name = article.Author.Name,
+                AvatarImage = article.Author.AvatarPath,
+            },
+            ArticleId = article.Id,
+            Title = article.Title,
+            ViewCount = article.ViewCount,
+            CommentCount = article.Comments!.Count,
+            DatePublished = (DateTime)article.CreatedAt!,
+            RatingData = new RatingData
+            {
+                ThumbsUp = article.ThumbsUp,
+                ThumbsDown = article.ThumbsDown,
+                UserRating = 0,
+            }
+        };
     }
 
     public async Task<List<ArticleCard>> GetLatest(int batchIndex, int batchSize)
@@ -213,23 +219,7 @@ public class ArticleService : CrudService<Article>, IArticleService
                 ThumbsDown = article.ThumbsDown,
             },
             Views = article.ViewCount,
-            Comments = article.Comments!.ConvertAll(c => new CommentModel
-            {
-                CommentId = c.Id,
-                User = new UserLink
-                {
-                    Id = c.User!.Id,
-                    Name = c.User.Name,
-                    AvatarImage = c.User.AvatarPath,
-                },
-                Content = c.Content,
-                DateWritten = (DateTime)c.CreatedAt!,
-                RatingData = new RatingData
-                {
-                    ThumbsUp = c.ThumbsUp,
-                    ThumbsDown = c.ThumbsDown,
-                },
-            })
+            Comments = article.Comments!.ConvertAll(commentService.CreateCommentModel)
         };
     }
 

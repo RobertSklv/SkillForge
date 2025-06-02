@@ -2,6 +2,7 @@
 	import AnchorList from '$components/anchor-list/AnchorList.svelte';
 	import ArticleCard from '$components/article/ArticleCard.svelte';
 	import ArticlePlaceholder from '$components/article/ArticlePlaceholder.svelte';
+	import TopArticleLink from '$components/article/TopArticleLink.svelte';
 	import Button from '$components/button/Button.svelte';
 	import InfiniteScroll from '$components/infinite-scroll/InfiniteScroll.svelte';
 	import Block from '$components/layout/Block.svelte';
@@ -34,7 +35,7 @@
 </script>
 
 <div class="row">
-	<div class="d-none d-sm-block col-md-3">
+	<div class="d-none d-lg-block left-column">
 		<div class="d-flex flex-column gap-4">
 			<AnchorList title="Top Users" items={data.TopUsers}>
 				{#snippet itemSnippet(item)}
@@ -52,7 +53,7 @@
 			</AnchorList>
 		</div>
 	</div>
-	<div class="col-12 col-md-6">
+	<div class="col-12 middle-column">
 		<InfiniteScroll
 			mod="d-flex flex-column gap-4"
 			batchSize={BATCH_SIZE}
@@ -70,19 +71,30 @@
 			{/snippet}
 		</InfiniteScroll>
 	</div>
-	<div class="d-none d-sm-block col-md-3">
+	<div class="d-none d-lg-block right-column">
 		<div class="d-flex flex-column gap-4">
 			<AnchorList title="Top Articles" items={data.TopArticles}>
 				{#snippet itemSnippet(item)}
-					<a href="/article/{item.ArticleId}" class="list-group-item list-group-item-action" aria-label="Article '{item.Title}' link">
-						<div class="d-flex w-100 justify-content-between">
-							<h4 class="h5 mb-1">{item.Title}</h4>
-						</div>
-						<small class="text-body-tertiary">{item.ViewCount} views | {item.CommentCount} comments | 3 days ago</small>
-					</a>
+					<TopArticleLink data={item} />
 				{/snippet}
 			</AnchorList>
 			<LoginCta ctaText="Join us" description="to receive personalized content and interact with the rest of the community." />
 		</div>
 	</div>
 </div>
+
+<style>
+	@media (min-width: 992px) {
+		.left-column {
+			flex-basis: 20%;
+		}
+
+		.middle-column {
+			flex-basis: 52%;
+		}
+
+		.right-column {
+			flex-basis: 28%;
+		}
+	}
+</style>
