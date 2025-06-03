@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SkillForge.Areas.Admin.Models.DTOs;
 using SkillForge.Areas.Admin.Services;
+using SkillForge.Models.DTOs.Home;
 
 namespace SkillForge.Controllers;
 

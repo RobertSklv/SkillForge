@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SkillForge.Areas.Admin.Models.DTOs;
+using SkillForge.Models.DTOs.Tag;
 using SkillForge.Areas.Admin.Services;
 
 namespace SkillForge.Controllers;

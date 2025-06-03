@@ -1,4 +1,4 @@
-﻿namespace SkillForge.Models.DTOs;
+﻿namespace SkillForge.Models.DTOs.User;
 
 public class UserInfo
 {

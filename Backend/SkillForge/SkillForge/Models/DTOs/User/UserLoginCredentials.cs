@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SkillForge.Models.DTOs;
+namespace SkillForge.Models.DTOs.User;
 
 public class UserLoginCredentials
 {

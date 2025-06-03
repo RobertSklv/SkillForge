@@ -1,6 +1,7 @@
-﻿using SkillForge.Areas.Admin.Models.DTOs.Rating;
+﻿using SkillForge.Models.DTOs.Rating;
+using SkillForge.Models.DTOs.User;
 
-namespace SkillForge.Areas.Admin.Models.DTOs.Article;
+namespace SkillForge.Models.DTOs.Article;
 
 public class CommentModel
 {

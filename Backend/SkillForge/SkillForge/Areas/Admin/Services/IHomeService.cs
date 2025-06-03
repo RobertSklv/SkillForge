@@ -1,4 +1,4 @@
-﻿using SkillForge.Areas.Admin.Models.DTOs;
+﻿using SkillForge.Models.DTOs.Home;
 
 namespace SkillForge.Areas.Admin.Services;
 

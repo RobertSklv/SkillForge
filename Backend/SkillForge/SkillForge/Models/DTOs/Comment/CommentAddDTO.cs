@@ -1,4 +1,4 @@
-﻿namespace SkillForge.Areas.Admin.Models.DTOs.Comment;
+﻿namespace SkillForge.Models.DTOs.Comment;
 
 public class CommentAddDTO
 {

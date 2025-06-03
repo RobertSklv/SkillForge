@@ -1,5 +1,7 @@
-﻿using SkillForge.Areas.Admin.Models.DTOs;
-using SkillForge.Areas.Admin.Models.DTOs.Article;
+﻿using SkillForge.Models.DTOs.Article;
+using SkillForge.Models.DTOs.Home;
+using SkillForge.Models.DTOs.Tag;
+using SkillForge.Models.DTOs.User;
 
 namespace SkillForge.Areas.Admin.Services;
 

@@ -1,7 +1,6 @@
-﻿using SkillForge.Areas.Admin.Models.DTOs;
-using SkillForge.Areas.Admin.Repositories;
+﻿using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Models.Database;
-using SkillForge.Models.DTOs;
+using SkillForge.Models.DTOs.User;
 
 namespace SkillForge.Areas.Admin.Services;
 

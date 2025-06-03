@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SkillForge.Areas.Admin.Models.DTOs.Comment;
-using SkillForge.Areas.Admin.Models.DTOs.Rating;
+using SkillForge.Areas.Admin.Models.DTOs;
+using SkillForge.Areas.Admin.Models.DTOs.Article;
 using SkillForge.Areas.Admin.Services;
+using SkillForge.Models.Database;
+using SkillForge.Models.DTOs.Comment;
+using SkillForge.Models.DTOs.Rating;
 
 namespace SkillForge.Controllers;
 

@@ -1,4 +1,4 @@
-﻿namespace SkillForge.Areas.Admin.Models.DTOs.Article;
+﻿namespace SkillForge.Models.DTOs.Article;
 
 public class ArticleState
 {

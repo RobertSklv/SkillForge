@@ -1,4 +1,4 @@
-﻿namespace SkillForge.Areas.Admin.Models.DTOs;
+﻿namespace SkillForge.Models.DTOs.Tag;
 
 public class TagLink
 {

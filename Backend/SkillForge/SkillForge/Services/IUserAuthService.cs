@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SkillForge.Models.Database;
-using SkillForge.Models.DTOs;
+using SkillForge.Models.DTOs.User;
 
 namespace SkillForge.Services;
 

@@ -3,7 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillForge.Models.Database;
-using SkillForge.Models.DTOs;
+using SkillForge.Models.DTOs.User;
 using SkillForge.Services;
 using SkillForge.Areas.Admin.Services;
 

@@ -1,4 +1,4 @@
-﻿namespace SkillForge.Areas.Admin.Models.DTOs.Rating;
+﻿namespace SkillForge.Models.DTOs.Rating;
 
 public class RatingData
 {
