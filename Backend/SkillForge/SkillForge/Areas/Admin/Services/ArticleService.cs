@@ -174,7 +174,12 @@ public class ArticleService : CrudService<Article>, IArticleService
                 ThumbsDown = article.ThumbsDown,
                 UserRating = 0,
             },
-            Comments = article.Comments!.ConvertAll(commentService.CreateCommentModel),
+            Comments = article.Comments!
+                .OrderByDescending(c => c.CreatedAt)
+                .Take(2)
+                .ToList()
+                .ConvertAll(commentService.CreateCommentModel),
+            TotalComments = article.Comments!.Count,
             Tags = article.Tags!.ConvertAll(at => tagService.CreateTagLink(at.Tag!))
         };
     }

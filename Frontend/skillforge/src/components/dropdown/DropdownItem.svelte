@@ -4,7 +4,7 @@
 
     interface Props {
         href?: string,
-        isButton?: boolean,
+        type?: 'link' | 'button' | 'text',
         onclick?: MouseEventHandler<HTMLButtonElement>,
         active?: boolean,
         disabled?: boolean,
@@ -13,7 +13,7 @@
 
     const {
         href,
-        isButton,
+        type = 'link',
         active,
         disabled,
         onclick,
@@ -22,13 +22,17 @@
 </script>
 
 <li>
-    {#if isButton}
+    {#if type === 'button'}
         <button class="dropdown-item" class:active class:disabled {onclick}>
             {@render children()}
         </button>
-    {:else}
+    {:else if type === 'link'}
         <a class="dropdown-item" class:active class:disabled {href}>
             {@render children()}
         </a>
+    {:else if type === 'text'}
+        <span class="dropdown-item-text">
+            {@render children()}
+        </span>
     {/if}
 </li>

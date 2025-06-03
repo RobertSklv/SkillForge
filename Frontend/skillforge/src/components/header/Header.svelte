@@ -3,10 +3,8 @@
 	import Navbar from "../navbar/Navbar.svelte";
 	import NavLink from "../navbar/NavLink.svelte";
 	import { currentUserStore, logoutUser } from "$lib/stores/currentUserStore";
-	import NavDropdown from "../navbar/NavDropdown.svelte";
-	import NavDropdownLink from "../navbar/NavDropdownLink.svelte";
-	import Form from "../form/Form.svelte";
-	import Button from "../button/Button.svelte";
+	import Dropdown from "$components/dropdown/Dropdown.svelte";
+	import DropdownItem from "$components/dropdown/DropdownItem.svelte";
 
   function logout() {
     logoutUser();
@@ -28,18 +26,18 @@
     Contact us
   </NavLink>
   {#if $currentUserStore}
-    <NavDropdown>
+    <Dropdown isNav={true}>
       {#snippet buttonSnippet()}
         <span>{$currentUserStore.Name}</span>
         <Icon type="person-circle" />
       {/snippet}
-      <NavDropdownLink href="/account">
+      <DropdownItem href="/account">
         Account
-      </NavDropdownLink>
-      <NavDropdownLink isButton={true} onclick={logout}>
+      </DropdownItem>
+      <DropdownItem type="button" onclick={logout}>
           Logout
-      </NavDropdownLink>
-    </NavDropdown>
+      </DropdownItem>
+    </Dropdown>
   {:else}
     <NavLink href="/join" isActive={false}>
         <span>Join us</span>

@@ -14,4 +14,5 @@ export default interface ArticleCardType {
     RatingData: RatingData,
     Tags: TagLinkType[],
     Comments: CommentModel[],
+    TotalComments: number,
 }

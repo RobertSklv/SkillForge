@@ -1,15 +1,20 @@
 <script lang="ts">
 	import Button from "$components/button/Button.svelte";
+	import Comment from "$components/comment/Comment.svelte";
+	import Dropdown from "$components/dropdown/Dropdown.svelte";
+	import DropdownDivider from "$components/dropdown/DropdownDivider.svelte";
+	import DropdownItem from "$components/dropdown/DropdownItem.svelte";
 	import Form from "$components/form/Form.svelte";
 	import TextEditor from "$components/form/TextEditor.svelte";
 	import Block from "$components/layout/Block.svelte";
-	import UserLink from "$components/link/UserLink.svelte";
 	import LoginCta from "$components/login-cta/LoginCta.svelte";
 	import RateButtons from "$components/rating/RateButtons.svelte";
+	import AuthorBox from "$components/user/AuthorBox.svelte";
 	import { PUBLIC_BACKEND_DOMAIN } from "$env/static/public";
 	import { currentUserStore } from "$lib/stores/currentUserStore";
 	import type ArticlePageModel from "$lib/types/ArticlePageModel";
 	import type CommentModel from "$lib/types/CommentModel";
+	import moment from "moment";
 	import { writable } from "svelte/store";
 
     interface Props {
@@ -61,12 +66,25 @@
         {#snippet header()}
             <div class="row mb-3">
                 <div class="col">
-                    <UserLink data={data.Author} />
+	                <AuthorBox name={data.Author.Name} date={data.DatePublished} indent={false} />
                 </div>
                 <div class="col text-end">
-                    <small class="text-tertiary">
-                        {data.DatePublished}
-                    </small>
+                    <Dropdown>
+                        {#snippet buttonSnippet()}
+                            <i class="bi bi-three-dots-vertical"></i>
+                        {/snippet}
+                        {#if $currentUserStore && $currentUserStore.Name == data.Author.Name}
+                            <DropdownItem href="/article/{data.ArticleId}/edit">
+                                <i class="bi bi-pencil-square"></i>
+                                Edit
+                            </DropdownItem>
+                            <DropdownDivider />
+                        {/if}
+                        <DropdownItem href="/">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            Report
+                        </DropdownItem>
+                    </Dropdown>
                 </div>
             </div>
         {/snippet}
@@ -92,7 +110,7 @@
                     <small class="text-muted">{data.Views}</small>
                 </div>
                 <div class="col">
-            <RateButtons data={data.RatingData} subjectId={data.ArticleId} type="article" readonly={!$currentUserStore} />
+                    <RateButtons data={data.RatingData} subjectId={data.ArticleId} type="article" readonly={!$currentUserStore} />
                 </div>
             </div>
         {/snippet}
@@ -100,27 +118,7 @@
 
     <div class="d-flex flex-column gap-3">
         {#each comments as comment}
-            <Block>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col">
-                            <UserLink data={data.Author} />
-                        </div>
-                        <div class="col text-end">
-                            <small class="text-tertiary">
-                                {comment.DateWritten}
-                            </small>
-                        </div>
-                    </div>
-                    <div class="text-break">
-                        {@html comment.Content}
-                    </div>
-                </div>
-
-                {#snippet footer()}
-                    <RateButtons data={comment.RatingData} subjectId={comment.CommentId} type="comment" readonly={!$currentUserStore} />
-                {/snippet}
-            </Block>
+            <Comment data={comment} />
         {/each}
     </div>
 
@@ -130,7 +128,9 @@
                 <Form action="/Comment/Add" formData={$commentFormData} onSuccess={addComment}>
                     <TextEditor id="Content" label={null} height={200} bind:content={$commentFormData.Content} imageUploadType="comment" />
 
-                    <Button isSubmitButton={true}>Comment</Button>
+                    <div class="text-center">
+                        <Button isSubmitButton={true}>Comment</Button>
+                    </div>
                 </Form>
             </div>
         </Block>

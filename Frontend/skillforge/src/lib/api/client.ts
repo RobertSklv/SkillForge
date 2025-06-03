@@ -93,6 +93,9 @@ export function viewArticle(fetch: SvelteFetch, id: number): Promise<ArticlePage
 export function loadArticleUpsertPage(fetch: SvelteFetch, id?: number): Promise<ArticleUpsertPageModel> {
   return requestApi<ArticleUpsertPageModel>('/Article/LoadUpsertPage', {
     fetchFunction: fetch,
+    init: {
+      credentials: 'include'
+    },
     query: {
       id: id?.toString()
     }

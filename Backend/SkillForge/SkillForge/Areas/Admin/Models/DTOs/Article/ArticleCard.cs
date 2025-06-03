@@ -23,4 +23,6 @@ public class ArticleCard
     public List<TagLink> Tags { get; set; }
 
     public List<CommentModel> Comments { get; set; }
+
+    public int TotalComments { get; set; }
 }

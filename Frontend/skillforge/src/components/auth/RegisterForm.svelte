@@ -66,6 +66,7 @@
 
     function onRegisterSuccess() {
         let userInfo: UserInfo = {
+            Id: 0,
             Name: $formData.Username,
             Email: $formData.Email,
             AvatarPath: ''
