@@ -9,6 +9,8 @@ public interface ITagService : ICrudService<Tag>
 
     Task<List<Tag>> GetByNames(List<string> names);
 
+    Task<List<Tag>> GetByNamesAndCreateNonexisting(List<string> names);
+
     Task<List<Tag>> GetMostPopular();
 
     Task<List<Tag>> Search(string? phrase, List<string>? exclude);

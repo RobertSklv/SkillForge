@@ -1,9 +1,12 @@
-﻿using SkillForge.Areas.Admin.Models;
+﻿using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SkillForge.Areas.Admin.Models;
 using SkillForge.Areas.Admin.Models.Components.Grid;
 using SkillForge.Areas.Admin.Models.DTOs;
 using SkillForge.Areas.Admin.Models.DTOs.Article;
 using SkillForge.Areas.Admin.Models.DTOs.Rating;
 using SkillForge.Areas.Admin.Repositories;
+using SkillForge.Attributes;
 using SkillForge.Models.Database;
 
 namespace SkillForge.Areas.Admin.Services;
@@ -13,13 +16,19 @@ public class ArticleService : CrudService<Article>, IArticleService
     private readonly IArticleRepository repository;
     private readonly ICommentService commentService;
     private readonly ITagService tagService;
+    private readonly IArticleTagRepository articleTagRepository;
 
-    public ArticleService(IArticleRepository repository, ICommentService commentService, ITagService tagService)
+    public ArticleService(
+        IArticleRepository repository,
+        ICommentService commentService,
+        ITagService tagService,
+        IArticleTagRepository articleTagRepository)
         : base(repository)
     {
         this.repository = repository;
         this.commentService = commentService;
         this.tagService = tagService;
+        this.articleTagRepository = articleTagRepository;
     }
 
     public override Table<Article> CreateEditRowAction(Table<Article> table)
@@ -104,10 +113,27 @@ public class ArticleService : CrudService<Article>, IArticleService
         return await UpsertMultiple(articles);
     }
 
+    public bool ValidateTagNames(List<string> tags, string propertyName, ModelStateDictionary modelState)
+    {
+        Regex r = new(CodeAttribute.PATTERN);
+        List<string> invalidTags = tags
+            .Where(tag => !r.IsMatch(tag))
+            .ToList();
+
+        if (invalidTags.Any())
+        {
+            modelState.AddModelError(
+                propertyName,
+                $"Invalid tag(s). The following tags contain invalid characters: " + string.Join(", ", invalidTags));
+
+            return false;
+        }
+
+        return true;
+    }
+
     public async Task UserUpsert(ArticleUpsertDTO model, int userId)
     {
-        List<Tag> tags = await tagService.GetByNames(model.Tags);
-
         Article entity = new()
         {
             Id = model.Id,
@@ -116,32 +142,14 @@ public class ArticleService : CrudService<Article>, IArticleService
             Image = model.Image,
             Title = model.Title,
             Content = model.Content,
-            Tags = model.Tags.ConvertAll(tagName =>
-            {
-                Tag? t = tags.Find(tt => tt.Name == tagName);
-
-                ArticleTag at = new()
-                {
-                    ArticleId = model.Id,
-                };
-
-                if (t != null)
-                {
-                    at.TagId = t.Id;
-                }
-                else
-                {
-                    at.Tag = new Tag
-                    {
-                        Name = tagName
-                    };
-                }
-
-                return at;
-            }).ToList()
         };
 
         await repository.Upsert(entity);
+
+        List<Tag> tags = await tagService.GetByNamesAndCreateNonexisting(model.Tags);
+        List<int> tagIds = tags.ConvertAll(t => t.Id).ToList();
+
+        await articleTagRepository.UpdateLeft(model.Id, tagIds);
     }
 
     public ArticleCard CreateArticleCard(Article article)

@@ -62,9 +62,6 @@
             <div class="row mb-3">
                 <div class="col">
                     <UserLink data={data.Author} />
-                    {#each data.Tags as tag}
-                        <a href="/tag/{tag}" class="me-2">#{tag}</a>
-                    {/each}
                 </div>
                 <div class="col text-end">
                     <small class="text-tertiary">
@@ -79,6 +76,9 @@
         {/if}
         
         <div class="card-body">
+            {#each data.Tags as tag}
+                <a href="/tag/{tag}" class="me-2">#{tag}</a>
+            {/each}
             <h1 class="card-title mb-4">{data.Title}</h1>
             <div class="card-text text-break">
                 {@html data.Content}
@@ -141,7 +141,7 @@
 
 <style>
     .cover-image {
-        height: 250px;
+        height: 300px;
         box-shadow: 0px 0px 99px 32px rgba(0,0,0,1) inset;
         -webkit-box-shadow: 0px 0px 99px 32px rgba(0,0,0,1) inset;
         -moz-box-shadow: 0px 0px 99px 32px rgba(0,0,0,1) inset;

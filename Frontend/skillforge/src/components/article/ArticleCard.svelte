@@ -33,9 +33,11 @@
 				<i class="bi bi-bookmark fs-5"></i>
 			</button>
 		</div>
-		{#each data.Tags as tag}
-			<TagLink size="small" background="fill" muted={true} data={tag} />
-		{/each}
+		<div class="tags d-flex gap-1">
+			{#each data.Tags as tag}
+				<TagLink size="small" background="fill" muted={true} data={tag} />
+			{/each}
+		</div>
 	</div>
 	{#snippet footer()}
 		<div class="d-flex justify-content-between align-items-center">

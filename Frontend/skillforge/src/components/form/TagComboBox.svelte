@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { searchTags } from '$lib/api/client';
 	import type TagLinkType from '$lib/types/TagLinkType';
+	import type ValidatedField from '$lib/types/ValidatedField';
 	import FieldValidation from './FieldValidation.svelte';
 
 	interface Props {
@@ -11,13 +12,14 @@
 	}
 
 	let {
-        id,
-        label = id,
-        tags = $bindable([]),
-        limit = 3
-    }: Props = $props();
+		id,
+		label = id,
+		tags = $bindable([]),
+		limit = 3
+	}: Props = $props();
 
 	let suggestionsElement: HTMLElement;
+	let fieldValidation: ValidatedField;
 
 	let inputValue = $state('');
 	let showSuggestions = $state(false);
@@ -28,10 +30,17 @@
 	async function updateSuggestions() {
 		if (isWithinLimit) {
 			suggestions = await searchTags(inputValue, tags);
+
+			if (inputValue && !suggestions.map((s) => s.Name).includes(inputValue)) {
+				suggestions.unshift({
+					Name: inputValue
+				});
+			}
 		}
 	}
 
 	function oninput() {
+		fieldValidation?.validate();
 		updateSuggestions();
 	}
 
@@ -41,13 +50,39 @@
 	}
 
 	function onfocusout(e: FocusEvent & { currentTarget: EventTarget & HTMLInputElement }) {
+		fieldValidation?.validate();
 		if (!suggestionsElement?.contains(e.relatedTarget as Node)) {
 			showSuggestions = false;
 		}
 	}
 
+	function onkeydown(e: KeyboardEvent & { currentTarget: EventTarget & HTMLInputElement }) {
+		if (e.code === 'Enter') {
+			if (inputValue.length) {
+				addTag(inputValue);
+			}
+		} else if (e.code === 'Backspace') {
+			if (!inputValue.length) {
+				let lastTag = tags.pop();
+
+				if (lastTag) {
+					// The tag is already removed at this point, this removeTag() call is needed to update the state,
+					// because tags.pop() does not update the component state
+					removeTag(lastTag);
+
+					inputValue = lastTag;
+					updateSuggestions();
+				}
+			}
+		}
+	}
+
 	function addTag(tagName: string) {
-    tags ??= [];
+		tags ??= [];
+
+		if (!isWithinLimit || !isValid) {
+			return;
+		}
 
 		if (!tags.includes(tagName)) {
 			tags.push(tagName);
@@ -56,18 +91,20 @@
 		inputValue = '';
 		showSuggestions = false;
 		updateSuggestions();
+		fieldValidation?.validate();
 	}
 
 	function removeTag(tagName: string) {
 		tags = tags.filter((t) => t != tagName);
 
 		updateSuggestions();
+		fieldValidation?.validate();
 	}
 </script>
 
-<div class="combo-box position-relative">
+<div class="combo-box position-relative mb-4">
 	<label for={id} class="form-label">{label}</label>
-	<div class="d-flex flex-wrap gap-1">
+	<div class="d-flex flex-wrap gap-1" class:is-invalid={!isValid}>
 		{#each tags as tag}
 			<div class="toast show w-auto">
 				<div class="d-flex">
@@ -90,12 +127,13 @@
 			{onfocus}
 			{onfocusout}
 			{oninput}
+			{onkeydown}
 			class:is-invalid={!isValid}
-            autocomplete="off"
+			autocomplete="off"
 			bind:value={inputValue}
 		/>
 	</div>
-	{#if showSuggestions && suggestions.length && isWithinLimit}
+	{#if showSuggestions && suggestions.length && isWithinLimit && isValid}
 		<div class="position-absolute w-100 z-3 shadow" bind:this={suggestionsElement}>
 			<ul class="list-group">
 				{#each suggestions as tag}
@@ -115,5 +153,12 @@
 			</ul>
 		</div>
 	{/if}
-	<FieldValidation name={id} {label} value={tags} shouldValidate={true} bind:isValid />
+	<FieldValidation
+		name={id}
+		{label}
+		value={inputValue ? tags.concat(inputValue) : tags}
+		shouldValidate={true}
+		bind:isValid
+		bind:this={fieldValidation}
+	/>
 </div>

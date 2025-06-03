@@ -28,6 +28,11 @@ public class ArticleController : ApiController
             throw new Exception("Server error.");
         }
 
+        if (!service.ValidateTagNames(form.Tags, nameof(form.Tags), ModelState))
+        {
+            return ValidationProblem(ModelState);
+        }
+
         await service.UserUpsert(form, (int)userId);
 
         if (form.Id == 0)

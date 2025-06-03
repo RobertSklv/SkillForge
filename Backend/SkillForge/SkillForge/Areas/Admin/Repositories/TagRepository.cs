@@ -30,9 +30,10 @@ public class TagRepository : CrudRepository<Tag>, ITagRepository
             .ToListAsync();
     }
 
-    public Task<List<Tag>> GetMostPopular()
+    public Task<List<Tag>> GetMostFollowed()
     {
         return DbSet
+            .Where(e => e.ArticlesCount > 0)
             .OrderByDescending(e => e.FollowersCount)
             .Take(8)
             .ToListAsync();
@@ -53,6 +54,7 @@ public class TagRepository : CrudRepository<Tag>, ITagRepository
         }
 
         return query
+            .Where(e => e.ArticlesCount > 0)
             .OrderByDescending(e => e.ArticlesCount)
             .Take(6)
             .ToListAsync();

@@ -11,6 +11,8 @@
 	import { getContext } from 'svelte';
 	import type ArticleUpsertPageModel from '$lib/types/ArticleUpsertPageModel';
 	import TagComboBox from '$components/form/TagComboBox.svelte';
+	import type ValidationRules from '$lib/types/ValidationRules';
+	import { regex, required } from '$lib/validation/rules';
 
 	let pageContext = getContext<ArticleUpsertPageModel>('page');
 
@@ -22,6 +24,44 @@
 			Tags: []
 		}
 	);
+
+	let validationRules: ValidationRules = {
+		CategoryId: [
+            {
+                validate: (v) => v != 0,
+                message: (label) => `The ${label} field is required.`
+            },
+		],
+		Title: [
+            {
+                validate: required,
+                message: (label) => `The ${label} field is required.`
+            },
+		],
+		Content: [
+            {
+                validate: required,
+                message: (label) => `The ${label} field is required.`
+            },
+		],
+		Tags: [
+			{
+				validate: (tags) => {
+					let isValid = true;
+
+					for (let tagName of tags) {
+						if (!regex(tagName, /^(?:[a-z][a-z0-9]*(?:_[a-z][a-z0-9]*)*)$/)) {
+							isValid = false;
+							break;
+						}
+					}
+
+					return isValid;
+				},
+				message: () => `Invalid tag name.`,
+			}
+		]
+	};
 
 	function onSuccess() {
 		console.log('Article created successfully');
@@ -37,7 +77,7 @@
 	</div>
 {/if}
 
-<Form action="/Article/Upsert" method="POST" formData={$formData} {onSuccess}>
+<Form action="/Article/Upsert" method="POST" formData={$formData} {validationRules} {onSuccess}>
 	<input type="hidden" name="Id" bind:value={$formData.Id} />
 
 	<div class="row">

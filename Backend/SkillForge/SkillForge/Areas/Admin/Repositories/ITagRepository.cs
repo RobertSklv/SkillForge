@@ -8,7 +8,7 @@ public interface ITagRepository : ICrudRepository<Tag>
 
     Task<List<Tag>> GetByNames(List<string> names);
 
-    Task<List<Tag>> GetMostPopular();
+    Task<List<Tag>> GetMostFollowed();
 
     Task<List<Tag>> Search(string? phrase, List<string>? exclude);
 }

@@ -24,9 +24,34 @@ public class TagService : CrudService<Tag>, ITagService
         return repository.GetByNames(names);
     }
 
+    public async Task<List<Tag>> GetByNamesAndCreateNonexisting(List<string> names)
+    {
+        List<Tag> tags = await GetByNames(names);
+
+        List<string> nonexsistent = names
+            .Where(n => !tags.ConvertAll(t => t.Name).Contains(n))
+            .ToList();
+
+        List<Tag> newTags = new();
+
+        foreach (string name in nonexsistent)
+        {
+            newTags.Add(new Tag
+            {
+                Name = name
+            });
+        }
+
+        await UpsertMultiple(newTags);
+
+        tags.AddRange(newTags);
+
+        return tags;
+    }
+
     public Task<List<Tag>> GetMostPopular()
     {
-        return repository.GetMostPopular();
+        return repository.GetMostFollowed();
     }
 
     public async Task<List<TagLink>> GetMostPopularLinks()

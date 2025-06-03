@@ -1,4 +1,5 @@
-﻿using SkillForge.Areas.Admin.Models;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SkillForge.Areas.Admin.Models;
 using SkillForge.Areas.Admin.Models.DTOs;
 using SkillForge.Areas.Admin.Models.DTOs.Article;
 using SkillForge.Areas.Admin.Models.DTOs.Rating;
@@ -35,6 +36,8 @@ public interface IArticleService : ICrudService<Article>
     Task<bool> Approve(int id, int adminId);
 
     Task<bool> MassApprove(List<int> ids, int adminId);
+
+    bool ValidateTagNames(List<string> tags, string propertyName, ModelStateDictionary modelState);
 
     ArticleCard CreateArticleCard(Article article);
 
