@@ -25,7 +25,7 @@
 	<div class="author-box__info-col d-flex flex-column">
         <a href="/user/{name}" class="text-decoration-none">{name}</a>
         <div class="small text-tertiary">
-            {moment(date).format('MMMM Do YYYY, HH:mm:ss')}
+            {moment(date).format('ddd, MMMM D, YYYY HH:mm')}
             <span class="text-muted ms-2">({moment(date).fromNow()})</span>
         </div>
 	</div>

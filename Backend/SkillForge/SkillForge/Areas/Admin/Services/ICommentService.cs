@@ -11,6 +11,4 @@ public interface ICommentService : ICrudService<Comment>
     Task Rate(int userId, int commentId, UserRatingData rate);
 
     Task<CommentRating?> GetUserRating(int userId, int commentId);
-
-    CommentModel CreateCommentModel(Comment comment);
 }

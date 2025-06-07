@@ -11,9 +11,11 @@ public interface IUserService : ICrudService<User>
 
     Task<bool> IsEmailTaken(string email);
 
-    UserInfo GetUserInfo(User user);
-
     Task<List<User>> GetMostPopular();
 
     Task<List<UserLink>> GetMostPopularLinks();
+
+    Task<List<UserFollow>> GetFollowings(int id);
+
+    Task<List<UserFollow>> GetFollowers(int id);
 }

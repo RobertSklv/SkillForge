@@ -40,4 +40,18 @@ public class UserRepository : CrudRepository<User>, IUserRepository
             .Take(8)
             .ToListAsync();
     }
+    
+    public Task<List<UserFollow>> GetFollowings(int id)
+    {
+        return db.UserFollows
+            .Where(e => e.FollowerId == id)
+            .ToListAsync();
+    }
+    
+    public Task<List<UserFollow>> GetFollowers(int id)
+    {
+        return db.UserFollows
+            .Where(e => e.FollowedUserId == id)
+            .ToListAsync();
+    }
 }

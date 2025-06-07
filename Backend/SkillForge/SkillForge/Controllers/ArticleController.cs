@@ -5,6 +5,7 @@ using SkillForge.Models.DTOs.Article;
 using SkillForge.Models.DTOs.Rating;
 using SkillForge.Areas.Admin.Services;
 using SkillForge.Models.Database;
+using SkillForge.Services;
 
 namespace SkillForge.Controllers;
 
@@ -13,11 +14,13 @@ public class ArticleController : ApiController
 {
     private readonly IArticleService service;
     private readonly ICategoryService categoryService;
+    private readonly IUserFeedService userFeedService;
 
-    public ArticleController(IArticleService service, ICategoryService categoryService)
+    public ArticleController(IArticleService service, ICategoryService categoryService, IUserFeedService userFeedService)
     {
         this.service = service;
         this.categoryService = categoryService;
+        this.userFeedService = userFeedService;
     }
 
     [HttpPost]
@@ -92,14 +95,22 @@ public class ArticleController : ApiController
     {
         List<ArticleCard> cards;
 
-        if (TryGetUserId(out int? _))
-        {
-            cards = await service.GetLatest(UserId, batchIndex, batchSize);
-        }
-        else
-        {
-            cards = await service.GetLatest(batchIndex, batchSize);
-        }
+        TryGetUserId(out int? userId);
+
+        cards = await userFeedService.GetLatestArticles(userId, batchIndex, batchSize);
+
+        return Ok(cards);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> LatestByTag(string tag, int batchIndex, int batchSize = 10)
+    {
+        List<ArticleCard> cards;
+
+        TryGetUserId(out int? userId);
+
+        cards = await userFeedService.GetLatestArticlesByTag(tag, userId, batchIndex, batchSize);
 
         return Ok(cards);
     }
@@ -109,7 +120,7 @@ public class ArticleController : ApiController
     [Route("/Api/Article/View/{id}")]
     public async Task<IActionResult> View(int id)
     {
-        ArticlePageModel model;
+        ArticlePageData model;
 
         if (TryGetUserId(out int? _))
         {

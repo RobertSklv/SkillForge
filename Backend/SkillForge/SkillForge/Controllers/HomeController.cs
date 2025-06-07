@@ -15,7 +15,9 @@ public class HomeController : ApiController
 
     public async Task<IActionResult> Load()
     {
-        HomePageData pageData = await service.LoadPage();
+        TryGetUserId(out int? userId);
+
+        HomePageData pageData = await service.LoadPage(userId);
 
         return Ok(pageData);
     }

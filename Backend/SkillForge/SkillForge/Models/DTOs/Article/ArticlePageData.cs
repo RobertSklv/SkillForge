@@ -3,7 +3,7 @@ using SkillForge.Models.DTOs.User;
 
 namespace SkillForge.Models.DTOs.Article;
 
-public class ArticlePageModel
+public class ArticlePageData
 {
     public int ArticleId { get; set; }
 

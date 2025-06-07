@@ -1,17 +1,20 @@
 ﻿using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Models.Database;
 using SkillForge.Models.DTOs.User;
+using SkillForge.Services;
 
 namespace SkillForge.Areas.Admin.Services;
 
 public class UserService : CrudService<User>, IUserService
 {
     private readonly IUserRepository repository;
+    private readonly IFrontendService frontendService;
 
-    public UserService(IUserRepository repository)
+    public UserService(IUserRepository repository, IFrontendService frontendService)
         : base(repository)
     {
         this.repository = repository;
+        this.frontendService = frontendService;
     }
 
     public Task<User?> FindUser(string usernameOrEmail)
@@ -29,17 +32,6 @@ public class UserService : CrudService<User>, IUserService
         return repository.IsEmailTaken(email);
     }
 
-    public UserInfo GetUserInfo(User user)
-    {
-        return new UserInfo
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            AvatarPath = user.AvatarPath
-        };
-    }
-
     public Task<List<User>> GetMostPopular()
     {
         return repository.GetMostPopular();
@@ -49,11 +41,16 @@ public class UserService : CrudService<User>, IUserService
     {
         List<User> users = await GetMostPopular();
 
-        return users.ConvertAll(u => new UserLink
-        {
-            Id = u.Id,
-            Name = u.Name,
-            AvatarImage = u.AvatarPath,
-        });
+        return users.ConvertAll(frontendService.CreateUserLink);
+    }
+
+    public Task<List<UserFollow>> GetFollowings(int id)
+    {
+        return repository.GetFollowings(id);
+    }
+
+    public Task<List<UserFollow>> GetFollowers(int id)
+    {
+        return repository.GetFollowers(id);
     }
 }

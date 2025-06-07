@@ -39,21 +39,9 @@ public interface IArticleService : ICrudService<Article>
 
     bool ValidateTagNames(List<string> tags, string propertyName, ModelStateDictionary modelState);
 
-    ArticleCard CreateArticleCard(Article article);
+    Task<ArticlePageData> View(int userId, int articleId);
 
-    TopArticleItem CreateTopArticleItem(Article article);
-
-    Task<List<ArticleCard>> GetLatest(int batchIndex, int batchSize);
-
-    Task<List<ArticleCard>> GetLatest(int userId, int batchIndex, int batchSize);
-
-    Task<ArticlePageModel> View(int userId, int articleId);
-
-    Task<ArticlePageModel> View(string guestId, int articleId);
+    Task<ArticlePageData> View(string guestId, int articleId);
 
     Task Rate(int userId, int articleId, UserRatingData rate);
-
-    Task<List<Article>> GetMostPopular();
-
-    Task<List<TopArticleItem>> GetMostPopularItems();
 }

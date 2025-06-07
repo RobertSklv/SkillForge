@@ -11,13 +11,15 @@ public interface ITagService : ICrudService<Tag>
 
     Task<List<Tag>> GetByNamesAndCreateNonexisting(List<string> names);
 
-    Task<List<Tag>> GetMostPopular();
+    Task<List<Tag>> GetMostFollowed();
+
+    Task<bool> IsFollowedByUser(int userId, int tagId);
 
     Task<List<Tag>> Search(string? phrase, List<string>? exclude);
 
     Task<List<TagLink>> SearchLinks(string? phrase, List<string>? exclude);
 
-    Task<List<TagLink>> GetMostPopularLinks();
+    Task<List<TagLink>> GetMostFollowedLinks();
 
-    TagLink CreateTagLink(Tag tag);
+    Task<TagPageData> LoadPage(Tag tag, int? userId = null);
 }

@@ -2,31 +2,32 @@
 using SkillForge.Models.DTOs.Home;
 using SkillForge.Models.DTOs.Tag;
 using SkillForge.Models.DTOs.User;
+using SkillForge.Services;
 
 namespace SkillForge.Areas.Admin.Services;
 
 public class HomeService : IHomeService
 {
-    private readonly IArticleService articleService;
     private readonly IUserService userService;
     private readonly ITagService tagService;
+    private readonly IUserFeedService userFeedService;
 
     public HomeService(
-        IArticleService articleService,
         IUserService userService,
-        ITagService tagService)
+        ITagService tagService,
+        IUserFeedService userFeedService)
     {
-        this.articleService = articleService;
         this.userService = userService;
         this.tagService = tagService;
+        this.userFeedService = userFeedService;
     }
 
-    public async Task<HomePageData> LoadPage()
+    public async Task<HomePageData> LoadPage(int? userId)
     {
-        List<ArticleCard> latestArticles = await articleService.GetLatest(0, 10);
-        List<TopArticleItem> topArticles = await articleService.GetMostPopularItems();
+        List<ArticleCard> latestArticles = await userFeedService.GetLatestArticles(userId, 0, 10);
+        List<TopArticleItem> topArticles = await userFeedService.GetTopArticles(5);
         List<UserLink> topUsers = await userService.GetMostPopularLinks();
-        List<TagLink> topTags = await tagService.GetMostPopularLinks();
+        List<TagLink> topTags = await tagService.GetMostFollowedLinks();
 
         return new HomePageData
         {

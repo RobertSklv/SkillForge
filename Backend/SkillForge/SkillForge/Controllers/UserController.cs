@@ -14,11 +14,13 @@ public class UserController : ApiController
 {
     private readonly IUserAuthService userAuthService;
     private readonly IUserService service;
+    private readonly IFrontendService frontendService;
 
-    public UserController(IUserAuthService userAuthService, IUserService userService)
+    public UserController(IUserAuthService userAuthService, IUserService userService, IFrontendService frontendService)
     {
         this.userAuthService = userAuthService;
         this.service = userService;
+        this.frontendService = frontendService;
     }
 
     [AllowAnonymous]
@@ -56,7 +58,7 @@ public class UserController : ApiController
             }
             else
             {
-                return Ok(service.GetUserInfo(user));
+                return Ok(frontendService.GetUserInfo(user));
             }
         }
 
@@ -76,7 +78,7 @@ public class UserController : ApiController
 
         await AttemptAuthenticate(user);
 
-        return Ok(service.GetUserInfo(user));
+        return Ok(frontendService.GetUserInfo(user));
     }
 
     [AllowAnonymous]

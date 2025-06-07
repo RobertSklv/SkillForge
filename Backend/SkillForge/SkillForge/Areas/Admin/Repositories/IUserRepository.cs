@@ -11,4 +11,8 @@ public interface IUserRepository : ICrudRepository<User>
     Task<bool> IsEmailTaken(string email);
 
     Task<List<User>> GetMostPopular();
+
+    Task<List<UserFollow>> GetFollowings(int id);
+
+    Task<List<UserFollow>> GetFollowers(int id);
 }

@@ -151,13 +151,89 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
             .ToListAsync();
     }
 
-    public Task<List<Article>> GetMostPopular()
+    public async Task<List<Article>> GetLatestByTag(int tagId, int batchIndex, int batchSize)
+    {
+        List<ArticleTag> articleTags = await db.ArticleTags
+            .Where(e => e.TagId == tagId)
+            .ToListAsync();
+        List<int> articleTagIds = articleTags.ConvertAll(e => e.Id);
+
+        return await db.Articles
+            .Include(e => e.Author)
+            .Include(e => e.Category)
+            .Include(e => e.Approval)
+            .Include(e => e.Comments!)
+                .ThenInclude(e => e.User)
+            .Include(e => e.Tags!)
+                .ThenInclude(e => e.Tag)
+            .Where(e => e.ApprovalId != null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
+            .OrderByDescending(e => e.CreatedAt)
+            .Skip(batchIndex * batchSize)
+            .Take(batchSize)
+            .ToListAsync();
+    }
+
+    public async Task<List<Article>> GetLatestByTag(string tagName, int batchIndex, int batchSize)
+    {
+        List<ArticleTag> articleTags = await db.ArticleTags
+            .Include(e => e.Tag)
+            .Where(e => e.Tag!.Name == tagName)
+            .ToListAsync();
+        List<int> articleTagIds = articleTags.ConvertAll(e => e.Id);
+
+        return await db.Articles
+            .Include(e => e.Author)
+            .Include(e => e.Category)
+            .Include(e => e.Approval)
+            .Include(e => e.Comments!)
+                .ThenInclude(e => e.User)
+            .Include(e => e.Tags!)
+                .ThenInclude(e => e.Tag)
+            .Where(e => e.ApprovalId != null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
+            .OrderByDescending(e => e.CreatedAt)
+            .Skip(batchIndex * batchSize)
+            .Take(batchSize)
+            .ToListAsync();
+    }
+
+    public async Task<List<Article>> GetTopArticlesByTag(int tagId, int count)
+    {
+        List<ArticleTag> articleTags = await db.ArticleTags
+            .Where(e => e.TagId == tagId)
+            .ToListAsync();
+        List<int> articleTagIds = articleTags.ConvertAll(e => e.Id);
+
+        return await db.Articles
+            .Include(e => e.Comments)
+            .Where(e => e.ApprovalId != null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
+            .OrderByDescending(e => e.ViewCount)
+            .Take(count)
+            .ToListAsync();
+    }
+
+    public async Task<List<Article>> GetTopArticlesByTag(string tagName, int count)
+    {
+        List<ArticleTag> articleTags = await db.ArticleTags
+            .Include(e => e.Tag)
+            .Where(e => e.Tag!.Name == tagName)
+            .ToListAsync();
+        List<int> articleTagIds = articleTags.ConvertAll(e => e.Id);
+
+        return await db.Articles
+            .Include(e => e.Comments)
+            .Where(e => e.ApprovalId != null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
+            .OrderByDescending(e => e.ViewCount)
+            .Take(count)
+            .ToListAsync();
+    }
+
+    public Task<List<Article>> GetTopArticles(int count)
     {
         return DbSet
             .Include(e => e.Comments)
             .Where(e => e.ApprovalId != null)
             .OrderByDescending(e => e.ViewCount)
-            .Take(5)
+            .Take(count)
             .ToListAsync();
     }
 }

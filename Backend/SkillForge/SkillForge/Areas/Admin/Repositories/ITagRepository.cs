@@ -10,5 +10,11 @@ public interface ITagRepository : ICrudRepository<Tag>
 
     Task<List<Tag>> GetMostFollowed();
 
+    Task<bool> IsFollowedByUser(int userId, int tagId);
+
     Task<List<Tag>> Search(string? phrase, List<string>? exclude);
+
+    Task<List<TagFollow>> GetLatestFollowers(int tagId, int count);
+
+    Task<List<TagFollow>> GetLatestFollowers(string tagName, int count);
 }

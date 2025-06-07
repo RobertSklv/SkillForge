@@ -39,6 +39,14 @@ public class TagRepository : CrudRepository<Tag>, ITagRepository
             .ToListAsync();
     }
 
+    public Task<bool> IsFollowedByUser(int userId, int tagId)
+    {
+        return db.TagFollows.AnyAsync(tf => tf.UserId == userId && tf.TagId == tagId);
+    }
+    {
+        return db.TagFollows.AnyAsync(tf => tf.UserId == userId);
+    }
+
     public Task<List<Tag>> Search(string? phrase, List<string>? exclude)
     {
         IQueryable<Tag> query = DbSet;
@@ -57,6 +65,27 @@ public class TagRepository : CrudRepository<Tag>, ITagRepository
             .Where(e => e.ArticlesCount > 0)
             .OrderByDescending(e => e.ArticlesCount)
             .Take(6)
+            .ToListAsync();
+    }
+
+    public async Task<List<TagFollow>> GetLatestFollowers(int tagId, int count)
+    {
+        return await db.TagFollows
+            .Include(e => e.User)
+            .Where(e => e.TagId == tagId)
+            .OrderByDescending(e => e.CreatedAt)
+            .Take(count)
+            .ToListAsync();
+    }
+
+    public async Task<List<TagFollow>> GetLatestFollowers(string tagName, int count)
+    {
+        return await db.TagFollows
+            .Include(e => e.User)
+            .Include(e => e.Tag)
+            .Where(e => e.Tag!.Name == tagName)
+            .OrderByDescending(e => e.CreatedAt)
+            .Take(count)
             .ToListAsync();
     }
 }

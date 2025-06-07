@@ -8,27 +8,29 @@ using SkillForge.Models.DTOs.Rating;
 using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Attributes;
 using SkillForge.Models.Database;
+using SkillForge.Models.DTOs.User;
+using SkillForge.Services;
 
 namespace SkillForge.Areas.Admin.Services;
 
 public class ArticleService : CrudService<Article>, IArticleService
 {
     private readonly IArticleRepository repository;
-    private readonly ICommentService commentService;
     private readonly ITagService tagService;
-    private readonly IArticleTagRepository articleTagRepository;
+    private readonly IArticleTagMtmRepository articleTagRepository;
+    private readonly IFrontendService frontendService;
 
     public ArticleService(
         IArticleRepository repository,
-        ICommentService commentService,
         ITagService tagService,
-        IArticleTagRepository articleTagRepository)
+        IArticleTagMtmRepository articleTagRepository,
+        IFrontendService frontendService)
         : base(repository)
     {
         this.repository = repository;
-        this.commentService = commentService;
         this.tagService = tagService;
         this.articleTagRepository = articleTagRepository;
+        this.frontendService = frontendService;
     }
 
     public override Table<Article> CreateEditRowAction(Table<Article> table)
@@ -152,117 +154,7 @@ public class ArticleService : CrudService<Article>, IArticleService
         await articleTagRepository.UpdateLeft(model.Id, tagIds);
     }
 
-    public ArticleCard CreateArticleCard(Article article)
-    {
-        return new ArticleCard()
-        {
-            Author = new UserLink()
-            {
-                Id = article.Author!.Id,
-                Name = article.Author.Name,
-                AvatarImage = article.Author.AvatarPath,
-            },
-            ArticleId = article.Id,
-            Title = article.Title,
-            CoverImage = article.Image,
-            CategoryCode = article.Category!.Code,
-            CategoryName = article.Category.DisplayedName,
-            DatePublished = (DateTime)article.CreatedAt!,
-            RatingData = new RatingData
-            {
-                ThumbsUp = article.ThumbsUp,
-                ThumbsDown = article.ThumbsDown,
-                UserRating = 0,
-            },
-            Comments = article.Comments!
-                .OrderByDescending(c => c.CreatedAt)
-                .Take(2)
-                .ToList()
-                .ConvertAll(commentService.CreateCommentModel),
-            TotalComments = article.Comments!.Count,
-            Tags = article.Tags!.ConvertAll(at => tagService.CreateTagLink(at.Tag!))
-        };
-    }
-
-    public TopArticleItem CreateTopArticleItem(Article article)
-    {
-        return new TopArticleItem()
-        {
-            Author = new UserLink()
-            {
-                Id = article.Author!.Id,
-                Name = article.Author.Name,
-                AvatarImage = article.Author.AvatarPath,
-            },
-            ArticleId = article.Id,
-            Title = article.Title,
-            ViewCount = article.ViewCount,
-            CommentCount = article.Comments!.Count,
-            DatePublished = (DateTime)article.CreatedAt!,
-            RatingData = new RatingData
-            {
-                ThumbsUp = article.ThumbsUp,
-                ThumbsDown = article.ThumbsDown,
-                UserRating = 0,
-            }
-        };
-    }
-
-    public async Task<List<ArticleCard>> GetLatest(int batchIndex, int batchSize)
-    {
-        return (await repository.GetLatest(batchIndex, batchSize)).ConvertAll(CreateArticleCard);
-    }
-
-    public async Task<List<ArticleCard>> GetLatest(int userId, int batchIndex, int batchSize)
-    {
-        List<ArticleCard> latest = await GetLatest(batchIndex, batchSize);
-        List<int> articleIds = latest.ConvertAll(a => a.ArticleId);
-        List<ArticleRating> userRatings = await GetUserRating(userId, articleIds);
-
-        foreach (ArticleCard a in latest)
-        {
-            ArticleRating? rating = userRatings
-                .Where(e => e.ArticleId == a.ArticleId)
-                .FirstOrDefault();
-
-            if (rating != null)
-            {
-                a.RatingData.UserRating = rating.Rate;
-            }
-        }
-
-        return latest;
-    }
-
-    public async Task<ArticlePageModel> View(Article article)
-    {
-        return new ArticlePageModel
-        {
-            ArticleId = article.Id,
-            Author = new UserLink
-            {
-                Id = article.Author!.Id,
-                Name = article.Author.Name,
-                AvatarImage = article.Author.AvatarPath,
-            },
-            Title = article.Title,
-            CategoryCode = article.Category!.Code,
-            CategoryName = article.Category.DisplayedName,
-            Content = article.Content,
-            CoverImage = article.Image,
-            Tags = article.Tags!.ConvertAll(t => t.Tag!.Name).ToList(),
-            DatePublished = (DateTime)article.CreatedAt!,
-            RatingData = new RatingData
-            {
-                ThumbsUp = article.ThumbsUp,
-                ThumbsDown = article.ThumbsDown,
-            },
-            Views = article.ViewCount,
-            Comments = article.Comments!.ConvertAll(commentService.CreateCommentModel)
-        };
-    }
-
-    public async Task<ArticlePageModel> View(int userId, int articleId)
+    public async Task<ArticlePageData> View(int userId, int articleId)
     {
         Article article = await GetWithComments(articleId);
         RegisteredArticleView? viewRecord = await GetView(userId, articleId);
@@ -280,7 +172,7 @@ public class ArticleService : CrudService<Article>, IArticleService
             await RecordView(viewRecord);
         }
 
-        ArticlePageModel model = await View(article);
+        ArticlePageData model = frontendService.CreateArticlePageData(article);
         ArticleRating? userRating = await GetUserRating(userId, articleId);
         List<int> commentIds = model.Comments.ConvertAll(c => c.CommentId);
         List<CommentRating> commentUserRatings = await GetUserCommentRating(userId, commentIds);
@@ -305,7 +197,7 @@ public class ArticleService : CrudService<Article>, IArticleService
         return model;
     }
 
-    public async Task<ArticlePageModel> View(string guestId, int articleId)
+    public async Task<ArticlePageData> View(string guestId, int articleId)
     {
         Article article = await GetWithComments(articleId);
         GuestArticleView? viewRecord = await GetView(guestId, articleId);
@@ -323,7 +215,7 @@ public class ArticleService : CrudService<Article>, IArticleService
             await RecordView(viewRecord);
         }
 
-        ArticlePageModel model = await View(article);
+        ArticlePageData model = frontendService.CreateArticlePageData(article);
 
         return model;
     }
@@ -411,15 +303,5 @@ public class ArticleService : CrudService<Article>, IArticleService
     public Task RecordView(GuestArticleView view)
     {
         return repository.RecordView(view);
-    }
-
-    public Task<List<Article>> GetMostPopular()
-    {
-        return repository.GetMostPopular();
-    }
-
-    public async Task<List<TopArticleItem>> GetMostPopularItems()
-    {
-        return (await GetMostPopular()).ConvertAll(CreateTopArticleItem);
     }
 }

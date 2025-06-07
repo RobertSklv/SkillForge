@@ -10,6 +10,7 @@ import type TagLinkType from "$lib/types/TagLinkType";
 import type QueryParams from "$lib/types/QueryParams";
 import type QueryParamsFiltered from "$lib/types/QueryParamsFiltered";
 import type FetchData from "$lib/types/FetchData";
+import type TagPageData from "$lib/types/TagPageData";
 
 export async function getCurrentUser(): Promise<UserInfo | null> {
   try {
@@ -74,9 +75,26 @@ export function rate(id: number, rate: -1 | 0 | 1, type: 'article' | 'comment') 
 }
 
 export function getLatestArticles(batchIndex: number, batchSize: number): Promise<ArticleCardType[]> {
-  return requestApi<ArticleCardType[]>(`/Article/Latest?batchIndex=${batchIndex}&batchSize=${batchSize}`, {
+  return requestApi<ArticleCardType[]>('/Article/Latest', {
     init: {
       credentials: 'include'
+    },
+    query: {
+      batchIndex,
+      batchSize,
+    }
+  });
+}
+
+export function getLatestArticlesByTag(tag: string, batchIndex: number, batchSize: number): Promise<ArticleCardType[]> {
+  return requestApi<ArticleCardType[]>('/Article/Latest', {
+    init: {
+      credentials: 'include'
+    },
+    query: {
+      tag,
+      batchIndex,
+      batchSize,
     }
   });
 }
@@ -104,6 +122,12 @@ export function loadArticleUpsertPage(fetch: SvelteFetch, id?: number): Promise<
 
 export function loadHomePage(fetch: SvelteFetch): Promise<HomePageData> {
   return requestApi('/Home/Load', {
+    fetchFunction: fetch
+  });
+}
+
+export function loadTagPage(fetch: SvelteFetch, name: string): Promise<TagPageData> {
+  return requestApi(`/Tag/Load/${name}`, {
     fetchFunction: fetch
   });
 }

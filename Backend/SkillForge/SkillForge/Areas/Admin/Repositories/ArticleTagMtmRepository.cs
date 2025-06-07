@@ -4,11 +4,11 @@ using SkillForge.Models.Database;
 
 namespace SkillForge.Areas.Admin.Repositories;
 
-public class ArticleTagRepository : ManyToManyRepository<ArticleTag>, IArticleTagRepository
+public class ArticleTagMtmRepository : ManyToManyRepository<ArticleTag>, IArticleTagMtmRepository
 {
     protected override DbSet<ArticleTag> DbSet => db.ArticleTags;
 
-    public ArticleTagRepository(AppDbContext db) : base(db)
+    public ArticleTagMtmRepository(AppDbContext db) : base(db)
     {
     }
 }

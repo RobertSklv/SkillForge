@@ -4,5 +4,5 @@ namespace SkillForge.Areas.Admin.Services;
 
 public interface IHomeService
 {
-    Task<HomePageData> LoadPage();
+    Task<HomePageData> LoadPage(int? userId);
 }

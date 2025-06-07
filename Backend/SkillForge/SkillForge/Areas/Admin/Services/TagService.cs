@@ -1,17 +1,30 @@
 ﻿using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Models.Database;
+using SkillForge.Models.DTOs.Article;
 using SkillForge.Models.DTOs.Tag;
+using SkillForge.Models.DTOs.User;
+using SkillForge.Services;
 
 namespace SkillForge.Areas.Admin.Services;
 
 public class TagService : CrudService<Tag>, ITagService
 {
     private readonly ITagRepository repository;
+    private readonly IUserService userService;
+    private readonly IFrontendService frontendService;
+    private readonly IUserFeedService userFeedService;
 
-    public TagService(ITagRepository repository)
+    public TagService(
+        ITagRepository repository,
+        IUserService userService,
+        IFrontendService frontendService,
+        IUserFeedService userFeedService)
         : base(repository)
     {
         this.repository = repository;
+        this.userService = userService;
+        this.frontendService = frontendService;
+        this.userFeedService = userFeedService;
     }
 
     public Task<Tag?> GetByName(string name)
@@ -49,24 +62,44 @@ public class TagService : CrudService<Tag>, ITagService
         return tags;
     }
 
-    public Task<List<Tag>> GetMostPopular()
+    public Task<List<Tag>> GetMostFollowed()
     {
         return repository.GetMostFollowed();
     }
 
-    public async Task<List<TagLink>> GetMostPopularLinks()
+    public Task<bool> IsFollowedByUser(int userId, int tagId)
     {
-        List<Tag> tags = await GetMostPopular();
-
-        return tags.ConvertAll(CreateTagLink);
+        return repository.IsFollowedByUser(userId, tagId);
+    }
+    {
+        return repository.IsFollowedByUser(userId);
     }
 
-    public TagLink CreateTagLink(Tag tag)
+    public async Task<List<TagLink>> GetMostFollowedLinks()
     {
-        return new TagLink
+        List<Tag> tags = await GetMostFollowed();
+
+        return tags.ConvertAll(frontendService.CreateTagLink);
+    }
+
+    public async Task<TagPageData> LoadPage(Tag tag, int? userId = null)
+    {
+        List<ArticleCard> latestArticles = await userFeedService.GetLatestArticlesByTag(tag.Id, userId, 0, 10);
+        List<TopArticleItem> topArticles = await userFeedService.GetTopArticlesByTag(tag.Id, 5);
+        List<UserListItem> latestFollowers = await userFeedService.GetLatestTagFollowers(tag.Id, userId, 6);
+
+        return new TagPageData
         {
             Name = tag.Name,
             Description = tag.Description,
+            ArticlesCount = tag.ArticlesCount,
+            FollowersCount = tag.FollowersCount,
+            IsFollowedByCurrentUser = userId != null
+                ? await IsFollowedByUser((int)userId, tag.Id)
+                : false,
+            LatestArticles = latestArticles,
+            LatestFollowers = latestFollowers,
+            TopArticles = topArticles,
         };
     }
 
@@ -77,6 +110,6 @@ public class TagService : CrudService<Tag>, ITagService
 
     public async Task<List<TagLink>> SearchLinks(string? phrase, List<string>? exclude)
     {
-        return (await repository.Search(phrase, exclude)).ConvertAll(CreateTagLink);
+        return (await repository.Search(phrase, exclude)).ConvertAll(frontendService.CreateTagLink);
     }
 }

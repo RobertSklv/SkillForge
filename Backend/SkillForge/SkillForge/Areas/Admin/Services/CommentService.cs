@@ -3,6 +3,7 @@ using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Models.Database;
 using SkillForge.Models.DTOs.Article;
 using SkillForge.Models.DTOs.Rating;
+using SkillForge.Models.DTOs.User;
 
 namespace SkillForge.Areas.Admin.Services;
 
@@ -78,26 +79,5 @@ public class CommentService : CrudService<Comment>, ICommentService
     public Task<CommentRating?> GetUserRating(int userId, int commentId)
     {
         return repository.GetUserRating(userId, commentId);
-    }
-
-    public CommentModel CreateCommentModel(Comment comment)
-    {
-        return new CommentModel
-        {
-            CommentId = comment.Id,
-            User = new UserLink
-            {
-                Id = comment.User!.Id,
-                Name = comment.User.Name,
-                AvatarImage = comment.User.AvatarPath,
-            },
-            Content = comment.Content,
-            DateWritten = (DateTime)comment.CreatedAt!,
-            RatingData = new RatingData
-            {
-                ThumbsUp = comment.ThumbsUp,
-                ThumbsDown = comment.ThumbsDown,
-            },
-        };
     }
 }

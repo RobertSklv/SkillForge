@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SkillForge.Models.DTOs.Tag;
 using SkillForge.Areas.Admin.Services;
+using SkillForge.Models.Database;
 
 namespace SkillForge.Controllers;
 
@@ -11,6 +12,21 @@ public class TagController : ApiController
     public TagController(ITagService service)
 	{
         this.service = service;
+    }
+
+    [HttpGet]
+    [Route("/Api/Tag/Load/{name}")]
+    public async Task<IActionResult> Load([FromRoute] string name)
+    {
+        Tag? tag = await service.GetByName(name);
+
+        if (tag == null) return NotFound();
+
+        TryGetUserId(out int? userId);
+
+        TagPageData pageData = await service.LoadPage(tag, userId);
+
+        return Ok(pageData);
     }
 
     [HttpGet]

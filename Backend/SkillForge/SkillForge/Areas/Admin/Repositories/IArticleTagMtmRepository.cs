@@ -2,6 +2,6 @@
 
 namespace SkillForge.Areas.Admin.Repositories;
 
-public interface IArticleTagRepository : IManyToManyRepository<ArticleTag>
+public interface IArticleTagMtmRepository : IManyToManyRepository<ArticleTag>
 {
 }

@@ -9,6 +9,7 @@
         color?: BootstrapColor,
         size?: BootstrapSize,
         mod?: string,
+        isOutline?: boolean,
         isSubmitButton?: boolean,
         disabled?: boolean,
         onclick?: MouseEventHandler<HTMLButtonElement>,
@@ -19,6 +20,7 @@
         color = 'primary',
         size,
         mod,
+        isOutline,
         isSubmitButton,
         disabled,
         onclick,
@@ -26,6 +28,7 @@
     }: Props = $props();
 
     let isLoading = $state<boolean>(false);
+    let colorClass = $derived(`btn${isOutline ? '-outline' : ''}-${color}`)
 
     let formContext = getContext<FormContext>('form');
 
@@ -42,7 +45,7 @@
     }
 </script>
 
-<button type="button" class="btn btn-{color} {mod} {size ? 'btn-' + size : ''}" onclick={onclickPrivate} disabled={disabled || isLoading}>
+<button type="button" class="btn {colorClass} {mod} {size ? 'btn-' + size : ''}" onclick={onclickPrivate} disabled={disabled || isLoading}>
     {#if isLoading}
         <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
         <span role="status">Processing...</span>
