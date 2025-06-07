@@ -1,4 +1,5 @@
 ﻿using SkillForge.Areas.Admin.Repositories;
+using SkillForge.Exceptions;
 using SkillForge.Models.Database;
 using SkillForge.Models.DTOs.Article;
 using SkillForge.Models.DTOs.Tag;
@@ -71,8 +72,38 @@ public class TagService : CrudService<Tag>, ITagService
     {
         return repository.IsFollowedByUser(userId, tagId);
     }
+
+    public async Task Follow(int userId, string tagName)
     {
-        return repository.IsFollowedByUser(userId);
+        Tag? tag = await GetByName(tagName) ?? throw new RecordNotFoundException($"Tag '{tagName}' does not exist.");
+
+        TagFollow? followRecord = await repository.GetFollowRecord(userId, tag.Id);
+
+        if (followRecord != null)
+        {
+            throw new AlreadyFollowingException();
+        }
+
+        TagFollow follow = new()
+        {
+            UserId = userId,
+            TagId = tag.Id
+        };
+
+        tag.FollowersCount++;
+
+        await repository.SaveFollowRecord(follow);
+    }
+
+    public async Task Unfollow(int userId, string tagName)
+    {
+        Tag? tag = await GetByName(tagName) ?? throw new RecordNotFoundException($"Tag '{tagName}' does not exist.");
+
+        TagFollow? followRecord = await repository.GetFollowRecord(userId, tag.Id) ?? throw new AlreadyNotFollowingException();
+
+        tag.FollowersCount--;
+
+        await repository.DeleteFollowRecord(followRecord);
     }
 
     public async Task<List<TagLink>> GetMostFollowedLinks()
@@ -82,8 +113,10 @@ public class TagService : CrudService<Tag>, ITagService
         return tags.ConvertAll(frontendService.CreateTagLink);
     }
 
-    public async Task<TagPageData> LoadPage(Tag tag, int? userId = null)
+    public async Task<TagPageData> LoadPage(string name, int? userId = null)
     {
+        Tag? tag = await GetByName(name) ?? throw new RecordNotFoundException($"Tag '{name}' does not exist.");
+
         List<ArticleCard> latestArticles = await userFeedService.GetLatestArticlesByTag(tag.Id, userId, 0, 10);
         List<TopArticleItem> topArticles = await userFeedService.GetTopArticlesByTag(tag.Id, 5);
         List<UserListItem> latestFollowers = await userFeedService.GetLatestTagFollowers(tag.Id, userId, 6);

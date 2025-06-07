@@ -39,12 +39,35 @@ public class TagRepository : CrudRepository<Tag>, ITagRepository
             .ToListAsync();
     }
 
+    public Task<TagFollow?> GetFollowRecord(int userId, int tagId)
+    {
+        return db.TagFollows.FirstOrDefaultAsync(e => e.UserId == userId && e.TagId == tagId);
+    }
+
     public Task<bool> IsFollowedByUser(int userId, int tagId)
     {
         return db.TagFollows.AnyAsync(tf => tf.UserId == userId && tf.TagId == tagId);
     }
+
+    public Task SaveFollowRecord(TagFollow followRecord)
     {
-        return db.TagFollows.AnyAsync(tf => tf.UserId == userId);
+        db.TagFollows.Add(followRecord);
+
+        return db.SaveChangesAsync();
+    }
+
+    public Task DeleteFollowRecord(int userId, int tagId)
+    {
+        return db.TagFollows
+            .Where(e => e.UserId == userId && e.TagId == tagId)
+            .ExecuteDeleteAsync();
+    }
+
+    public Task DeleteFollowRecord(TagFollow followRecord)
+    {
+        db.TagFollows.Remove(followRecord);
+
+        return db.SaveChangesAsync();
     }
 
     public Task<List<Tag>> Search(string? phrase, List<string>? exclude)

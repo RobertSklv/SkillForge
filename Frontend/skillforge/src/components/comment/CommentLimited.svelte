@@ -1,9 +1,5 @@
 <script lang="ts">
-	import Block from "$components/layout/Block.svelte";
-	import UserLink from "$components/link/UserLink.svelte";
-	import RateButtons from "$components/rating/RateButtons.svelte";
 	import AuthorBox from "$components/user/AuthorBox.svelte";
-	import { currentUserStore } from "$lib/stores/currentUserStore";
 	import type CommentModel from "$lib/types/CommentModel";
 
     interface Props {

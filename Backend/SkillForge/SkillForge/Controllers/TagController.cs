@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SkillForge.Models.DTOs.Tag;
 using SkillForge.Areas.Admin.Services;
-using SkillForge.Models.Database;
+using Microsoft.AspNetCore.Authorization;
+using SkillForge.Exceptions;
 
 namespace SkillForge.Controllers;
 
+[Authorize(AuthenticationSchemes = "FrontendCookie")]
 public class TagController : ApiController
 {
     private readonly ITagService service;
@@ -14,19 +16,23 @@ public class TagController : ApiController
         this.service = service;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     [Route("/Api/Tag/Load/{name}")]
     public async Task<IActionResult> Load([FromRoute] string name)
     {
-        Tag? tag = await service.GetByName(name);
-
-        if (tag == null) return NotFound();
-
         TryGetUserId(out int? userId);
 
-        TagPageData pageData = await service.LoadPage(tag, userId);
+        try
+        {
+            TagPageData pageData = await service.LoadPage(name, userId);
 
-        return Ok(pageData);
+            return Ok(pageData);
+        }
+        catch (RecordNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
     }
 
     [HttpGet]
@@ -35,5 +41,53 @@ public class TagController : ApiController
         List<TagLink> tagLinks = await service.SearchLinks(phrase, exclude);
 
         return Ok(tagLinks);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Follow(TagRequest tagRequest)
+    {
+        if (!TryGetUserId(out int? userId))
+        {
+            return Unauthorized();
+        }
+
+        try
+        {
+            await service.Follow((int)userId, tagRequest.Tag);
+        }
+        catch (RecordNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (AlreadyFollowingException e)
+        {
+            return BadRequest(e.Message);
+        }
+
+        return Ok();
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> Unfollow(TagRequest tagRequest)
+    {
+        if (!TryGetUserId(out int? userId))
+        {
+            return Unauthorized();
+        }
+
+        try
+        {
+            await service.Unfollow((int)userId, tagRequest.Tag);
+        }
+        catch (RecordNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (AlreadyNotFollowingException e)
+        {
+            return BadRequest(e.Message);
+        }
+
+        return Ok();
     }
 }

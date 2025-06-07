@@ -13,7 +13,7 @@
         isSubmitButton?: boolean,
         disabled?: boolean,
         onclick?: MouseEventHandler<HTMLButtonElement>,
-        children: Snippet
+        children?: Snippet
     }
 
     let {
@@ -45,11 +45,11 @@
     }
 </script>
 
-<button type="button" class="btn {colorClass} {mod} {size ? 'btn-' + size : ''}" onclick={onclickPrivate} disabled={disabled || isLoading}>
+<button type="button" class="btn {colorClass} {mod} {size ? 'btn-' + size : ''}" class:disabled onclick={onclickPrivate} disabled={disabled || isLoading}>
     {#if isLoading}
         <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
         <span role="status">Processing...</span>
     {:else}
-        {@render children()}
+        {@render children?.()}
     {/if}
 </button>

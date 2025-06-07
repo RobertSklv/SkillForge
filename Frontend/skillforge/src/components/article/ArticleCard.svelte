@@ -18,9 +18,9 @@
 
 <Block>
 	{#if data.CoverImage}
-		<img src={PUBLIC_BACKEND_DOMAIN + data.CoverImage} class="card-img-top rounded-top-3 object-fit-cover mb-3" alt="Article cover" style="height: 250px" />
+		<img src={PUBLIC_BACKEND_DOMAIN + data.CoverImage} class="card-img-top rounded-top-3 object-fit-cover" alt="Article cover" style="height: 250px" />
 	{/if}
-	<AuthorBox name={data.Author.Name} date={data.DatePublished} />
+	<AuthorBox name={data.Author.Name} date={data.DatePublished} mod="mt-3" />
 	<div class="card-body mx-5">
 		<div class="d-flex align-items-start">
 			<h2 class="card-title fw-bold">
@@ -46,7 +46,7 @@
 					{#if data.Comments.length}
 						<div class="text-primary ms-2">
 							<i class="bi bi-chat fs-6"></i>
-							<small>{data.Comments.length}</small>
+							<small>{data.TotalComments}</small>
 						</div>
 					{/if}
 				</div>

@@ -14,7 +14,7 @@ import type TagPageData from "$lib/types/TagPageData";
 
 export async function getCurrentUser(): Promise<UserInfo | null> {
   try {
-    return await requestApi<UserInfo | null>('/User/Me', {
+    return await requestApi('/User/Me', {
       init: {
         credentials: 'include'
       }
@@ -25,7 +25,7 @@ export async function getCurrentUser(): Promise<UserInfo | null> {
 }
 
 export async function logout(): Promise<string> {
-  const data = await requestApi<string>('/User/Logout', {
+  const data = await requestApi('/User/Logout', {
     init: {
     method: 'POST',
     credentials: 'include'
@@ -39,7 +39,7 @@ export async function uploadImage(file: File, type: ImageUploadType): Promise<st
   const formData = new FormData();
   formData.append('image', file);
 
-  let url = await requestApi<string>('/Image/Upload', {
+  let url = await requestApi('/Image/Upload', {
     init: {
       method: 'POST',
       body: formData
@@ -75,7 +75,7 @@ export function rate(id: number, rate: -1 | 0 | 1, type: 'article' | 'comment') 
 }
 
 export function getLatestArticles(batchIndex: number, batchSize: number): Promise<ArticleCardType[]> {
-  return requestApi<ArticleCardType[]>('/Article/Latest', {
+  return requestApi('/Article/Latest', {
     init: {
       credentials: 'include'
     },
@@ -87,7 +87,7 @@ export function getLatestArticles(batchIndex: number, batchSize: number): Promis
 }
 
 export function getLatestArticlesByTag(tag: string, batchIndex: number, batchSize: number): Promise<ArticleCardType[]> {
-  return requestApi<ArticleCardType[]>('/Article/Latest', {
+  return requestApi('/Article/LatestByTag', {
     init: {
       credentials: 'include'
     },
@@ -100,7 +100,7 @@ export function getLatestArticlesByTag(tag: string, batchIndex: number, batchSiz
 }
 
 export function viewArticle(fetch: SvelteFetch, id: number): Promise<ArticlePageModel> {
-  return requestApi<ArticlePageModel>(`/Article/View/${id}`, {
+  return requestApi(`/Article/View/${id}`, {
     fetchFunction: fetch,
     init: {
       credentials: 'include'
@@ -109,7 +109,7 @@ export function viewArticle(fetch: SvelteFetch, id: number): Promise<ArticlePage
 }
 
 export function loadArticleUpsertPage(fetch: SvelteFetch, id?: number): Promise<ArticleUpsertPageModel> {
-  return requestApi<ArticleUpsertPageModel>('/Article/LoadUpsertPage', {
+  return requestApi('/Article/LoadUpsertPage', {
     fetchFunction: fetch,
     init: {
       credentials: 'include'
@@ -126,19 +126,48 @@ export function loadHomePage(fetch: SvelteFetch): Promise<HomePageData> {
   });
 }
 
-export function loadTagPage(fetch: SvelteFetch, name: string): Promise<TagPageData> {
+export function loadTagPage(name: string): Promise<TagPageData> {
   return requestApi(`/Tag/Load/${name}`, {
-    fetchFunction: fetch
+    init: {
+      credentials: 'include'
+    }
   });
 }
 
 export function searchTags(phrase?: string, exclude?: string[]): Promise<TagLinkType[]> {
   return requestApi(`/Tag/Search`, {
+    init: {
+      credentials: 'include'
+    },
     query: {
       phrase,
       exclude
     }
   });
+}
+
+export function followTag(tag: string): Promise<boolean> {
+  return requestApi('/Tag/Follow', {
+    init: {
+      method: 'POST',
+      credentials: 'include',
+      body: JSON.stringify({
+        tag
+      })
+    }
+  })
+}
+
+export function unfollowTag(tag: string): Promise<boolean> {
+  return requestApi('/Tag/Unfollow', {
+    init: {
+      method: 'DELETE',
+      credentials: 'include',
+      body: JSON.stringify({
+        tag
+      })
+    }
+  })
 }
 
 function isString(val: any): val is string {
@@ -176,11 +205,11 @@ function createURLSearchParams(params: QueryParams): URLSearchParams {
   return usp;
 }
 
-export async function requestApi<T>(url: string, data?: FetchData): Promise<T> {
-  return request<T>(PUBLIC_BACKEND_DOMAIN + '/Api' + url, data);
+export async function requestApi(url: string, data?: FetchData): Promise<any> {
+  return request(PUBLIC_BACKEND_DOMAIN + '/Api' + url, data);
 }
 
-export async function request<T>(url: string, data?: FetchData): Promise<T> {
+export async function request(url: string, data?: FetchData): Promise<any> {
 
   if (data) {
     data.init ??= {};

@@ -1,34 +1,26 @@
 <script lang="ts">
-	import moment from "moment";
-
     interface Props {
-        name: string,
-        date: string,
         mod?: string,
         size?: 'normal' | 'small',
         indent?: boolean
     }
 
     let {
-        name,
-        date,
         mod,
         size = 'normal',
         indent = true,
     }: Props = $props();
 </script>
 
-<div class="author-box d-flex gap-2 size-{size} {mod}" class:ms-2={indent}>
+<div class="author-box d-flex gap-2 size-{size} w-100 {mod}" class:ms-2={indent}>
 	<div class="author-box__image-wrapper d-flex flex-column justify-content-start align-items-end" class:w-auto={!indent}>
-        <a href="/user/{name}" class="text-decoration-none">
-		    <img src="/user.png" class="author-box__image rounded-circle" alt="Robert profile" />
-        </a>
+        <span class="author-box__image rounded-circle placeholder"></span>
 	</div>
-	<div class="author-box__info-col d-flex flex-column">
-        <a href="/user/{name}" class="text-decoration-none">{name}</a>
+	<div class="author-box__info-col d-flex flex-column w-50">
+        <span class="{size == 'normal' ? 'fs-4' : 'fs-5'} placeholder col-4"></span>
         <div class="small text-tertiary">
-            {moment(date).format('ddd, MMMM D, YYYY HH:mm')}
-            <span class="text-muted ms-2">({moment(date).fromNow()})</span>
+            <span class="fs-6 placeholder col-5"></span>
+            <span class="text-muted ms-2 placeholder col-3"></span>
         </div>
 	</div>
 </div>
@@ -38,12 +30,14 @@
         &__image {
             &-wrapper {
                 width: 48px;
+                height: 45px;
             }
         }
 
         &.size-normal {
             .author-box__image {
                 width: 40px;
+                height: 40px;
             }
         }
 
@@ -52,6 +46,7 @@
 
             .author-box__image {
                 width: 30px;
+                height: 30px;
             }
         }
 	}

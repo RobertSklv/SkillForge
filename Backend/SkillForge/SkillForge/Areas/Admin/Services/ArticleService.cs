@@ -149,9 +149,12 @@ public class ArticleService : CrudService<Article>, IArticleService
         await repository.Upsert(entity);
 
         List<Tag> tags = await tagService.GetByNamesAndCreateNonexisting(model.Tags);
+
+        tags.ForEach(t => t.ArticlesCount++);
+
         List<int> tagIds = tags.ConvertAll(t => t.Id).ToList();
 
-        await articleTagRepository.UpdateLeft(model.Id, tagIds);
+        await articleTagRepository.UpdateLeft(entity.Id, tagIds);
     }
 
     public async Task<ArticlePageData> View(int userId, int articleId)

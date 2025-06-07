@@ -15,11 +15,15 @@ public interface ITagService : ICrudService<Tag>
 
     Task<bool> IsFollowedByUser(int userId, int tagId);
 
+    Task Follow(int userId, string tagName);
+
+    Task Unfollow(int userId, string tagName);
+
     Task<List<Tag>> Search(string? phrase, List<string>? exclude);
 
     Task<List<TagLink>> SearchLinks(string? phrase, List<string>? exclude);
 
     Task<List<TagLink>> GetMostFollowedLinks();
 
-    Task<TagPageData> LoadPage(Tag tag, int? userId = null);
+    Task<TagPageData> LoadPage(string name, int? userId = null);
 }

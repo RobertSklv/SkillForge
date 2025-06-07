@@ -4,19 +4,21 @@
 	import type UserListItemType from "$lib/types/UserListItemType";
 
     interface Props {
-        data: UserListItemType
+        data: UserListItemType,
+        mod?: string
     }
 
     let {
-        data
+        data,
+        mod
     }: Props = $props();
 </script>
 
-<li class="d-flex justify-content-between align-items-center">
+<li class="d-flex justify-content-between align-items-center {mod}">
     <UserLink data={data.Link} />
     {#if data.IsFollowedByCurrentUser}
-        <Button isOutline={true}>Unfollow</Button>
+        <Button size="sm" isOutline>Unfollow</Button>
     {:else}
-        <Button>Follow</Button>
+        <Button size="sm">Follow</Button>
     {/if}
 </li>

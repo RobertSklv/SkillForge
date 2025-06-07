@@ -65,10 +65,10 @@
     <Block>
         {#snippet header()}
             <div class="row mb-3">
-                <div class="col">
+                <div class="col-10">
 	                <AuthorBox name={data.Author.Name} date={data.DatePublished} indent={false} />
                 </div>
-                <div class="col text-end">
+                <div class="col-2 text-end">
                     <Dropdown>
                         {#snippet buttonSnippet()}
                             <i class="bi bi-three-dots-vertical"></i>

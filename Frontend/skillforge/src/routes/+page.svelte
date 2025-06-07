@@ -1,17 +1,14 @@
 <script lang="ts">
 	import AnchorList from '$components/anchor-list/AnchorList.svelte';
 	import ArticleCard from '$components/article/ArticleCard.svelte';
-	import ArticlePlaceholder from '$components/article/ArticlePlaceholder.svelte';
+	import ArticleCardPlaceholder from '$components/article/ArticleCardPlaceholder.svelte';
 	import TopArticleLink from '$components/article/TopArticleLink.svelte';
-	import Button from '$components/button/Button.svelte';
 	import InfiniteScroll from '$components/infinite-scroll/InfiniteScroll.svelte';
-	import Block from '$components/layout/Block.svelte';
 	import Columns from '$components/layout/Columns.svelte';
 	import TagLink from '$components/link/TagLink.svelte';
 	import UserLink from '$components/link/UserLink.svelte';
 	import LoginCta from '$components/login-cta/LoginCta.svelte';
 	import { getLatestArticles } from '$lib/api/client';
-	import { currentUserStore } from '$lib/stores/currentUserStore';
 	import type ArticleCardType from '$lib/types/ArticleCardType';
 	import type HomePageData from '$lib/types/HomePageData';
 	import { onMount } from 'svelte';
@@ -66,9 +63,9 @@
 			<ArticleCard data={item} />
 		{/snippet}
 		{#snippet placeholderSnippet()}
-			<ArticlePlaceholder />
-			<ArticlePlaceholder />
-			<ArticlePlaceholder />
+			<ArticleCardPlaceholder />
+			<ArticleCardPlaceholder />
+			<ArticleCardPlaceholder />
 		{/snippet}
 	</InfiniteScroll>
 

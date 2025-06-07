@@ -2,19 +2,21 @@
 	import type { Snippet } from "svelte";
 
     interface Props {
+        mod?: string,
         leftColumn: Snippet,
         children: Snippet,
         rightColumn: Snippet,
     }
 
     const {
+        mod,
         leftColumn,
         children,
         rightColumn,
     }: Props = $props();
 </script>
 
-<div class="row">
+<div class="row {mod}">
     <div class="d-none d-lg-block left-column">
         {@render leftColumn()}
     </div>
