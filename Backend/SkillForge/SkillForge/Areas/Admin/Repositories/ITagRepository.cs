@@ -20,6 +20,8 @@ public interface ITagRepository : ICrudRepository<Tag>
 
     Task DeleteFollowRecord(TagFollow followRecord);
 
+    Task<List<TagFollow>> GetFollowers(int tagId, int batchIndex, int batchSize);
+
     Task<List<Tag>> Search(string? phrase, List<string>? exclude);
 
     Task<List<TagFollow>> GetLatestFollowers(int tagId, int count);

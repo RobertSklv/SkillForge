@@ -1,11 +1,10 @@
 <script lang="ts" generics="T">
-	import { onDestroy, onMount, type Snippet } from 'svelte';
+	import type ScrollableStore from '$lib/types/ScrollableStore';
+	import { getContext, onDestroy, onMount, type Snippet } from 'svelte';
 
 	interface Props {
 		mod?: string,
 		batchSize: number;
-		autoLoadOnMount?: boolean,
-		scrollableElement: () => HTMLElement,
         loadMore: (batchIndex: number) => Promise<T[]>,
 		itemSnippet: Snippet<[T]>,
 		placeholderSnippet?: Snippet,
@@ -14,8 +13,6 @@
 	let {
 		mod,
         batchSize,
-		autoLoadOnMount,
-		scrollableElement,
         loadMore,
         itemSnippet,
 		placeholderSnippet,
@@ -27,7 +24,17 @@
 	let containerElement: HTMLElement;
 	let isLoading = $state<boolean>(false);
 
-	export function updateItemList(newItems: T[]) {
+	const scrollable = getContext<ScrollableStore>('scrollable');
+
+	function getScrollableHeight() {
+		if (scrollable && typeof scrollable.getClientHeight !== 'undefined' && scrollable.getClientHeight != null) {
+			return scrollable.getClientHeight();
+		}
+
+		return document.documentElement.clientHeight;
+	}
+
+	function updateItemList(newItems: T[]) {
 		items = items.concat(newItems);
 
 		if (newItems.length < batchSize) {
@@ -55,17 +62,19 @@
 			return;
 		}
 
-		if (containerElement.getBoundingClientRect().bottom <= scrollableElement().clientHeight) {
+		if (containerElement.getBoundingClientRect().bottom <= getScrollableHeight()) {
             await loadMoreAndUpdateItemList();
 		}
 	}
 
 	onMount(async () => {
-		window.addEventListener('scroll', onScroll);
-
-		if (autoLoadOnMount) {
-			await loadMoreAndUpdateItemList();
+		if (scrollable?.onScroll) {
+			scrollable.onScroll(onScroll);
+		} else {
+			window.addEventListener('scroll', onScroll);
 		}
+
+		await loadMoreAndUpdateItemList();
 	});
 
 	onDestroy(() => {

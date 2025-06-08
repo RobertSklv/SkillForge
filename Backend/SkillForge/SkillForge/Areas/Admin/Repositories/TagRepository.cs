@@ -70,6 +70,17 @@ public class TagRepository : CrudRepository<Tag>, ITagRepository
         return db.SaveChangesAsync();
     }
 
+    public Task<List<TagFollow>> GetFollowers(int tagId, int batchIndex, int batchSize)
+    {
+        return db.TagFollows
+            .Include(e => e.User)
+            .Where(e => e.TagId == tagId)
+            .OrderByDescending(e => e.CreatedAt)
+            .Skip(batchIndex * batchSize)
+            .Take(batchSize)
+            .ToListAsync();
+    }
+
     public Task<List<Tag>> Search(string? phrase, List<string>? exclude)
     {
         IQueryable<Tag> query = DbSet;
@@ -91,9 +102,9 @@ public class TagRepository : CrudRepository<Tag>, ITagRepository
             .ToListAsync();
     }
 
-    public async Task<List<TagFollow>> GetLatestFollowers(int tagId, int count)
+    public Task<List<TagFollow>> GetLatestFollowers(int tagId, int count)
     {
-        return await db.TagFollows
+        return db.TagFollows
             .Include(e => e.User)
             .Where(e => e.TagId == tagId)
             .OrderByDescending(e => e.CreatedAt)
@@ -101,9 +112,9 @@ public class TagRepository : CrudRepository<Tag>, ITagRepository
             .ToListAsync();
     }
 
-    public async Task<List<TagFollow>> GetLatestFollowers(string tagName, int count)
+    public Task<List<TagFollow>> GetLatestFollowers(string tagName, int count)
     {
-        return await db.TagFollows
+        return db.TagFollows
             .Include(e => e.User)
             .Include(e => e.Tag)
             .Where(e => e.Tag!.Name == tagName)

@@ -11,6 +11,7 @@ import type QueryParams from "$lib/types/QueryParams";
 import type QueryParamsFiltered from "$lib/types/QueryParamsFiltered";
 import type FetchData from "$lib/types/FetchData";
 import type TagPageData from "$lib/types/TagPageData";
+import type UserListItemType from "$lib/types/UserListItemType";
 
 export async function getCurrentUser(): Promise<UserInfo | null> {
   try {
@@ -170,6 +171,18 @@ export function unfollowTag(tag: string): Promise<boolean> {
   })
 }
 
+export function getTagFollowers(name: string, batchIndex: number, batchSize: number): Promise<UserListItemType[]> {
+  return requestApi(`/Tag/Followers/${name}`, {
+    init: {
+      credentials: 'include'
+    },
+    query: {
+      batchIndex,
+      batchSize
+    }
+  });
+}
+
 function isString(val: any): val is string {
   return typeof val === 'string';
 }
@@ -198,6 +211,8 @@ function createURLSearchParams(params: QueryParams): URLSearchParams {
         for (let v of value) {
           usp.append(key, toString(v));
         }
+      } else {
+        usp.append(key, toString(value));
       }
     }
   }
@@ -232,7 +247,7 @@ export async function request(url: string, data?: FetchData): Promise<any> {
 
   let _url = new URL(url);
   if (data?.query) {
-    _url.search = createURLSearchParams(data?.query).toString();
+    _url.search = createURLSearchParams(data.query).toString();
   }
 
   const response = await (data?.fetchFunction ?? fetch)(_url, data?.init);

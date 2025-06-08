@@ -64,7 +64,7 @@
 <div class="d-flex flex-column gap-5">
     <Block>
         {#snippet header()}
-            <div class="row mb-3">
+            <div class="row mb-3 pt-2">
                 <div class="col-10">
 	                <AuthorBox name={data.Author.Name} date={data.DatePublished} indent={false} />
                 </div>

@@ -1,4 +1,3 @@
-import type ArticleCardType from "./ArticleCardType";
 import type TopArticleItemType from "./TopArticleItemType";
 import type UserListItemType from "./UserListItemType";
 
@@ -10,5 +9,4 @@ export default interface TagPageData {
     IsFollowedByCurrentUser: boolean,
     LatestFollowers: UserListItemType[],
     TopArticles: TopArticleItemType[],
-    LatestArticles: ArticleCardType[],
 }

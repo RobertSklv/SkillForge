@@ -1,0 +1,15 @@
+body {
+    &:has(.modal.d-block) {
+        overflow-y: hidden;
+        padding-right: 15px;
+
+        .navbar {
+            padding-right: 15px;
+        }
+    }
+}
+
+#main-content {
+    padding-top: calc(3rem + 56px);
+    min-height: calc(100vh - 56px);
+}

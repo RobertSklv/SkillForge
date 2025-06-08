@@ -204,6 +204,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         List<int> articleTagIds = articleTags.ConvertAll(e => e.Id);
 
         return await db.Articles
+            .Include(e => e.Author)
             .Include(e => e.Comments)
             .Where(e => e.ApprovalId != null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
             .OrderByDescending(e => e.ViewCount)
@@ -220,6 +221,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         List<int> articleTagIds = articleTags.ConvertAll(e => e.Id);
 
         return await db.Articles
+            .Include(e => e.Author)
             .Include(e => e.Comments)
             .Where(e => e.ApprovalId != null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
             .OrderByDescending(e => e.ViewCount)
@@ -230,6 +232,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
     public Task<List<Article>> GetTopArticles(int count)
     {
         return DbSet
+            .Include(e => e.Author)
             .Include(e => e.Comments)
             .Where(e => e.ApprovalId != null)
             .OrderByDescending(e => e.ViewCount)

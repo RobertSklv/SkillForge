@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { formatRelativeTime } from "$lib/util";
 	import moment from "moment";
 
     interface Props {
@@ -28,7 +29,7 @@
         <a href="/user/{name}" class="text-decoration-none">{name}</a>
         <div class="small text-tertiary">
             {moment(date).format('ddd, MMMM D, YYYY HH:mm')}
-            <span class="text-muted ms-2">({moment(date).fromNow()})</span>
+            <span class="text-muted ms-2">({formatRelativeTime(date)})</span>
         </div>
 	</div>
 </div>

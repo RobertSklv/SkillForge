@@ -6,6 +6,7 @@
     import 'bootswatch/dist/vapor/bootstrap.min.css';
     import 'bootstrap-icons/font/bootstrap-icons.min.css';
 	import CookieConsentBanner from "$components/cookie-consent/CookieConsentBanner.svelte";
+    import '$styles/global.scss';
 
     const {
         children
@@ -27,10 +28,3 @@
 <Footer />
 
 <CookieConsentBanner />
-
-<style>
-    #main-content {
-        padding-top: calc(3rem + 56px);
-        min-height: calc(100vh - 56px);
-    }
-</style>

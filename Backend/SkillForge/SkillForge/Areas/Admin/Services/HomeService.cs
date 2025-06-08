@@ -24,14 +24,12 @@ public class HomeService : IHomeService
 
     public async Task<HomePageData> LoadPage(int? userId)
     {
-        List<ArticleCard> latestArticles = await userFeedService.GetLatestArticles(userId, 0, 10);
         List<TopArticleItem> topArticles = await userFeedService.GetTopArticles(5);
         List<UserLink> topUsers = await userService.GetMostPopularLinks();
         List<TagLink> topTags = await tagService.GetMostFollowedLinks();
 
         return new HomePageData
         {
-            LatestArticles = latestArticles,
             TopArticles = topArticles,
             TopUsers = topUsers,
             TopTags = topTags,

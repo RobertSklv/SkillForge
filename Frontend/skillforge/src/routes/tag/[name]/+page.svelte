@@ -11,46 +11,24 @@
 	import LoginCta from "$components/login-cta/LoginCta.svelte";
 	import UserListItem from "$components/user/UserListItem.svelte";
 	import UserListItemPlaceholder from "$components/user/UserListItemPlaceholder.svelte";
-	import { followTag, getLatestArticlesByTag, loadTagPage, unfollowTag } from "$lib/api/client";
+	import { followTag, getLatestArticlesByTag, getTagFollowers, loadTagPage, unfollowTag } from "$lib/api/client";
 	import { currentUserStore } from "$lib/stores/currentUserStore";
 	import type ArticleCardType from "$lib/types/ArticleCardType";
 	import type TagPageData from "$lib/types/TagPageData";
-	import { onMount } from "svelte";
+	import { page } from '$app/stores';
+	import Modal from "$components/modal/Modal.svelte";
+	import type UserListItemType from "$lib/types/UserListItemType";
 
-	const BATCH_SIZE: number = 10;
-
-    interface Props {
-		data: {
-			tagName: string
-		}
-    }
-
-    let {
-        data
-    }: Props = $props();
+	const ARTICLE_BATCH_SIZE: number = 10;
+	const TAG_FOLLOWER_BATCH_SIZE: number = 15;
 
 	let backendData = $state<TagPageData>();
 	let loadPromise = $state<Promise<TagPageData>>();
 	let isFollowedByCurrentUser = $state<boolean>(false);
+	let isFollowersModalOpen = $state<boolean>(false);
 
-	function loadMore(batchIndex: number): Promise<ArticleCardType[]> {
-		return getLatestArticlesByTag(data.tagName, batchIndex, BATCH_SIZE);
-	}
-
-	async function follow() {
-		await followTag(data.tagName);
-
-		isFollowedByCurrentUser = true;
-	}
-
-	async function unfollow() {
-		await unfollowTag(data.tagName);
-		
-		isFollowedByCurrentUser = false;
-	}
-
-	onMount(async () => {
-		loadPromise = loadTagPage(data.tagName)
+	$effect(() => {
+		loadPromise = loadTagPage($page.params.name)
 			.then(r => {
 				backendData = r;
 				isFollowedByCurrentUser = backendData.IsFollowedByCurrentUser;
@@ -58,6 +36,34 @@
 				return r;
 			});
 	});
+
+	function loadMore(batchIndex: number): Promise<ArticleCardType[]> {
+		if (!backendData) return Promise.resolve([]);
+		
+		return getLatestArticlesByTag(backendData.Name, batchIndex, ARTICLE_BATCH_SIZE);
+	}
+
+	function loadMoreTagFollowers(batchIndex: number): Promise<UserListItemType[]> {
+		if (!backendData) return Promise.resolve([]);
+
+		return getTagFollowers(backendData?.Name, batchIndex, TAG_FOLLOWER_BATCH_SIZE);
+	}
+
+	async function follow() {
+		if (!backendData) return;
+
+		await followTag(backendData.Name);
+
+		isFollowedByCurrentUser = true;
+	}
+
+	async function unfollow() {
+		if (!backendData) return;
+		
+		await unfollowTag(backendData.Name);
+		
+		isFollowedByCurrentUser = false;
+	}
 </script>
 
 {#await loadPromise}
@@ -181,17 +187,29 @@
 				</ul>
 				{#if data.FollowersCount > data.LatestFollowers.length}
 					<div class="text-center">
-						<Button mod="px-4">View all</Button>
+						<Button mod="px-4" onclick={() => isFollowersModalOpen = true}>View all</Button>
 					</div>
 				{/if}
+				<Modal title="Followers" bind:show={isFollowersModalOpen} verticallyCentered scrollable>
+					<InfiniteScroll batchSize={TAG_FOLLOWER_BATCH_SIZE} loadMore={loadMoreTagFollowers}>
+						{#snippet itemSnippet(item)}
+							<UserListItem mod="mb-3" data={item} />
+						{/snippet}
+						{#snippet placeholderSnippet()}
+							<div class="d-flex justify-content-center">
+								<div class="spinner-border" role="status">
+									<span class="visually-hidden">Loading...</span>
+								</div>
+							</div>
+						{/snippet}
+					</InfiniteScroll>
+				</Modal>
 			{/snippet}
 
 			<InfiniteScroll
 				mod="d-flex flex-column gap-4"
-				batchSize={BATCH_SIZE}
-				scrollableElement={() => document.documentElement}
+				batchSize={ARTICLE_BATCH_SIZE}
 				{loadMore}
-				autoLoadOnMount
 			>
 				{#snippet itemSnippet(item)}
 					<ArticleCard data={item} />

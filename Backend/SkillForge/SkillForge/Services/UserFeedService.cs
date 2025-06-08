@@ -98,7 +98,7 @@ public class UserFeedService : IUserFeedService
         return (await articleRepository.GetTopArticlesByTag(tagName, count)).ConvertAll(frontendService.CreateTopArticleItem);
     }
 
-    public async Task<List<UserListItem>> GetLatestTagFollowers(List<TagFollow> latestFollowers, int? userId)
+    public async Task<List<UserListItem>> GetTagFollowers(List<TagFollow> followers, int? userId)
     {
         List<UserFollow> followings = new();
 
@@ -107,24 +107,31 @@ public class UserFeedService : IUserFeedService
             followings = await userRepository.GetFollowings((int)userId);
         }
 
-        return latestFollowers.ConvertAll(tf => new UserListItem
+        return followers.ConvertAll(tf => new UserListItem
         {
             Link = frontendService.CreateUserLink(tf.User!),
             IsFollowedByCurrentUser = followings.Any(uf => uf.FollowedUserId == tf.UserId)
         });
     }
 
+    public async Task<List<UserListItem>> GetTagFollowers(int tagId, int? userId, int batchIndex, int batchSize)
+    {
+        List<TagFollow> latestFollowers = await tagRepository.GetFollowers(tagId, batchIndex, batchSize);
+
+        return await GetTagFollowers(latestFollowers, userId);
+    }
+
     public async Task<List<UserListItem>> GetLatestTagFollowers(int tagId, int? userId, int count)
     {
         List<TagFollow> latestFollowers = await tagRepository.GetLatestFollowers(tagId, count);
 
-        return await GetLatestTagFollowers(latestFollowers, userId);
+        return await GetTagFollowers(latestFollowers, userId);
     }
 
     public async Task<List<UserListItem>> GetLatestTagFollowers(string tagName, int? userId, int count)
     {
         List<TagFollow> latestFollowers = await tagRepository.GetLatestFollowers(tagName, count);
 
-        return await GetLatestTagFollowers(latestFollowers, userId);
+        return await GetTagFollowers(latestFollowers, userId);
     }
 }

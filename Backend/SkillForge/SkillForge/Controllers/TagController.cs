@@ -3,6 +3,9 @@ using SkillForge.Models.DTOs.Tag;
 using SkillForge.Areas.Admin.Services;
 using Microsoft.AspNetCore.Authorization;
 using SkillForge.Exceptions;
+using SkillForge.Models.DTOs.User;
+using SkillForge.Services;
+using SkillForge.Models.Database;
 
 namespace SkillForge.Controllers;
 
@@ -10,10 +13,12 @@ namespace SkillForge.Controllers;
 public class TagController : ApiController
 {
     private readonly ITagService service;
+    private readonly IUserFeedService userFeedService;
 
-    public TagController(ITagService service)
+    public TagController(ITagService service, IUserFeedService userFeedService)
 	{
         this.service = service;
+        this.userFeedService = userFeedService;
     }
 
     [AllowAnonymous]
@@ -41,6 +46,22 @@ public class TagController : ApiController
         List<TagLink> tagLinks = await service.SearchLinks(phrase, exclude);
 
         return Ok(tagLinks);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("/Api/Tag/Followers/{tag}")]
+    public async Task<IActionResult> Followers([FromRoute] string tag, [FromQuery] int batchIndex, [FromQuery] int batchSize)
+    {
+        Tag? t = await service.GetByName(tag);
+
+        if (t == null) return NotFound("Tag not found");
+
+        TryGetUserId(out int? userId);
+
+        List<UserListItem> followers = await userFeedService.GetTagFollowers(t.Id, userId, batchIndex, batchSize);
+
+        return Ok(followers);
     }
 
     [HttpPost]
