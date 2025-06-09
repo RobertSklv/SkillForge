@@ -1,13 +1,14 @@
 <script lang="ts">
 	import Scrollable from '$components/scrollable/Scrollable.svelte';
-	import { type Snippet } from 'svelte';
+	import { setContext, type Snippet } from 'svelte';
 	import { fade } from 'svelte/transition';
     import './modal.scss';
 	import { clickOutside } from '$lib/util';
+	import type ModalContext from '$lib/types/ModalContext';
 
 	interface Props {
-		title?: string;
 		children?: Snippet;
+        header?: Snippet,
 		footer?: Snippet;
         show: boolean,
 		size?: 'default' | 'sm' | 'lg' | 'xl';
@@ -16,8 +17,8 @@
 	}
 
 	let {
-		title,
 		children,
+        header,
 		footer,
         show = $bindable<boolean>(false),
 		size = 'default',
@@ -25,7 +26,11 @@
 		scrollable
 	}: Props = $props();
 
-    function close() {
+    setContext<ModalContext>('modal', {
+        close
+    });
+
+    export function close() {
         show = false;
     }
 </script>
@@ -45,10 +50,7 @@
             use:clickOutside={close}
         >
             <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title fs-5">{title}</h2>
-                    <button type="button" class="btn-close" aria-label="Close" onclick={close}></button>
-                </div>
+                {@render header?.()}
                 {#if children}
                     {#if scrollable}
                         <Scrollable class="modal-body">

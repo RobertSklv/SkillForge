@@ -2,6 +2,7 @@
 	import Button from "$components/button/Button.svelte";
 	import InfiniteScroll from "$components/infinite-scroll/InfiniteScroll.svelte";
 	import Modal from "$components/modal/Modal.svelte";
+	import ModalHeader from "$components/modal/ModalHeader.svelte";
 	import type { Snippet } from "svelte";
 
     interface Props {
@@ -40,7 +41,8 @@
                 <Button mod="px-4" onclick={() => isModalOpen = true}>View all</Button>
             </div>
         {/if}
-        <Modal {title} bind:show={isModalOpen} verticallyCentered scrollable>
+        <Modal bind:show={isModalOpen} verticallyCentered scrollable>
+            <ModalHeader {title} />
             <InfiniteScroll {batchSize} {loadMore}>
                 {#snippet itemSnippet(item)}
                     {@render itemSnippet(item)}

@@ -31,6 +31,7 @@
 	import FollowListPlaceholder from '$components/user/FollowListPlaceholder.svelte';
 	import { getImagePath } from '$lib/util';
 	import { fade } from 'svelte/transition';
+	import Modal from '$components/modal/Modal.svelte';
 
 	const ARTICLE_BATCH_SIZE: number = 4;
 	const FOLLOW_LIST_BATCH_SIZE: number = 15;
@@ -38,6 +39,7 @@
 	let backendData = $state<UserPageData>();
 	let loadPromise = $state<Promise<UserPageData>>();
 	let isFollowedByCurrentUser = $state<boolean>(false);
+	let isAvatarModalOpen = $state<boolean>(false);
 
 	$effect(() => {
 		loadPromise = loadUserPage($page.params.name).then((r) => {
@@ -47,6 +49,10 @@
 			return r;
 		});
 	});
+
+	function openAvatarModal() {
+		isAvatarModalOpen = true;
+	}
 
 	function loadMore(batchIndex: number): Promise<ArticleCardType[]> {
 		if (!backendData) return Promise.resolve([]);
@@ -105,7 +111,7 @@
 			<div class="card-body">
 				<div class="row align-items-center">
 					<div class="col-2 d-flex justify-content-center">
-						<div class="rounded-circle avatar-image placeholder"></div>
+						<div class="rounded-circle avatar-image-wrapper placeholder"></div>
 					</div>
 					<div class="col-4">
 						<p>
@@ -192,11 +198,24 @@
 			<div class="card-body">
 				<div class="row align-items-center">
 					<div class="col-2 d-flex justify-content-center">
-						<img
-							src={getImagePath(backendData?.AvatarImage)}
-							alt="{backendData?.Name} profile"
-							class="rounded-circle avatar-image object-fit-cover"
-						/>
+						<button
+							class="bg-transparent border-0 rounded-circle avatar-image-wrapper"
+							type="button"
+							onclick={openAvatarModal}
+						>
+							<img
+								src={getImagePath(backendData?.AvatarImage)}
+								alt="{backendData?.Name} profile"
+								class="rounded-circle object-fit-cover w-100"
+							/>
+						</button>
+						<Modal bind:show={isAvatarModalOpen} verticallyCentered>
+							<img
+								src={getImagePath(backendData?.AvatarImage)}
+								alt="{backendData?.Name} profile full size"
+								class="w-100 object-fit-cover"
+							/>
+						</Modal>
 					</div>
 					<div class="col-4">
 						{#if data.Bio}
@@ -294,7 +313,7 @@
 {/await}
 
 <style>
-	.avatar-image {
+	.avatar-image-wrapper {
 		width: 130px;
 		height: 130px;
 		margin-top: -50px;
