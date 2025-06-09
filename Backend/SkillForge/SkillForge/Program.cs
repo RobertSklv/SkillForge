@@ -107,6 +107,8 @@ builder.Services.AddHostedService<AggregateCommentRatingService>();
 builder.Services.AddHostedService<AggregateUserFollowService>();
 builder.Services.AddHostedService<AggregateTagFollowService>();
 builder.Services.AddHostedService<AggregateTagArticleService>();
+builder.Services.AddHostedService<AggregateUserArticlesService>();
+builder.Services.AddHostedService<AggregateCategoryArticlesService>();
 
 var app = builder.Build();
 

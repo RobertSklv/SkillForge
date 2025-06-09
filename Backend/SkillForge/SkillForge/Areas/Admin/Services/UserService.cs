@@ -1,5 +1,8 @@
 ﻿using SkillForge.Areas.Admin.Repositories;
+using SkillForge.Exceptions;
 using SkillForge.Models.Database;
+using SkillForge.Models.DTOs.Article;
+using SkillForge.Models.DTOs.Tag;
 using SkillForge.Models.DTOs.User;
 using SkillForge.Services;
 
@@ -9,12 +12,22 @@ public class UserService : CrudService<User>, IUserService
 {
     private readonly IUserRepository repository;
     private readonly IFrontendService frontendService;
+    private readonly IUserFeedService userFeedService;
 
-    public UserService(IUserRepository repository, IFrontendService frontendService)
+    public UserService(
+        IUserRepository repository,
+        IFrontendService frontendService,
+        IUserFeedService userFeedService)
         : base(repository)
     {
         this.repository = repository;
         this.frontendService = frontendService;
+        this.userFeedService = userFeedService;
+    }
+
+    public Task<User?> GetByName(string name)
+    {
+        return repository.GetByName(name);
     }
 
     public Task<User?> FindUser(string usernameOrEmail)
@@ -44,13 +57,101 @@ public class UserService : CrudService<User>, IUserService
         return users.ConvertAll(frontendService.CreateUserLink);
     }
 
-    public Task<List<UserFollow>> GetFollowings(int id)
+    public Task<bool> IsFollowedBy(int id, int followerId)
     {
-        return repository.GetFollowings(id);
+        return repository.IsFollowedBy(id, followerId);
     }
 
-    public Task<List<UserFollow>> GetFollowers(int id)
+    public Task<bool> IsFollowing(int id, int followedUserId)
     {
-        return repository.GetFollowers(id);
+        return repository.IsFollowing(id, followedUserId);
+    }
+
+    public Task<List<UserFollow>> GetFollowings(int id, List<int> followedUserIds)
+    {
+        return repository.GetFollowings(id, followedUserIds);
+    }
+
+    public Task<List<TagFollow>> GetTagFollowings(int id, List<int> followedTagIds)
+    {
+        return repository.GetTagFollowings(id, followedTagIds);
+    }
+
+    public Task<List<UserFollow>> GetLatestFollowers(int userId, int batchIndex, int batchSize)
+    {
+        return repository.GetLatestFollowers(userId, batchIndex, batchSize);
+    }
+
+    public Task<List<UserFollow>> GetLatestFollowings(int userId, int batchIndex, int batchSize)
+    {
+        return repository.GetLatestFollowings(userId, batchIndex, batchSize);
+    }
+
+    public Task<List<TagFollow>> GetLatestTagFollowings(int userId, int batchIndex, int batchSize)
+    {
+        return repository.GetLatestTagFollowings(userId, batchIndex, batchSize);
+    }
+
+    public async Task Follow(int currentUserId, string username)
+    {
+        User? user = await GetByName(username) ?? throw new RecordNotFoundException($"User '{username}' does not exist.");
+        User? currentUser = await GetStrict(currentUserId);
+
+        UserFollow? followRecord = await repository.GetFollowRecord(currentUserId, user.Id);
+
+        if (followRecord != null)
+        {
+            throw new AlreadyFollowingException();
+        }
+
+        UserFollow follow = new()
+        {
+            FollowerId = currentUserId,
+            FollowedUserId = user.Id
+        };
+
+        currentUser.FollowingsCount++;
+        user.FollowersCount++;
+
+        await repository.SaveFollowRecord(follow);
+    }
+
+    public async Task Unfollow(int currentUserId, string username)
+    {
+        User? user = await GetByName(username) ?? throw new RecordNotFoundException($"User '{username}' does not exist.");
+        User? currentUser = await GetStrict(currentUserId);
+
+        UserFollow? followRecord = await repository.GetFollowRecord(currentUserId, user.Id) ?? throw new AlreadyNotFollowingException();
+
+        currentUser.FollowingsCount--;
+        user.FollowersCount--;
+
+        await repository.DeleteFollowRecord(followRecord);
+    }
+
+    public async Task<UserPageData> LoadPage(string name, int? currentUserId = null)
+    {
+        User? user = await GetByName(name) ?? throw new RecordNotFoundException($"User '{name}' does not exist.");
+
+        List<TopArticleItem> topArticles = await userFeedService.GetTopArticlesByAuthor(user.Id, 5);
+        List<UserListItem> latestFollowers = await userFeedService.GetLatestUserFollowers(user.Id, currentUserId, 6);
+        List<UserListItem> latestFollowings = await userFeedService.GetLatestUserFollowings(user.Id, currentUserId, 6);
+        List<TagListItem> latestTagFollowings = await userFeedService.GetLatestUserTagFollowings(user.Id, currentUserId, 6);
+
+        return new UserPageData
+        {
+            Name = user.Name,
+            Bio = user.Bio,
+            AvatarImage = user.AvatarPath,
+            ArticlesCount = user.ArticlesCount,
+            FollowersCount = user.FollowersCount,
+            FollowingsCount = user.FollowingsCount,
+            TagFollowingsCount = user.TagFollowingsCount,
+            IsFollowedByCurrentUser = currentUserId != null && await IsFollowedBy(user.Id, (int)currentUserId),
+            LatestFollowers = latestFollowers,
+            LatestFollowings = latestFollowings,
+            LatestTagFollowings = latestTagFollowings,
+            TopArticles = topArticles,
+        };
     }
 }

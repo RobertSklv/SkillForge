@@ -2,7 +2,7 @@
 
 namespace SkillForge.Models.Database;
 
-public class UserFollow : BaseEntity
+public class UserFollow : BaseEntity, IFollower, IFollowedUser
 {
     [DeleteBehavior(DeleteBehavior.NoAction)]
     public User? Follower { get; set; }

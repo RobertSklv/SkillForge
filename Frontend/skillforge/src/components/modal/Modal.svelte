@@ -3,6 +3,7 @@
 	import { type Snippet } from 'svelte';
 	import { fade } from 'svelte/transition';
     import './modal.scss';
+	import { clickOutside } from '$lib/util';
 
 	interface Props {
 		title?: string;
@@ -35,12 +36,13 @@
         tabindex="-1"
         aria-modal={show ? 'true' : undefined}
         role={show ? 'dialog' : undefined}
-        transition:fade={{ duration: 150 }}
+        transition:fade={{ duration: 100 }}
     >
         <div
             class="modal-dialog modal-fullscreen-sm-down {size === 'default' ? '' : `modal-${size}`}"
             class:modal-dialog-centered={verticallyCentered}
             class:modal-dialog-scrollable={scrollable}
+            use:clickOutside={close}
         >
             <div class="modal-content">
                 <div class="modal-header">
@@ -66,5 +68,5 @@
             </div>
         </div>
     </div>
-    <div class="modal-backdrop fade show"></div>
+    <div class="modal-backdrop show"></div>
 {/if}

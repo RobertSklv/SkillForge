@@ -20,7 +20,7 @@
 	{#if data.CoverImage}
 		<img src={PUBLIC_BACKEND_DOMAIN + data.CoverImage} class="card-img-top rounded-top-3 object-fit-cover" alt="Article cover" style="height: 250px" />
 	{/if}
-	<AuthorBox name={data.Author.Name} date={data.DatePublished} mod="mt-3" />
+	<AuthorBox name={data.Author.Name} avatarImage={data.Author.AvatarImage} date={data.DatePublished} mod="mt-3" />
 	<div class="card-body mx-5">
 		<div class="d-flex align-items-start">
 			<h2 class="card-title fw-bold">

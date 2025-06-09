@@ -1,3 +1,4 @@
+import { PUBLIC_BACKEND_DOMAIN } from "$env/static/public";
 
 
 export function clickOutside(
@@ -49,4 +50,12 @@ export function formatRelativeTime(date: string): string {
 	}
 
 	return rtf.format(Math.round(value), unit as Intl.RelativeTimeFormatUnit);
+}
+
+export function getImagePath(relativePath?: string | null) {
+	if (!relativePath) {
+		return '/user.png';
+	}
+
+	return PUBLIC_BACKEND_DOMAIN + relativePath;
 }

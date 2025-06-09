@@ -16,6 +16,7 @@ public class AggregateTagFollowService : AggregateService
     {
         List<TagFollow> allFollows = await db.TagFollows.ToListAsync();
         List<Tag> tags = await db.Tags.ToListAsync();
+        List<User> users = await db.Users.ToListAsync();
 
         var followerAggregates = await db.TagFollows
             .GroupBy(e => e.TagId)
@@ -26,11 +27,27 @@ public class AggregateTagFollowService : AggregateService
             })
             .ToListAsync();
 
+        var followingAggregates = await db.TagFollows
+            .GroupBy(e => e.UserId)
+            .Select(g => new
+            {
+                UserId = g.Key,
+                FollowingCount = g.Count(),
+            })
+            .ToListAsync();
+
         foreach (Tag t in tags)
         {
             var followerAggregate = followerAggregates.Where(x => x.TagId == t.Id).FirstOrDefault();
 
             t.FollowersCount = followerAggregate?.FollowerCount ?? 0;
+        }
+
+        foreach (User u in users)
+        {
+            var followingAggregate = followingAggregates.Where(x => x.UserId == u.Id).FirstOrDefault();
+
+            u.TagFollowingsCount = followingAggregate?.FollowingCount ?? 0;
         }
 
         await db.SaveChangesAsync();

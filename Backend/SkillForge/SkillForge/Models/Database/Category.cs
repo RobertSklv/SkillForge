@@ -38,4 +38,6 @@ public class Category : BaseEntity
     public List<Article>? Articles { get; set; }
 
     public List<Category>? SubCategories { get; set; }
+
+    public int ArticlesCount { get; set; }
 }

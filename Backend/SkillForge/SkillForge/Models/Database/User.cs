@@ -53,4 +53,8 @@ public class User : BaseEntity
     public int FollowersCount { get; set; }
 
     public int FollowingsCount { get; set; }
+
+    public int TagFollowingsCount { get; set; }
+
+    public int ArticlesCount { get; set; }
 }

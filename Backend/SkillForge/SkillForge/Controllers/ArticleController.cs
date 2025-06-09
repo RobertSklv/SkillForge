@@ -117,6 +117,19 @@ public class ArticleController : ApiController
 
     [AllowAnonymous]
     [HttpGet]
+    public async Task<IActionResult> LatestByAuthor(string authorName, int batchIndex, int batchSize = 10)
+    {
+        List<ArticleCard> cards;
+
+        TryGetUserId(out int? userId);
+
+        cards = await userFeedService.GetLatestArticlesByAuthor(authorName, userId, batchIndex, batchSize);
+
+        return Ok(cards);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
     [Route("/Api/Article/View/{id}")]
     public async Task<IActionResult> View(int id)
     {

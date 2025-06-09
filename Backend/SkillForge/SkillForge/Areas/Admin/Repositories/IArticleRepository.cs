@@ -34,9 +34,13 @@ public interface IArticleRepository : ICrudRepository<Article>
 
     Task<List<Article>> GetLatestByTag(string tagName, int batchIndex, int batchSize);
 
+    Task<List<Article>> GetLatestByAuthor(string authorName, int batchIndex, int batchSize);
+
     Task<List<Article>> GetTopArticlesByTag(int tagId, int count);
 
     Task<List<Article>> GetTopArticlesByTag(string tagName, int count);
+
+    Task<List<Article>> GetTopArticlesByAuthor(int authorId, int count);
 
     Task<List<Article>> GetTopArticles(int count);
 }

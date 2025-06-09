@@ -118,7 +118,7 @@ public class TagService : CrudService<Tag>, ITagService
         Tag? tag = await GetByName(name) ?? throw new RecordNotFoundException($"Tag '{name}' does not exist.");
 
         List<TopArticleItem> topArticles = await userFeedService.GetTopArticlesByTag(tag.Id, 5);
-        List<UserListItem> latestFollowers = await userFeedService.GetLatestTagFollowers(tag.Id, userId, 6);
+        List<UserListItem> latestFollowers = await userFeedService.GetLatestTagFollowers(tag.Id, userId, 2);
 
         return new TagPageData
         {
@@ -126,9 +126,7 @@ public class TagService : CrudService<Tag>, ITagService
             Description = tag.Description,
             ArticlesCount = tag.ArticlesCount,
             FollowersCount = tag.FollowersCount,
-            IsFollowedByCurrentUser = userId != null
-                ? await IsFollowedByUser((int)userId, tag.Id)
-                : false,
+            IsFollowedByCurrentUser = userId != null && await IsFollowedByUser((int)userId, tag.Id),
             LatestFollowers = latestFollowers,
             TopArticles = topArticles,
         };

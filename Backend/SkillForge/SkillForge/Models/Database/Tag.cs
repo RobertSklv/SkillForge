@@ -21,7 +21,7 @@ public class Tag : BaseEntity
 
     public int ArticlesCount { get; set; }
 
-    public List<User>? Followers { get; set; }
+    public List<TagFollow>? Followers { get; set; }
 
     public List<ArticleTag>? Articles { get; set; }
 }

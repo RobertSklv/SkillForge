@@ -6,21 +6,144 @@ using SkillForge.Models.Database;
 using SkillForge.Models.DTOs.User;
 using SkillForge.Services;
 using SkillForge.Areas.Admin.Services;
+using SkillForge.Exceptions;
+using SkillForge.Models.DTOs.Tag;
 
 namespace SkillForge.Controllers;
 
 [Authorize(AuthenticationSchemes = "FrontendCookie")]
 public class UserController : ApiController
 {
-    private readonly IUserAuthService userAuthService;
     private readonly IUserService service;
+    private readonly IUserAuthService userAuthService;
     private readonly IFrontendService frontendService;
+    private readonly IUserFeedService userFeedService;
 
-    public UserController(IUserAuthService userAuthService, IUserService userService, IFrontendService frontendService)
+    public UserController(
+        IUserService service,
+        IUserAuthService userAuthService,
+        IFrontendService frontendService,
+        IUserFeedService userFeedService)
     {
+        this.service = service;
         this.userAuthService = userAuthService;
-        this.service = userService;
         this.frontendService = frontendService;
+        this.userFeedService = userFeedService;
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("/Api/User/Load/{name}")]
+    public async Task<IActionResult> Load([FromRoute] string name)
+    {
+        TryGetUserId(out int? userId);
+
+        try
+        {
+            UserPageData pageData = await service.LoadPage(name, userId);
+
+            return Ok(pageData);
+        }
+        catch (RecordNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("/Api/User/Followers/{name}")]
+    public async Task<IActionResult> Followers([FromRoute] string name, [FromQuery] int batchIndex, [FromQuery] int batchSize)
+    {
+        User? u = await service.GetByName(name);
+
+        if (u == null) return NotFound("User not found");
+
+        TryGetUserId(out int? userId);
+
+        List<UserListItem> followers = await userFeedService.GetUserFollowers(u.Id, userId, batchIndex, batchSize);
+
+        return Ok(followers);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("/Api/User/Followings/{name}")]
+    public async Task<IActionResult> Followings([FromRoute] string name, [FromQuery] int batchIndex, [FromQuery] int batchSize)
+    {
+        User? u = await service.GetByName(name);
+
+        if (u == null) return NotFound("User not found");
+
+        TryGetUserId(out int? userId);
+
+        List<UserListItem> followings = await userFeedService.GetUserFollowings(u.Id, userId, batchIndex, batchSize);
+
+        return Ok(followings);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("/Api/User/TagFollowings/{name}")]
+    public async Task<IActionResult> TagFollowings([FromRoute] string name, [FromQuery] int batchIndex, [FromQuery] int batchSize)
+    {
+        User? u = await service.GetByName(name);
+
+        if (u == null) return NotFound("User not found");
+
+        TryGetUserId(out int? userId);
+
+        List<TagListItem> tagfollowings = await userFeedService.GetUserTagFollowings(u.Id, userId, batchIndex, batchSize);
+
+        return Ok(tagfollowings);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Follow(UserRequest userRequest)
+    {
+        if (!TryGetUserId(out int? userId))
+        {
+            return Unauthorized();
+        }
+
+        try
+        {
+            await service.Follow((int)userId, userRequest.User);
+        }
+        catch (RecordNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (AlreadyFollowingException e)
+        {
+            return BadRequest(e.Message);
+        }
+
+        return Ok();
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> Unfollow(UserRequest userRequest)
+    {
+        if (!TryGetUserId(out int? userId))
+        {
+            return Unauthorized();
+        }
+
+        try
+        {
+            await service.Unfollow((int)userId, userRequest.User);
+        }
+        catch (RecordNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (AlreadyNotFollowingException e)
+        {
+            return BadRequest(e.Message);
+        }
+
+        return Ok();
     }
 
     [AllowAnonymous]

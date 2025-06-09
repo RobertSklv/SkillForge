@@ -1,6 +1,6 @@
 ﻿namespace SkillForge.Models.Database;
 
-public class TagFollow : BaseEntity
+public class TagFollow : BaseEntity, IFollower
 {
     public User? User { get; set; }
 
@@ -9,4 +9,8 @@ public class TagFollow : BaseEntity
     public Tag? Tag { get; set; }
 
     public int TagId { get; set; }
+
+    public User? Follower => User;
+
+    public int FollowerId => UserId;
 }

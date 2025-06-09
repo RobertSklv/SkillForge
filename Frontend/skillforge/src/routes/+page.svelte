@@ -12,7 +12,7 @@
 	import type ArticleCardType from '$lib/types/ArticleCardType';
 	import type HomePageData from '$lib/types/HomePageData';
 
-	const BATCH_SIZE: number = 10;
+	const BATCH_SIZE: number = 6;
 
 	interface Props {
 		data: HomePageData;

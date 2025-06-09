@@ -12,6 +12,8 @@ import type QueryParamsFiltered from "$lib/types/QueryParamsFiltered";
 import type FetchData from "$lib/types/FetchData";
 import type TagPageData from "$lib/types/TagPageData";
 import type UserListItemType from "$lib/types/UserListItemType";
+import type UserPageData from "$lib/types/UserPageData";
+import type TagListItemType from "$lib/types/TagListItemType";
 
 export async function getCurrentUser(): Promise<UserInfo | null> {
   try {
@@ -100,6 +102,19 @@ export function getLatestArticlesByTag(tag: string, batchIndex: number, batchSiz
   });
 }
 
+export function getLatestArticlesByAuthor(authorName: string, batchIndex: number, batchSize: number): Promise<ArticleCardType[]> {
+  return requestApi('/Article/LatestByAuthor', {
+    init: {
+      credentials: 'include'
+    },
+    query: {
+      authorName,
+      batchIndex,
+      batchSize,
+    }
+  });
+}
+
 export function viewArticle(fetch: SvelteFetch, id: number): Promise<ArticlePageModel> {
   return requestApi(`/Article/View/${id}`, {
     fetchFunction: fetch,
@@ -125,6 +140,74 @@ export function loadHomePage(fetch: SvelteFetch): Promise<HomePageData> {
   return requestApi('/Home/Load', {
     fetchFunction: fetch
   });
+}
+
+export function loadUserPage(name: string): Promise<UserPageData> {
+  return requestApi(`/User/Load/${name}`, {
+    init: {
+      credentials: 'include'
+    }
+  });
+}
+
+export function getUserFollowers(name: string, batchIndex: number, batchSize: number): Promise<UserListItemType[]> {
+  return requestApi(`/User/Followers/${name}`, {
+    init: {
+      credentials: 'include'
+    },
+    query: {
+      batchIndex,
+      batchSize
+    }
+  });
+}
+
+export function getUserFollowings(name: string, batchIndex: number, batchSize: number): Promise<UserListItemType[]> {
+  return requestApi(`/User/Followings/${name}`, {
+    init: {
+      credentials: 'include'
+    },
+    query: {
+      batchIndex,
+      batchSize
+    }
+  });
+}
+
+export function getUserTagFollowings(name: string, batchIndex: number, batchSize: number): Promise<TagListItemType[]> {
+  return requestApi(`/User/TagFollowings/${name}`, {
+    init: {
+      credentials: 'include'
+    },
+    query: {
+      batchIndex,
+      batchSize
+    }
+  });
+}
+
+export function followUser(user: string): Promise<boolean> {
+  return requestApi('/User/Follow', {
+    init: {
+      method: 'POST',
+      credentials: 'include',
+      body: JSON.stringify({
+        user
+      })
+    }
+  })
+}
+
+export function unfollowUser(user: string): Promise<boolean> {
+  return requestApi('/User/Unfollow', {
+    init: {
+      method: 'DELETE',
+      credentials: 'include',
+      body: JSON.stringify({
+        user
+      })
+    }
+  })
 }
 
 export function loadTagPage(name: string): Promise<TagPageData> {

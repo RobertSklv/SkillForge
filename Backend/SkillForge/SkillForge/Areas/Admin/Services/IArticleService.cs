@@ -33,6 +33,8 @@ public interface IArticleService : ICrudService<Article>
 
     Task RecordView(GuestArticleView view);
 
+    void CreateArticleApproval(Article article, int adminId);
+
     Task<bool> Approve(int id, int adminId);
 
     Task<bool> MassApprove(List<int> ids, int adminId);

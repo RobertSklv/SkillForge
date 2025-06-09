@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { formatRelativeTime } from "$lib/util";
+	import { formatRelativeTime, getImagePath } from "$lib/util";
 	import moment from "moment";
 
     interface Props {
         name: string,
+        avatarImage: string | null | undefined,
         date: string,
         mod?: string,
         size?: 'normal' | 'small',
@@ -12,6 +13,7 @@
 
     let {
         name,
+        avatarImage,
         date,
         mod,
         size = 'normal',
@@ -22,7 +24,7 @@
 <div class="author-box d-flex gap-2 size-{size} {mod}" class:ms-2={indent}>
 	<div class="author-box__image-wrapper d-flex flex-column justify-content-start align-items-end" class:w-auto={!indent}>
         <a href="/user/{name}" class="text-decoration-none">
-		    <img src="/user.png" class="author-box__image rounded-circle" alt="Robert profile" />
+		    <img src="{getImagePath(avatarImage)}" class="author-box__image rounded-circle object-fit-cover" alt="Robert profile" />
         </a>
 	</div>
 	<div class="author-box__info-col d-flex flex-column">

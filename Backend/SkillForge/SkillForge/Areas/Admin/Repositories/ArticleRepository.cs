@@ -161,7 +161,6 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         return await db.Articles
             .Include(e => e.Author)
             .Include(e => e.Category)
-            .Include(e => e.Approval)
             .Include(e => e.Comments!)
                 .ThenInclude(e => e.User)
             .Include(e => e.Tags!)
@@ -184,12 +183,27 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         return await db.Articles
             .Include(e => e.Author)
             .Include(e => e.Category)
-            .Include(e => e.Approval)
             .Include(e => e.Comments!)
                 .ThenInclude(e => e.User)
             .Include(e => e.Tags!)
                 .ThenInclude(e => e.Tag)
             .Where(e => e.ApprovalId != null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
+            .OrderByDescending(e => e.CreatedAt)
+            .Skip(batchIndex * batchSize)
+            .Take(batchSize)
+            .ToListAsync();
+    }
+
+    public async Task<List<Article>> GetLatestByAuthor(string authorName, int batchIndex, int batchSize)
+    {
+        return await db.Articles
+            .Include(e => e.Author)
+            .Include(e => e.Category)
+            .Include(e => e.Comments!)
+                .ThenInclude(e => e.User)
+            .Include(e => e.Tags!)
+                .ThenInclude(e => e.Tag)
+            .Where(e => e.ApprovalId != null && e.Author!.Name == authorName)
             .OrderByDescending(e => e.CreatedAt)
             .Skip(batchIndex * batchSize)
             .Take(batchSize)
@@ -224,6 +238,17 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
             .Include(e => e.Author)
             .Include(e => e.Comments)
             .Where(e => e.ApprovalId != null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
+            .OrderByDescending(e => e.ViewCount)
+            .Take(count)
+            .ToListAsync();
+    }
+
+    public async Task<List<Article>> GetTopArticlesByAuthor(int authorId, int count)
+    {
+        return await db.Articles
+            .Include(e => e.Author)
+            .Include(e => e.Comments)
+            .Where(e => e.ApprovalId != null && e.AuthorId == authorId)
             .OrderByDescending(e => e.ViewCount)
             .Take(count)
             .ToListAsync();

@@ -84,16 +84,22 @@ public class ArticleService : CrudService<Article>, IArticleService
         return repository.ListByTag(listingModel, tagId);
     }
 
-    public async Task<bool> Approve(int id, int adminId)
+    public void CreateArticleApproval(Article article, int adminId)
     {
-        Article article = await GetStrict(id);
-
         ArticleApproval approval = new()
         {
             ModeratorId = adminId
         };
 
         article.Approval = approval;
+        article.Author!.ArticlesCount++;
+    }
+
+    public async Task<bool> Approve(int id, int adminId)
+    {
+        Article article = await GetStrict(id);
+
+        CreateArticleApproval(article, adminId);
 
         return await Upsert(article);
     }
@@ -104,12 +110,7 @@ public class ArticleService : CrudService<Article>, IArticleService
 
         foreach (Article a in articles)
         {
-            ArticleApproval approval = new()
-            {
-                ModeratorId = adminId
-            };
-
-            a.Approval = approval;
+            CreateArticleApproval(a, adminId);
         }
 
         return await UpsertMultiple(articles);

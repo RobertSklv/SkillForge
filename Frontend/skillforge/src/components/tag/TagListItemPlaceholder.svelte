@@ -1,9 +1,9 @@
 <script lang="ts">
 	import Button from "$components/button/Button.svelte";
-	import UserLinkPlaceholder from "$components/link/UserLinkPlaceholder.svelte";
+	import TagLinkPlaceholder from "$components/link/TagLinkPlaceholder.svelte";
 
     interface Props {
-        mod?: string
+        mod: string
     }
 
     let {
@@ -12,6 +12,6 @@
 </script>
 
 <li class="d-flex justify-content-between align-items-center {mod}">
-    <UserLinkPlaceholder />
+    <TagLinkPlaceholder />
     <Button size="sm" mod="placeholder col-3" disabled></Button>
 </li>
