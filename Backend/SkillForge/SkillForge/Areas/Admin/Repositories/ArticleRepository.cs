@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Ganss.Xss;
+using Microsoft.EntityFrameworkCore;
 using SkillForge.Areas.Admin.Models;
 using SkillForge.Areas.Admin.Models.DTOs;
 using SkillForge.Areas.Admin.Services;
@@ -18,6 +19,15 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         IEntitySearchService searchService)
         : base(db, filterService, sortService, searchService)
     {
+    }
+
+    public override Task<int> Upsert(Article entity)
+    {
+        HtmlSanitizer sanitizer = new();
+
+        entity.Content = sanitizer.Sanitize(entity.Content);
+
+        return base.Upsert(entity);
     }
 
     public async Task<Article> GetWithComments(int id)

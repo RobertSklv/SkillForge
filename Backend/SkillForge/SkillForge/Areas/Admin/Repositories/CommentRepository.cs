@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Ganss.Xss;
+using Microsoft.EntityFrameworkCore;
 using SkillForge.Areas.Admin.Services;
 using SkillForge.Data;
 using SkillForge.Models.Database;
@@ -16,6 +17,15 @@ public class CommentRepository : CrudRepository<Comment>, ICommentRepository
         IEntitySearchService searchService)
         : base(db, filterService, sortService, searchService)
     {
+    }
+
+    public override Task<int> Upsert(Comment entity)
+    {
+        HtmlSanitizer sanitizer = new();
+
+        entity.Content = sanitizer.Sanitize(entity.Content);
+
+        return base.Upsert(entity);
     }
 
     public Task<CommentRating?> GetUserRating(int userId, int commentId)
