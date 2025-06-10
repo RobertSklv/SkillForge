@@ -135,7 +135,7 @@
 	{#if $currentUserStore}
 		<Block>
 			<div class="card-body">
-				<Form action="/Comment/Add" formData={$commentFormData} onSuccess={addComment}>
+				<Form action="/Comment/Add" formData={$commentFormData} onSuccess={addComment} resetMode="onsuccess">
 					<TextEditor
 						id="Content"
 						label={null}

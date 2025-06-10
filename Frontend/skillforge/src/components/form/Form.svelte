@@ -1,27 +1,33 @@
-<script lang="ts" generics="T">
+<script lang="ts">
 	import type FormContext from "$lib/types/FormContext";
     import type ErrorResponse from "$lib/types/ErrorResponse";
 	import type ValidationRule from "$lib/types/ValidationRule";
 	import type ValidationRules from "$lib/types/ValidationRules";
 	import { setContext, type Snippet } from "svelte";
 	import { requestApi } from "$lib/api/client";
-	import type FetchData from "$lib/types/FetchData";
 
     interface Props {
         action: string,
         method?: 'GET' | 'POST' | 'DIALOG',
-        formData: T,
+        formData: any,
         isMultipartFormData?: boolean,
         onSuccess: (response: any) => void,
         children: Snippet,
-        validationRules?: ValidationRules
+        validationRules?: ValidationRules,
+        resetMode?: 'never' | 'onsuccess' | 'onsubmit',
     }
 
-    interface Fields {
+    interface FieldValidations {
         [key: string]: {
             validate: (onlyVisited: boolean) => string[] | null,
             setErrors: (errors: string[]) => void,
             errors: string[]
+        }
+    }
+
+    interface Fields {
+        [key: string]: {
+            reset: () => void
         }
     }
 
@@ -32,25 +38,38 @@
         isMultipartFormData = false,
         onSuccess,
         children,
-        validationRules
+        validationRules,
+        resetMode = 'never',
     }: Props = $props();
 
     let fields: Fields = {};
+    let fieldValidations: FieldValidations = {};
+    let initialFormData = JSON.parse(JSON.stringify(formData));
 
-    function registerField(
+    function registerField(name: string, reset: () => void) {
+        fields[name] = {
+            reset
+        };
+    }
+
+    function getFieldDefaultValue(name: string): any {
+        return initialFormData[name];
+    }
+
+    function registerFieldValidation(
             name: string,
             validate: (onlyVisited: boolean) => string[] | null,
             setErrors: (errors: string[]) => void): void {
 
-        fields[name] = {
+        fieldValidations[name] = {
             validate,
             setErrors,
             errors: []
         }
     }
 
-    function updateField(name: string, errors: string[]): void {
-        fields[name].errors = errors;
+    function updateFieldValidation(name: string, errors: string[]): void {
+        fieldValidations[name].errors = errors;
     }
 
     function getValidationRules(name: string): ValidationRule[] {
@@ -63,7 +82,9 @@
 
     setContext<FormContext>('form', {
         registerField,
-        updateField,
+        getFieldDefaultValue,
+        registerFieldValidation,
+        updateFieldValidation,
         getValidationRules,
         validateFields,
         submit,
@@ -72,8 +93,8 @@
     export function validate(): boolean {
         let isValid = true;
 
-        for (let fieldName in fields) {
-            let fieldErrors = fields[fieldName].validate(false);
+        for (let fieldName in fieldValidations) {
+            let fieldErrors = fieldValidations[fieldName].validate(false);
 
             if (fieldErrors == null) {
                 // should never happen because onlyVisited argument is false in the validate function call.
@@ -90,7 +111,7 @@
 
     export function validateFields(fieldNames: string[]) {
         for (let fieldName of fieldNames) {
-            fields[fieldName].validate(true);
+            fieldValidations[fieldName].validate(true);
         }
     }
 
@@ -128,14 +149,18 @@
         })
             .then(r => {
                 onSuccess(r);
+
+                if (resetMode === 'onsuccess') {
+                    reset();
+                }
             })
             .catch((e: ErrorResponse) => {
                 for (let fieldName in e.errors) {
                     let errors = e.errors[fieldName];
 
-                    if (fields[fieldName]) {
-                        fields[fieldName].errors = errors;
-                        fields[fieldName].setErrors(errors);
+                    if (fieldValidations[fieldName]) {
+                        fieldValidations[fieldName].errors = errors;
+                        fieldValidations[fieldName].setErrors(errors);
                     }
                 }
 
@@ -143,6 +168,17 @@
                     console.error(e.detail);
                 }
             })
+            .finally(() => {
+                if (resetMode === 'onsubmit') {
+                    reset();
+                }
+            });
+    }
+
+    export function reset() {
+        for (let fieldName in fields) {
+            fields[fieldName].reset();
+        }
     }
 </script>
 

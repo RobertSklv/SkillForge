@@ -45,7 +45,7 @@
                 isValid.then(r => {
                     if (!r) {
                         errorMessages.push(rule.message(label));
-                        formContext.updateField(name, errorMessages);
+                        formContext.updateFieldValidation(name, errorMessages);
                     }
                 })
             } else if (!isValid) {
@@ -57,7 +57,7 @@
             formContext.validateFields(validateTogether);
         }
 
-        formContext.updateField(name, errorMessages);
+        formContext.updateFieldValidation(name, errorMessages);
 
         return errorMessages;
     }
@@ -67,7 +67,7 @@
     }
 
     onMount(() => {
-        formContext.registerField(name, validate, setErrors);
+        formContext.registerFieldValidation(name, validate, setErrors);
     });
 </script>
 

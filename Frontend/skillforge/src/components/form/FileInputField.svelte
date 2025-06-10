@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type FormContext from "$lib/types/FormContext";
+	import { getContext, onMount } from "svelte";
 	import type { ChangeEventHandler } from "svelte/elements";
 
     interface Props {
@@ -24,6 +26,16 @@
         disabled,
         onchange,
     }: Props = $props();
+
+    const formContext = getContext<FormContext>('form');
+
+    export function reset() {
+        value = formContext?.getFieldDefaultValue(name);
+    }
+
+    onMount(() => {
+        formContext?.registerField(name, reset);
+    })
 </script>
 
 <div class="mb-4">

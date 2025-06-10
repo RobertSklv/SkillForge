@@ -1,10 +1,11 @@
 <script lang="ts">
 	import type ValidatedField from '$lib/types/ValidatedField';
-	import { setContext, type Snippet } from 'svelte';
+	import { getContext, onMount, setContext, type Snippet } from 'svelte';
 	import FieldValidation from './FieldValidation.svelte';
 	import type SelectFieldContext from '$lib/types/SelectFieldContext';
     import type OptionType from '$lib/types/Option';
 	import Option from './Option.svelte';
+	import type FormContext from '$lib/types/FormContext';
 
     interface Props {
         id: string,
@@ -40,6 +41,8 @@
         children,
     }: Props = $props();
 
+    const formContext = getContext<FormContext>('form');
+
     let isValid = $state<boolean>(true);
     let isVisited = $state<boolean>(false);
     let fieldValidation: ValidatedField;
@@ -56,10 +59,10 @@
     })
 
     setContext<SelectFieldContext>('select', {
-        registerField,
+        registerFieldValidation,
     });
     
-    function registerField(name: string, setSelected: (isSelected: boolean) => void) {
+    function registerFieldValidation(name: string, setSelected: (isSelected: boolean) => void) {
         opts[name] = {
             setSelected
         }
@@ -84,6 +87,14 @@
     function onfocusout() {
         fieldValidation?.validate();
     }
+
+    export function reset() {
+        value = formContext?.getFieldDefaultValue(name);
+    }
+
+    onMount(() => {
+        formContext?.registerField(name, reset);
+    })
 </script>
 
 <div class="mb-4">

@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { getContext, onMount } from "svelte";
 	import FieldValidation from "./FieldValidation.svelte";
+	import type FormContext from "$lib/types/FormContext";
 
     interface Props {
         id: string,
@@ -25,12 +27,22 @@
         validateTogether,
     }: Props = $props();
 
+    const formContext = getContext<FormContext>('form');
+
     let isValid = $state<boolean>(true);
     let isVisited = $state<boolean>(false);
 
     function onfocus() {
         isVisited = true;
     }
+
+    export function reset() {
+        checked = formContext?.getFieldDefaultValue(name);
+    }
+
+    onMount(() => {
+        formContext?.registerField(name, reset);
+    })
 </script>
 
 <div class="form-check"

@@ -2,6 +2,8 @@
 	import type ValidatedField from '$lib/types/ValidatedField';
 	import type { InputType } from '$lib/types/InputType';
 	import FieldValidation from './FieldValidation.svelte';
+	import { getContext, onMount } from 'svelte';
+	import type FormContext from '$lib/types/FormContext';
 
     interface Props {
         id: string,
@@ -37,6 +39,8 @@
         validateTogether,
     }: Props = $props();
 
+    const formContext = getContext<FormContext>('form');
+
     let isValid = $state<boolean>(true);
     let isVisited = $state<boolean>(false);
     let formClass = $derived<string>(type === 'range' ? 'form-range' : 'form-control');
@@ -53,6 +57,14 @@
     function onfocusout() {
         fieldValidation?.validate();
     }
+
+    export function reset() {
+        value = formContext?.getFieldDefaultValue(name);
+    }
+
+    onMount(() => {
+        formContext?.registerField(name, reset);
+    })
 </script>
 
 <div class="mb-4">

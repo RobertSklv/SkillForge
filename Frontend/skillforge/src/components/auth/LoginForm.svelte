@@ -33,8 +33,7 @@
     function onLoginSuccess(userInfo: UserInfo) {
         currentUserStore.set(userInfo);
 
-        //TODO goto account page
-        goto('/');
+        goto('/user/' + userInfo.Name);
     }
 </script>
 
@@ -43,7 +42,8 @@
     method="POST"
     formData={$formData}
     onSuccess={onLoginSuccess}
-    {validationRules}>
+    {validationRules}
+    resetMode="onsubmit">
     <div class="row">
         <div class="col-12">
             <InputField id="UsernameOrEmail" type="text" label="Username or e-mail" bind:value={$formData.UsernameOrEmail} />

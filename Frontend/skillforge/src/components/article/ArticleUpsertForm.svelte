@@ -77,7 +77,7 @@
 	</div>
 {/if}
 
-<Form action="/Article/Upsert" method="POST" formData={$formData} {validationRules} {onSuccess}>
+<Form action="/Article/Upsert" method="POST" formData={$formData} {validationRules} {onSuccess} resetMode={pageContext.CurrentState?.Model.Id == 0 ? 'onsuccess' : 'never'}>
 	<input type="hidden" name="Id" bind:value={$formData.Id} />
 
 	<div class="row">

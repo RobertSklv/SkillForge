@@ -74,8 +74,7 @@
 
         currentUserStore.set(userInfo);
 
-        //TODO goto account page
-        goto('/');
+        goto('/user/' + userInfo.Name);
     }
 </script>
 
@@ -84,7 +83,8 @@
     method="POST"
     formData={$formData}
     onSuccess={onRegisterSuccess}
-    {validationRules}>
+    {validationRules}
+    resetMode="onsuccess">
     <div class="row">
         <div class="col-12">
             <InputField id="Username" type="text" label="Username" bind:value={$formData.Username} />

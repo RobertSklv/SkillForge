@@ -25,7 +25,7 @@
     }
 
     onMount(() => {
-        selectContext.registerField(value, setSelected);
+        selectContext.registerFieldValidation(value, setSelected);
     });
 </script>
 

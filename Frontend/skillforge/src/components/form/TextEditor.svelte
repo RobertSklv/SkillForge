@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
+	import { getContext, onDestroy, onMount } from 'svelte';
     import 'quill/dist/quill.snow.css';
 	import { browser } from '$app/environment';
 	import FieldValidation from './FieldValidation.svelte';
 	import { uploadImage } from '$lib/api/client';
 	import { PUBLIC_BACKEND_DOMAIN } from '$env/static/public';
 	import type { ImageUploadType } from '$lib/types/ImageUploadType';
+	import type FormContext from '$lib/types/FormContext';
 
     interface Props {
         id: string,
@@ -23,18 +24,24 @@
         imageUploadType,
     }: Props = $props();
 
+    const formContext = getContext<FormContext>('form');
+
     let isValid = $state<boolean>(true);
     let isVisited = $state<boolean>(false);
 
     $effect(() => {
-        let convertedContent = quillEditor?.clipboard.convert({
-            html: content
-        });
-        quillEditor?.setContents(convertedContent);
+        setContent(content);
     });
 
     let editorWrapperElement: any;
     let quillEditor: any;
+
+    function setContent(content: string) {
+        let convertedContent = quillEditor?.clipboard.convert({
+            html: content
+        });
+        quillEditor?.setContents(convertedContent);
+    }
 
     function onTextChange() {
         content = quillEditor.getSemanticHTML();
@@ -44,7 +51,14 @@
         isVisited = true;
     }
 
+    export function reset() {
+        content = formContext?.getFieldDefaultValue(id);
+        setContent(content);
+    }
+
     onMount(async () => {
+        formContext?.registerField(id, reset);
+
         const toolbarOptions = [
             ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
             ['blockquote', 'code-block'],

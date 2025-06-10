@@ -2,7 +2,9 @@
 	import { searchTags } from '$lib/api/client';
 	import type TagLinkType from '$lib/types/TagLinkType';
 	import type ValidatedField from '$lib/types/ValidatedField';
+	import { getContext, onMount } from 'svelte';
 	import FieldValidation from './FieldValidation.svelte';
+	import type FormContext from '$lib/types/FormContext';
 
 	interface Props {
 		id: string;
@@ -17,6 +19,8 @@
 		tags = $bindable([]),
 		limit = 3
 	}: Props = $props();
+
+    const formContext = getContext<FormContext>('form');
 
 	let suggestionsElement: HTMLElement;
 	let fieldValidation: ValidatedField;
@@ -100,6 +104,14 @@
 		updateSuggestions();
 		fieldValidation?.validate();
 	}
+
+    export function reset() {
+        tags = formContext?.getFieldDefaultValue(id);
+    }
+
+    onMount(() => {
+        formContext?.registerField(id, reset);
+    })
 </script>
 
 <div class="combo-box position-relative mb-4">

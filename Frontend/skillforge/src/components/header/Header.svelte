@@ -5,9 +5,12 @@
 	import { currentUserStore, logoutUser } from '$lib/stores/currentUserStore';
 	import Dropdown from '$components/dropdown/Dropdown.svelte';
 	import DropdownItem from '$components/dropdown/DropdownItem.svelte';
+	import { goto } from '$app/navigation';
 
-	function logout() {
-		logoutUser();
+	async function logout() {
+		await logoutUser();
+
+		goto('/join');
 	}
 </script>
 
