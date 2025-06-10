@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { rate } from "$lib/api/client";
-	import type RatingData from "$lib/types/RatingData";
-    import './rate-buttons.scss';
+	import { rate } from '$lib/api/client';
+	import type RatingData from '$lib/types/RatingData';
+	import './rate-buttons.scss';
 
-    interface Props {
-        data: RatingData,
-        subjectId: number,
-        type: 'article' | 'comment',
-        size?: 'normal' | 'small',
-        readonly?: boolean,
-    }
+	interface Props {
+		data: RatingData;
+		subjectId: number;
+		type: 'article' | 'comment';
+		size?: 'normal' | 'small';
+		readonly?: boolean;
+	}
 
     let {
         data,
@@ -19,54 +19,82 @@
         readonly,
     }: Props = $props();
 
-    let thumbsUp = $state<number>(data.ThumbsUp);
-    let thumbsDown = $state<number>(data.ThumbsDown);
-    let currentUserRate = $state(data.UserRating);
+	let thumbsUp = $state<number>(data.ThumbsUp);
+	let thumbsDown = $state<number>(data.ThumbsDown);
+	let currentUserRate = $state(data.UserRating);
 
-    function toggleThumbsUp() {
-        let newRate: -1 | 0 | 1 = 0;
+	function toggleThumbsUp() {
+		let newRate: -1 | 0 | 1 = 0;
 
-        if (currentUserRate != 1) {
-            newRate = 1;
+		if (currentUserRate != 1) {
+			newRate = 1;
+		}
 
-            if (currentUserRate == -1) {
-                thumbsDown--;
-            }
-        }
+		rate(subjectId, newRate, type).then(() => {
+			if (currentUserRate == 1) {
+				thumbsUp--;
+			} else {
+				thumbsUp++;
+			}
 
-        rate(subjectId, newRate, type)
-            .then(() => {
-                thumbsUp++;
-                currentUserRate = newRate;
-            });
-    }
+			if (currentUserRate == -1) {
+				thumbsDown--;
+			}
 
-    function toggleThumbsDown() {
-        let newRate: -1 | 0 | 1 = 0;
+			currentUserRate = newRate;
+		});
+	}
 
-        if (currentUserRate != -1) {
-            newRate = -1;
+	function toggleThumbsDown() {
+		let newRate: -1 | 0 | 1 = 0;
 
-            if (currentUserRate == 1) {
-                thumbsUp--;
-            }
-        }
+		if (currentUserRate != -1) {
+			newRate = -1;
+		}
 
-        rate(subjectId, newRate, type)
-            .then(() => {
-                thumbsDown++;
-                currentUserRate = newRate;
-            });
-    }
+		rate(subjectId, newRate, type).then(() => {
+			if (currentUserRate == -1) {
+				thumbsDown--;
+			} else {
+				thumbsDown++;
+			}
+
+			if (currentUserRate == 1) {
+				thumbsUp--;
+			}
+
+			currentUserRate = newRate;
+		});
+	}
 </script>
 
 <div class="text-end">
-    <button type="button" class="rate-btn rate-btn__positive bg-transparent border-0 text-primary" aria-label="Thumbs up" onclick={toggleThumbsUp} disabled={readonly}>
-        <i class="bi bi-hand-thumbs-up{currentUserRate == 1 ? '-fill' : ''} {size === 'normal' ? 'fs-5' : 'fs-6'}"></i>
-        <small>{thumbsUp}</small>
-    </button>
-    <button type="button" class="rate-btn rate-btn__negative bg-transparent border-0 text-primary" aria-label="Thumbs down" onclick={toggleThumbsDown} disabled={readonly}>
-        <i class="bi bi-hand-thumbs-down{currentUserRate == -1 ? '-fill' : ''} {size === 'normal' ? 'fs-5' : 'fs-6'}"></i>
-        <small>{thumbsDown}</small>
-    </button>
+	<button
+		type="button"
+		class="rate-btn rate-btn__positive bg-transparent border-0 text-primary"
+		aria-label="Thumbs up"
+		onclick={toggleThumbsUp}
+		disabled={readonly}
+	>
+		<i
+			class="bi bi-hand-thumbs-up{currentUserRate == 1 ? '-fill' : ''} {size === 'normal'
+				? 'fs-5'
+				: 'fs-6'}"
+		></i>
+		<small>{thumbsUp}</small>
+	</button>
+	<button
+		type="button"
+		class="rate-btn rate-btn__negative bg-transparent border-0 text-primary"
+		aria-label="Thumbs down"
+		onclick={toggleThumbsDown}
+		disabled={readonly}
+	>
+		<i
+			class="bi bi-hand-thumbs-down{currentUserRate == -1 ? '-fill' : ''} {size === 'normal'
+				? 'fs-5'
+				: 'fs-6'}"
+		></i>
+		<small>{thumbsDown}</small>
+	</button>
 </div>
