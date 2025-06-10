@@ -9,6 +9,7 @@
 	import type UserInfo from "$lib/types/UserInfo";
 	import { currentUserStore } from "$lib/stores/currentUserStore";
 	import { goto } from "$app/navigation";
+	import { addToast } from "$lib/stores/toastStore";
 
     let formData = writable<UserLoginCredentials>({
         UsernameOrEmail: '',
@@ -19,19 +20,21 @@
         UsernameOrEmail: [
             {
                 validate: required,
-                message: (label) => `The ${label} field is required.`
+                message: () => `Please enter a valid username or e-mail address.`
             }
         ],
         Password: [
             {
                 validate: required,
-                message: (label) => `The ${label} field is required.`
+                message: () => `Please enter your password.`
             }
         ]
     };
 
     function onLoginSuccess(userInfo: UserInfo) {
         currentUserStore.set(userInfo);
+
+        addToast('Successfully logged in');
 
         goto('/user/' + userInfo.Name);
     }

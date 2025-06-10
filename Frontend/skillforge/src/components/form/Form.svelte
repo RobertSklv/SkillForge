@@ -5,6 +5,7 @@
 	import type ValidationRules from "$lib/types/ValidationRules";
 	import { setContext, type Snippet } from "svelte";
 	import { requestApi } from "$lib/api/client";
+	import { addToast } from "$lib/stores/toastStore";
 
     interface Props {
         action: string,
@@ -164,8 +165,9 @@
                     }
                 }
 
-                if (e.detail) {
-                    console.error(e.detail);
+                if (e.detail || e.title) {
+                    console.error(e.detail ?? e.title);
+                    addToast(e.detail ?? e.title, 'danger');
                 }
             })
             .finally(() => {

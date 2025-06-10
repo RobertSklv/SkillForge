@@ -8,6 +8,7 @@
 	import CookieConsentBanner from "$components/cookie-consent/CookieConsentBanner.svelte";
     import '$styles/global.scss';
     import { onNavigate } from '$app/navigation';
+	import ToastContainer from "$components/toast-container/ToastContainer.svelte";
 
     onNavigate((navigation) => {
         if (!document.startViewTransition) return;
@@ -40,6 +41,8 @@
 <Footer />
 
 <CookieConsentBanner />
+
+<ToastContainer />
 
 <style>
     @keyframes fade-in {

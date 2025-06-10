@@ -8,6 +8,7 @@
 	import Columns from '$components/layout/Columns.svelte';
 	import { loadAccountInfoForm } from '$lib/api/client';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
+	import { addToast } from '$lib/stores/toastStore';
 	import type AccountInfoFormData from '$lib/types/AccountInfoFormData';
 	import type PasswordChangeFormData from '$lib/types/PasswordChangeFormData';
 	import type ValidationRules from '$lib/types/ValidationRules';
@@ -24,11 +25,11 @@
 	});
 
 	async function onInfoUpdateSuccess() {
-		console.log('Account info updated successfully');
+		addToast('Account info updated successfully');
 	}
 
 	async function onPasswordUpdateSuccess() {
-		console.log('Password updated successfully');
+		addToast('Password updated successfully');
 	}
 
     let accountInfoValidationRules: ValidationRules = {
@@ -143,7 +144,7 @@
 					formData={$passwordChangeFormData}
 					onSuccess={onPasswordUpdateSuccess}
                     validationRules={changePasswordValidationRules}
-                    resetMode="onsubmit"
+                    resetMode="onsuccess"
 				>
 					<InputField id="Password" type="password" bind:value={$passwordChangeFormData.Password} />
 

@@ -13,6 +13,7 @@
 	import TagComboBox from '$components/form/TagComboBox.svelte';
 	import type ValidationRules from '$lib/types/ValidationRules';
 	import { regex, required } from '$lib/validation/rules';
+	import { addToast } from '$lib/stores/toastStore';
 
 	let pageContext = getContext<ArticleUpsertPageModel>('page');
 
@@ -64,7 +65,11 @@
 	};
 
 	function onSuccess() {
-		console.log('Article created successfully');
+		if (pageContext.CurrentState?.Model.Id == 0) {
+			addToast('Article successfully created. Pending moderator approval.', 'info');
+		} else {
+			addToast('Article successfully updated. Pending moderator approval.', 'info');
+		}
 	}
 </script>
 

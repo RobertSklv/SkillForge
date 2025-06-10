@@ -9,6 +9,7 @@
 	import type UserInfo from "$lib/types/UserInfo";
 	import { currentUserStore } from "$lib/stores/currentUserStore";
 	import { goto } from "$app/navigation";
+	import { addToast } from "$lib/stores/toastStore";
 
     let formData = writable<UserRegisterCredentials>({
         Username: '',
@@ -73,6 +74,8 @@
         };
 
         currentUserStore.set(userInfo);
+
+        addToast('Registration successful');
 
         goto('/user/' + userInfo.Name);
     }
