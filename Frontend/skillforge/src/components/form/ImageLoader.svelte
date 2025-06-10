@@ -62,13 +62,21 @@
             </div>
         </div>
     {:else if hasFile}
-        <div class="position-relative m-4">
-            <img src={PUBLIC_BACKEND_DOMAIN + url} alt={imageAlt} class="w-100 rounded" />
-            <div class="d-flex justify-content-end position-absolute start-0 top-0 end-0">
-                <Button color="danger" onclick={onRemoveClick}>
-                    <i class="bi bi-trash-fill"></i>
-                </Button>
+        <div class="m-4 d-flex justify-content-center">
+            <div class="position-relative">
+                <img src={PUBLIC_BACKEND_DOMAIN + url} alt={imageAlt} class="rounded preview-image" />
+                <div class="d-flex justify-content-end position-absolute start-0 top-0 end-0">
+                    <Button color="danger" onclick={onRemoveClick}>
+                        <i class="bi bi-trash-fill"></i>
+                    </Button>
+                </div>
             </div>
         </div>
     {/if}
 </div>
+
+<style>
+    .preview-image {
+        max-width: 250px;
+    }
+</style>

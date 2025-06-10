@@ -29,7 +29,8 @@
 					<span>{$currentUserStore.Name}</span>
 					<Icon type="person-circle" />
 				{/snippet}
-				<DropdownItem href="/account">Account</DropdownItem>
+				<DropdownItem href="/user/{$currentUserStore.Name}">Account</DropdownItem>
+				<DropdownItem href="/account">Edit Account</DropdownItem>
 				<DropdownItem type="button" onclick={logout}>Logout</DropdownItem>
 			</Dropdown>
 		{:else}

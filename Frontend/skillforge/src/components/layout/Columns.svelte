@@ -3,9 +3,9 @@
 
     interface Props {
         mod?: string,
-        leftColumn: Snippet,
+        leftColumn?: Snippet,
         children: Snippet,
-        rightColumn: Snippet,
+        rightColumn?: Snippet,
     }
 
     const {
@@ -18,13 +18,13 @@
 
 <div class="row {mod}">
     <div class="d-none d-lg-block left-column">
-        {@render leftColumn()}
+        {@render leftColumn?.()}
     </div>
     <div class="col-12 middle-column">
         {@render children()}
     </div>
     <div class="d-none d-lg-block right-column">
-        {@render rightColumn()}
+        {@render rightColumn?.()}
     </div>
 </div>
 

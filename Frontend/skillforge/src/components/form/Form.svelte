@@ -44,7 +44,7 @@
 
     let fields: Fields = {};
     let fieldValidations: FieldValidations = {};
-    let initialFormData = JSON.parse(JSON.stringify(formData));
+    let initialFormData = JSON.parse(JSON.stringify(formData ?? '{}'));
 
     function registerField(name: string, reset: () => void) {
         fields[name] = {

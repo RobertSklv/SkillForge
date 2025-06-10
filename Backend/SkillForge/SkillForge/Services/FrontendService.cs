@@ -26,7 +26,7 @@ public class FrontendService : IFrontendService
                 UserRating = 0,
             },
             Comments = article.Comments!
-                .OrderByDescending(c => c.CreatedAt)
+                .OrderBy(c => c.CreatedAt)
             .Take(2)
             .ToList()
                 .ConvertAll(CreateCommentModel),

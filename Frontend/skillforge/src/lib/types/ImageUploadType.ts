@@ -1,1 +1,1 @@
-export type ImageUploadType = 'article' | 'comment';
+export type ImageUploadType = 'article' | 'comment' | 'avatar';

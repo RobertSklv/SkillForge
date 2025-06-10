@@ -1,4 +1,5 @@
-﻿using SkillForge.Areas.Admin.Repositories;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Exceptions;
 using SkillForge.Models.Database;
 using SkillForge.Models.DTOs.Article;
@@ -13,16 +14,22 @@ public class UserService : CrudService<User>, IUserService
     private readonly IUserRepository repository;
     private readonly IFrontendService frontendService;
     private readonly IUserFeedService userFeedService;
+    private readonly IUserAuthService userAuthService;
+    private readonly IAuthService authService;
 
     public UserService(
         IUserRepository repository,
         IFrontendService frontendService,
-        IUserFeedService userFeedService)
+        IUserFeedService userFeedService,
+        IUserAuthService userAuthService,
+        IAuthService authService)
         : base(repository)
     {
         this.repository = repository;
         this.frontendService = frontendService;
         this.userFeedService = userFeedService;
+        this.userAuthService = userAuthService;
+        this.authService = authService;
     }
 
     public Task<User?> GetByName(string name)
@@ -127,6 +134,45 @@ public class UserService : CrudService<User>, IUserService
         user.FollowersCount--;
 
         await repository.DeleteFollowRecord(followRecord);
+    }
+
+    public async Task<bool> UpdateInfo(int userId, AccountInfoFormData formData)
+    {
+        User user = await GetStrict(userId);
+
+        user.Email = formData.Email;
+        user.AvatarPath = formData.AvatarImage;
+        user.Bio = formData.Bio;
+        user.DateOfBirth = formData._DateOfBirth;
+
+        return await Update(user);
+    }
+
+    public async Task<bool> UpdatePassword(int userId, PasswordChangeFormData formData, ModelStateDictionary modelState)
+    {
+        User user = await GetStrict(userId);
+
+        if (formData.Password == formData.CurrentPassword)
+        {
+            modelState.AddModelError(nameof(PasswordChangeFormData.Password), "New password cannot be the same as the old password");
+
+            return false;
+        }
+
+        if (!authService.CompareHashes(formData.CurrentPassword, user.PasswordHash, user.PasswordHashSalt))
+        {
+            modelState.AddModelError(nameof(PasswordChangeFormData.CurrentPassword), "Incorrect password");
+
+            return false;
+        }
+
+        byte[] passwordHashSalt = authService.GenerateSalt();
+        string passwordHash = authService.Hash(formData.Password, passwordHashSalt);
+
+        user.PasswordHashSalt = passwordHashSalt;
+        user.PasswordHash = passwordHash;
+
+        return await Update(user);
     }
 
     public async Task<UserPageData> LoadPage(string name, int? currentUserId = null)

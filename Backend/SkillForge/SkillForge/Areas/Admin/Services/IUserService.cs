@@ -1,4 +1,5 @@
-﻿using SkillForge.Models.Database;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SkillForge.Models.Database;
 using SkillForge.Models.DTOs.User;
 
 namespace SkillForge.Areas.Admin.Services;
@@ -34,6 +35,10 @@ public interface IUserService : ICrudService<User>
     Task Follow(int currentUserId, string username);
 
     Task Unfollow(int currentUserId, string username);
+
+    Task<bool> UpdateInfo(int userId, AccountInfoFormData formData);
+
+    Task<bool> UpdatePassword(int userId, PasswordChangeFormData formData, ModelStateDictionary modelState);
 
     Task<UserPageData> LoadPage(string name, int? currentUserId = null);
 }

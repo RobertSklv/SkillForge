@@ -188,6 +188,62 @@ public class UserController : ApiController
         return Unauthorized();
     }
 
+    [HttpGet]
+    public async Task<IActionResult> AccountInfoForm()
+    {
+        if (TryGetUserId(out int? userId))
+        {
+            User user = await service.GetStrict((int)userId);
+
+            return Ok(new AccountInfoFormData
+            {
+                Email = user.Email,
+                AvatarImage = user.AvatarPath,
+                Bio = user.Bio,
+                _DateOfBirth = user.DateOfBirth,
+            });
+        }
+
+        return Unauthorized();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateInfo(AccountInfoFormData formData)
+    {
+        if (TryGetUserId(out int? userId))
+        {
+            if (await service.UpdateInfo((int)userId, formData))
+            {
+                return Ok("Account information successfully updated!");
+            }
+
+            return BadRequest("Something went wrong!");
+        }
+
+        return Unauthorized();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdatePassword(PasswordChangeFormData formData)
+    {
+        if (TryGetUserId(out int? userId))
+        {
+            if (await service.UpdatePassword((int)userId, formData, ModelState))
+            {
+                return Ok("Account information successfully updated!");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            return BadRequest("Something went wrong!");
+        }
+
+        return Unauthorized();
+    }
+
     [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> Auth(UserLoginCredentials creds)

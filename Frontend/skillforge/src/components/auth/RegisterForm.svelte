@@ -21,7 +21,7 @@
         Username: [
             {
                 validate: required,
-                message: (label) => `The ${label} field is required.`
+                message: () => `Please enter a valid username.`
             },
             {
                 validate: (val) => remote('/User/VerifyUniqueUsername', 'name', val),
@@ -31,7 +31,7 @@
         Email: [
             {
                 validate: required,
-                message: (label) => `The ${label} field is required.`
+                message: () => `Please enter a valid e-mail.`
             },
             {
                 validate: email,
@@ -45,17 +45,17 @@
         Password: [
             {
                 validate: required,
-                message: (label) => `The ${label} field is required.`
+                message: () => `Please enter a valid password.`
             },
             {
                 validate: password,
-                message: () => 'The password must be at least 8 characters long, contain at least one lowercase and letter, and at least one symbol.'
+                message: () => 'The password must be at least 8 characters long, contain at least one lowercase and uppercase letter, and at least one symbol.'
             },
         ],
         ConfirmPassword: [
             {
                 validate: required,
-                message: (label) => `The ${label} field is required.`
+                message: () => `Please confirm your password.`
             },
             {
                 validate: (val) => compare(val, $formData.Password),

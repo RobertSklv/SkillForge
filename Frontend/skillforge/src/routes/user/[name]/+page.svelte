@@ -32,6 +32,9 @@
 	import { getImagePath } from '$lib/util';
 	import { fade } from 'svelte/transition';
 	import Modal from '$components/modal/Modal.svelte';
+	import Dropdown from '$components/dropdown/Dropdown.svelte';
+	import DropdownItem from '$components/dropdown/DropdownItem.svelte';
+	import DropdownDivider from '$components/dropdown/DropdownDivider.svelte';
 
 	const ARTICLE_BATCH_SIZE: number = 4;
 	const FOLLOW_LIST_BATCH_SIZE: number = 15;
@@ -192,6 +195,24 @@
 					<div class="col offset-2">
 						<h1 class="h2">{data.Name}</h1>
 					</div>
+					<div class="col-2 text-end">
+						<Dropdown>
+							{#snippet buttonSnippet()}
+								<i class="bi bi-three-dots-vertical"></i>
+							{/snippet}
+							{#if $currentUserStore && $currentUserStore.Name == data.Name}
+								<DropdownItem href="/account">
+									<i class="bi bi-pencil-square"></i>
+									Edit
+								</DropdownItem>
+								<DropdownDivider />
+							{/if}
+							<DropdownItem href="/">
+								<i class="bi bi-exclamation-triangle"></i>
+								Report
+							</DropdownItem>
+						</Dropdown>
+					</div>
 				</div>
 			{/snippet}
 
@@ -204,15 +225,15 @@
 							onclick={openAvatarModal}
 						>
 							<img
-								src={getImagePath(backendData?.AvatarImage)}
-								alt="{backendData?.Name} profile"
-								class="rounded-circle object-fit-cover w-100"
+								src={getImagePath(data.AvatarImage)}
+								alt="{data.Name} profile"
+								class="round-image w-100"
 							/>
 						</button>
 						<Modal bind:show={isAvatarModalOpen} verticallyCentered>
 							<img
-								src={getImagePath(backendData?.AvatarImage)}
-								alt="{backendData?.Name} profile full size"
+								src={getImagePath(data.AvatarImage)}
+								alt="{data.Name} profile full size"
 								class="w-100 object-fit-cover"
 							/>
 						</Modal>
@@ -237,7 +258,7 @@
 						<br />
 						<span>followings</span>
 					</div>
-					{#if $currentUserStore && $currentUserStore.Name != backendData?.Name}
+					{#if $currentUserStore && $currentUserStore.Name != data.Name}
 						<div class="col-2 text-center">
 							{#if isFollowedByCurrentUser}
 								<Button isOutline={true} onclick={unfollow}>Unfollow</Button>

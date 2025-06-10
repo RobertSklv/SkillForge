@@ -3,18 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SkillForge.Models.DTOs.User;
 
-public class UserRegisterCredentials
+public class PasswordChangeFormData
 {
-    [Required]
-    [StringLength(16, MinimumLength = 1)]
-    [Username]
-    public string Username { get; set; }
-
-    [Required]
-    [Display(Name = "E-mail")]
-    [EmailAddress(ErrorMessage = "Must enter a valid e-mail address.")]
-    public string Email { get; set; }
-
     [Required]
     [DataType(DataType.Password)]
     [Password]
@@ -25,4 +15,8 @@ public class UserRegisterCredentials
     [DataType(DataType.Password)]
     [Compare(nameof(Password), ErrorMessage = "Passwords don't match")]
     public string ConfirmPassword { get; set; }
+
+    [Required]
+    [DataType(DataType.Password)]
+    public string CurrentPassword { get; set; }
 }

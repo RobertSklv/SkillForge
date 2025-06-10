@@ -13,3 +13,10 @@ body {
     padding-top: calc(3rem + 56px);
     min-height: calc(100vh - 56px);
 }
+
+.round-image {
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--bs-primary-border-subtle);
+}

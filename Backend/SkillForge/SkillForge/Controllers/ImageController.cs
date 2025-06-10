@@ -9,6 +9,7 @@ public class ImageController : ApiController
     {
         { "article", "articles/uploads" },
         { "comment", "comments/uploads" },
+        { "avatar", "avatars/uploads" },
     };
 
     private readonly IImageService service;
