@@ -30,7 +30,10 @@
     let isVisited = $state<boolean>(false);
 
     $effect(() => {
-        setContent(content);
+        let convertedContent = quillEditor?.clipboard.convert({
+            html: content
+        });
+        quillEditor?.setContents(convertedContent);
     });
 
     let editorWrapperElement: any;
