@@ -85,7 +85,7 @@ builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserAuthService, UserAuthService>();
-builder.Services.AddScoped<IFrontendService, FrontendService>();
+builder.Services.AddSingleton<IFrontendService, FrontendService>();
 builder.Services.AddScoped<IUserFeedService, UserFeedService>();
 
 // Frontend config

@@ -14,6 +14,7 @@ import type TagPageData from "$lib/types/TagPageData";
 import type UserListItemType from "$lib/types/UserListItemType";
 import type UserPageData from "$lib/types/UserPageData";
 import type TagListItemType from "$lib/types/TagListItemType";
+import type ArticleSearchItemType from "$lib/types/ArticleSearchItemType";
 
 export async function getCurrentUser(): Promise<UserInfo | null> {
 	try {
@@ -113,6 +114,14 @@ export function getLatestArticlesByAuthor(authorName: string, batchIndex: number
 			authorName,
 			batchIndex,
 			batchSize,
+		}
+	});
+}
+
+export function searchArticles(p: string): Promise<ArticleSearchItemType[]> {
+	return requestApi('/Article/Search', {
+		query: {
+			p
 		}
 	});
 }

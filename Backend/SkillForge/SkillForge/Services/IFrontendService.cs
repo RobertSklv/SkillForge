@@ -11,6 +11,8 @@ public interface IFrontendService
 
     ArticleCard CreateArticleCard(Article article);
 
+    ArticleSearchItem CreateArticleSearchItem(Article article);
+
     TopArticleItem CreateTopArticleItem(Article article);
 
     UserInfo GetUserInfo(User user);

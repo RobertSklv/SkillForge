@@ -43,4 +43,6 @@ public interface IArticleRepository : ICrudRepository<Article>
     Task<List<Article>> GetTopArticlesByAuthor(int authorId, int count);
 
     Task<List<Article>> GetTopArticles(int count);
+
+    Task<List<Article>> Search(string phrase);
 }

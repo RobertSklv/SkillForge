@@ -1,15 +1,19 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
+	interface Props {
+		logoLink: string;
+		logoSnippet: Snippet;
+		children?: Snippet;
+		linksSnippet?: Snippet,
+	}
+
 	const {
 		logoLink,
 		logoSnippet,
-		children
-	}: {
-		logoLink: string;
-		logoSnippet: Snippet;
-		children: Snippet;
-	} = $props();
+		children,
+		linksSnippet,
+	}: Props = $props();
 
 	let isOpen = $state(false);
 
@@ -34,13 +38,18 @@
 		>
 			<span class="navbar-toggler-icon"></span>
 		</button>
+
+		<div class="d-flex justify-content-center w-100">
+			{@render children?.()}
+		</div>
+
 		<div
-			class="collapse navbar-collapse justify-content-end"
+			class="collapse navbar-collapse justify-content-end flex-shrink-0"
 			class:show={isOpen}
 			id="navbarNavDropdown"
 		>
 			<ul class="navbar-nav">
-				{@render children()}
+				{@render linksSnippet?.()}
 			</ul>
 		</div>
 	</div>

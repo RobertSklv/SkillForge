@@ -308,4 +308,14 @@ public class ArticleService : CrudService<Article>, IArticleService
     {
         return repository.RecordView(view);
     }
+
+    public Task<List<Article>> Search(string phrase)
+    {
+        return repository.Search(phrase);
+    }
+
+    public async Task<List<ArticleSearchItem>> SearchItems(string phrase)
+    {
+        return (await repository.Search(phrase)).ConvertAll(frontendService.CreateArticleSearchItem);
+    }
 }

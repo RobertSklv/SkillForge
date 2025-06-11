@@ -130,6 +130,15 @@ public class ArticleController : ApiController
 
     [AllowAnonymous]
     [HttpGet]
+    public async Task<IActionResult> Search(string p)
+    {
+        List<ArticleSearchItem> items = await service.SearchItems(p);
+
+        return Ok(items);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
     [Route("/Api/Article/View/{id}")]
     public async Task<IActionResult> View(int id)
     {

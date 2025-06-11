@@ -5,6 +5,7 @@
 	import { getContext, onMount } from 'svelte';
 	import FieldValidation from './FieldValidation.svelte';
 	import type FormContext from '$lib/types/FormContext';
+	import { fade } from 'svelte/transition';
 
 	interface Props {
 		id: string;
@@ -146,8 +147,8 @@
 		/>
 	</div>
 	{#if showSuggestions && suggestions.length && isWithinLimit && isValid}
-		<div class="position-absolute w-100 z-3 shadow" bind:this={suggestionsElement}>
-			<ul class="list-group">
+		<div class="position-absolute w-100 z-3 mt-1 shadow" bind:this={suggestionsElement} transition:fade={{ duration: 100 }}>
+			<ul class="list-group rounded-3">
 				{#each suggestions as tag}
 					<button
 						type="button"

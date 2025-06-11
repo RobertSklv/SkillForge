@@ -21,6 +21,15 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
     {
     }
 
+    public override IQueryable<Article> GetIncludes(IQueryable<Article> query)
+    {
+        return base.GetIncludes(query)
+            .Include(e => e.Author)
+            .Include(e => e.Category)
+            .Include(e => e.Tags!)
+                .ThenInclude(e => e.Tag);
+    }
+
     public override Task<int> Upsert(Article entity)
     {
         HtmlSanitizer sanitizer = new();
@@ -94,15 +103,6 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         db.GuestArticleViews.Add(view);
 
         return db.SaveChangesAsync();
-    }
-
-    public override IQueryable<Article> GetIncludes(IQueryable<Article> query)
-    {
-        return base.GetIncludes(query)
-            .Include(e => e.Author)
-            .Include(e => e.Category)
-            .Include(e => e.Tags!)
-                .ThenInclude(e => e.Tag);
     }
 
     public override Task<PaginatedList<Article>> List(ListingModel listingModel, Func<IQueryable<Article>, IQueryable<Article>>? queryCallback = null)
@@ -272,6 +272,24 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
             .Where(e => e.ApprovalId != null)
             .OrderByDescending(e => e.ViewCount)
             .Take(count)
+            .ToListAsync();
+    }
+
+    public Task<List<Article>> Search(string phrase)
+    {
+        IQueryable<Article> query = GetIncludes(DbSet);
+
+        string[] keywords = phrase.Split(' ');
+
+        foreach (string keyword in keywords)
+        {
+            query = query.Where(e => e.Title.StartsWith(keyword) || e.Title.Contains(keyword) || e.Title.EndsWith(keyword));
+        }
+
+        return query
+            .Where(e => e.ApprovalId != null)
+            .OrderByDescending(e => e.CreatedAt)
+            .Take(6)
             .ToListAsync();
     }
 }

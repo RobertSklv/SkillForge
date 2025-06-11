@@ -77,6 +77,17 @@ public class FrontendService : IFrontendService
         };
     }
 
+    public ArticleSearchItem CreateArticleSearchItem(Article article)
+    {
+        return new ArticleSearchItem
+        {
+            ArticleId = article.Id,
+            Title = article.Title,
+            AuthorName = article.Author!.Name,
+            DatePosted = (DateTime)article.CreatedAt!,
+        };
+    }
+
     public UserInfo GetUserInfo(User user)
     {
         return new UserInfo

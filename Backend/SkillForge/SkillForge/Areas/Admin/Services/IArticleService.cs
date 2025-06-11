@@ -46,4 +46,8 @@ public interface IArticleService : ICrudService<Article>
     Task<ArticlePageData> View(string guestId, int articleId);
 
     Task Rate(int userId, int articleId, UserRatingData rate);
+
+    Task<List<Article>> Search(string phrase);
+
+    Task<List<ArticleSearchItem>> SearchItems(string phrase);
 }
