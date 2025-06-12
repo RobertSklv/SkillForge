@@ -59,3 +59,13 @@ export function getImagePath(relativePath?: string | null) {
 
 	return PUBLIC_BACKEND_DOMAIN + relativePath;
 }
+
+export function clamp(value: number, lowerBound: number, upperBound: number) {
+	if (value < lowerBound) {
+		return lowerBound;
+	} else if (value > upperBound) {
+		return upperBound;
+	}
+
+	return value;
+}

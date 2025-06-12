@@ -4,6 +4,7 @@ using SkillForge.Areas.Admin.Models.DTOs;
 using SkillForge.Models.Database;
 using SkillForge.Models.DTOs.Article;
 using SkillForge.Models.DTOs.Rating;
+using SkillForge.Models.DTOs.Search;
 
 namespace SkillForge.Areas.Admin.Services;
 
@@ -50,4 +51,6 @@ public interface IArticleService : ICrudService<Article>
     Task<List<Article>> Search(string phrase);
 
     Task<List<ArticleSearchItem>> SearchItems(string phrase);
+
+    Task<PaginationResponse<ArticleCard>> SearchAdvancedCards(GridState gridState);
 }

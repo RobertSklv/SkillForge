@@ -15,6 +15,8 @@ import type UserListItemType from "$lib/types/UserListItemType";
 import type UserPageData from "$lib/types/UserPageData";
 import type TagListItemType from "$lib/types/TagListItemType";
 import type ArticleSearchItemType from "$lib/types/ArticleSearchItemType";
+import type GridState from "$lib/types/GridState";
+import type PaginationResponse from "$lib/types/PaginationResponse";
 
 export async function getCurrentUser(): Promise<UserInfo | null> {
 	try {
@@ -123,6 +125,13 @@ export function searchArticles(p: string): Promise<ArticleSearchItemType[]> {
 		query: {
 			p
 		}
+	});
+}
+
+export function searchArticlesAdvanced(gridState: GridState, fetch?: SvelteFetch): Promise<PaginationResponse<ArticleCardType>> {
+	return requestApi('/Article/SearchAdvanced', {
+		fetchFunction: fetch,
+		query: gridState
 	});
 }
 
@@ -306,12 +315,14 @@ function createURLSearchParams(params: QueryParams): URLSearchParams {
 
 	for (const key in params) {
 		const value = params[key];
-		if (value !== undefined) {
+		if (value) {
 			if (isString(value)) {
 				usp.append(key, value);
 			} else if (Array.isArray(value)) {
 				for (let v of value) {
-					usp.append(key, toString(v));
+					if (v) {
+						usp.append(key, toString(v));
+					}
 				}
 			} else {
 				usp.append(key, toString(value));

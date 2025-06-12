@@ -6,10 +6,10 @@ using SkillForge.Models.DTOs.Rating;
 using SkillForge.Areas.Admin.Services;
 using SkillForge.Models.Database;
 using SkillForge.Services;
+using SkillForge.Models.DTOs.Search;
 
 namespace SkillForge.Controllers;
 
-[Authorize(AuthenticationSchemes = "FrontendCookie")]
 public class ArticleController : ApiController
 {
     private readonly IArticleService service;
@@ -23,6 +23,7 @@ public class ArticleController : ApiController
         this.userFeedService = userFeedService;
     }
 
+    [Authorize(AuthenticationSchemes = "FrontendCookie")]
     [HttpPost]
     public async Task<IActionResult> Upsert(ArticleUpsertDTO form)
     {
@@ -48,6 +49,7 @@ public class ArticleController : ApiController
         }
     }
 
+    [Authorize(AuthenticationSchemes = "FrontendCookie")]
     [HttpGet]
     public async Task<IActionResult> LoadUpsertPage(int? id)
     {
@@ -89,6 +91,7 @@ public class ArticleController : ApiController
         return Ok(pageModel);
     }
 
+    [Authorize(AuthenticationSchemes = "FrontendCookie")]
     [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> Latest(int batchIndex, int batchSize = 10)
@@ -102,6 +105,7 @@ public class ArticleController : ApiController
         return Ok(cards);
     }
 
+    [Authorize(AuthenticationSchemes = "FrontendCookie")]
     [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> LatestByTag(string tag, int batchIndex, int batchSize = 10)
@@ -115,6 +119,7 @@ public class ArticleController : ApiController
         return Ok(cards);
     }
 
+    [Authorize(AuthenticationSchemes = "FrontendCookie")]
     [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> LatestByAuthor(string authorName, int batchIndex, int batchSize = 10)
@@ -139,6 +144,16 @@ public class ArticleController : ApiController
 
     [AllowAnonymous]
     [HttpGet]
+    public async Task<IActionResult> SearchAdvanced([FromQuery] GridState gridState)
+    {
+        PaginationResponse<ArticleCard> res = await service.SearchAdvancedCards(gridState);
+
+        return Ok(res);
+    }
+
+    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [AllowAnonymous]
+    [HttpGet]
     [Route("/Api/Article/View/{id}")]
     public async Task<IActionResult> View(int id)
     {
@@ -156,6 +171,7 @@ public class ArticleController : ApiController
         return Ok(model);
     }
 
+    [Authorize(AuthenticationSchemes = "FrontendCookie")]
     [HttpPost]
     [Route("/Api/Article/Rate/{id}")]
     public async Task<IActionResult> Rate([FromRoute] int id, [FromBody] UserRatingData rate)

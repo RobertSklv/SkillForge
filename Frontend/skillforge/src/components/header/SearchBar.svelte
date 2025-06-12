@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { searchArticles } from '$lib/api/client';
 	import type ArticleSearchItemType from '$lib/types/ArticleSearchItemType';
 	import moment from 'moment';
@@ -36,6 +37,10 @@
 			hideSuggestions();
 		}
 	}
+
+	function search() {
+		goto(`/search?q=${encodeURIComponent(inputValue)}`);
+	}
 </script>
 
 <div class="position-relative w-50">
@@ -53,7 +58,7 @@
 			{onfocusout}
 			bind:value={inputValue}
 		/>
-		<button class="btn btn-light rounded-end-3" type="button" id="search_button">Search</button>
+		<button class="btn btn-light rounded-end-3" type="button" id="search_button" onclick={search}>Search</button>
 	</div>
 	{#if showSuggestions && suggestions.length}
 		<div

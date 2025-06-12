@@ -30,6 +30,13 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
                 .ThenInclude(e => e.Tag);
     }
 
+    public override IQueryable<Article> List(DbSet<Article> dbSet)
+    {
+        return base.List(dbSet)
+            .Include(e => e.Author)
+            .Include(e => e.Category);
+    }
+
     public override Task<int> Upsert(Article entity)
     {
         HtmlSanitizer sanitizer = new();

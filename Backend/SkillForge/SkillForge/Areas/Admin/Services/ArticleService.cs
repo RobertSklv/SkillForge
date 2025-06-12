@@ -10,6 +10,7 @@ using SkillForge.Attributes;
 using SkillForge.Models.Database;
 using SkillForge.Models.DTOs.User;
 using SkillForge.Services;
+using SkillForge.Models.DTOs.Search;
 
 namespace SkillForge.Areas.Admin.Services;
 
@@ -317,5 +318,33 @@ public class ArticleService : CrudService<Article>, IArticleService
     public async Task<List<ArticleSearchItem>> SearchItems(string phrase)
     {
         return (await repository.Search(phrase)).ConvertAll(frontendService.CreateArticleSearchItem);
+    }
+
+    public async Task<PaginationResponse<ArticleCard>> SearchAdvancedCards(GridState gridState)
+    {
+        if (gridState.SortBy == "date")
+        {
+            gridState.SortBy = nameof(BaseEntity.CreatedAt);
+        }
+
+        ListingModel listingQuery = new()
+        {
+            Page = gridState.P ?? 1,
+            PageSize = gridState.Limit ?? 9,
+            SearchPhrase = gridState.Q,
+            OrderBy = gridState.SortBy ?? nameof(BaseEntity.CreatedAt),
+            Direction = gridState.SortOrder ?? "desc",
+        };
+
+        PaginatedList<Article> list = await List(listingQuery);
+
+        PaginationResponse<ArticleCard> response = new()
+        {
+            Items = list.ConvertAll(frontendService.CreateArticleCard),
+            ItemCount = list.Count,
+            TotalItems = list.TotalItems,
+        };
+
+        return response;
     }
 }

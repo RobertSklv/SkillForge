@@ -25,13 +25,14 @@ public class FrontendService : IFrontendService
                 ThumbsDown = article.ThumbsDown,
                 UserRating = 0,
             },
-            Comments = article.Comments!
+            Comments = article.Comments?
                 .OrderBy(c => c.CreatedAt)
-            .Take(2)
-            .ToList()
-                .ConvertAll(CreateCommentModel),
-            TotalComments = article.Comments!.Count,
-            Tags = article.Tags!.ConvertAll(at => CreateTagLink(at.Tag!))
+                .Take(2)
+                .ToList()
+                .ConvertAll(CreateCommentModel)
+                ?? new(),
+            TotalComments = article.Comments?.Count ?? 0,
+            Tags = article.Tags?.ConvertAll(at => CreateTagLink(at.Tag!)) ?? new()
         };
     }
 

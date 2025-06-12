@@ -31,13 +31,16 @@ public class EntitySearchService : IEntitySearchService
 
                 SelectOptionAttribute? selectOptionAttr = propInfo.PropertyType.GetCustomAttribute<SelectOptionAttribute>();
 
-                if (selectOptionAttr != null && helper.CanPropertyBeMapped(entityType, propertyName + '_' + selectOptionAttr.LabelProperty))
+                if (selectOptionAttr != null)
                 {
-                    propertyName += '_' + selectOptionAttr.LabelProperty;
-                }
-                else if (entityType.GetProperty("Name") != null)
-                {
-                    propertyName += '_' + "Name";
+                    if (helper.CanPropertyBeMapped(entityType, propertyName + '_' + selectOptionAttr.LabelProperty))
+                    {
+                        propertyName += '_' + selectOptionAttr.LabelProperty;
+                    }
+                    else if (entityType.GetProperty("Name") != null)
+                    {
+                        propertyName += '_' + "Name";
+                    }
                 }
 
                 if (!helper.CanPropertyBeMapped(entityType, propertyName))

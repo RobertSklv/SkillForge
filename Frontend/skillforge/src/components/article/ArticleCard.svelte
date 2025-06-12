@@ -11,12 +11,18 @@
 
 	interface Props {
 		data: ArticleCardType;
+		showComments?: boolean;
+		mod?: string;
 	}
 
-	let { data }: Props = $props();
+	let {
+		data,
+		showComments = true,
+		mod,
+	}: Props = $props();
 </script>
 
-<Block>
+<Block {mod}>
 	{#if data.CoverImage}
 		<img src={PUBLIC_BACKEND_DOMAIN + data.CoverImage} class="card-img-top rounded-top-3 object-fit-cover" alt="Article cover" style="height: 250px" />
 	{/if}
@@ -53,16 +59,18 @@
 			</div>
 		</div>
 	</div>
-	<div>
-		{#each data.Comments as comment}
-			<CommentLimited data={comment} />
-		{/each}
-	</div>
-	{#if data.Comments.length < data.TotalComments}
-		<div class="text-center mt-2 mb-4">
-			<Link href="/article/{data.ArticleId}" background="fill">
-				View all comments
-			</Link>
+	{#if showComments}
+		<div>
+			{#each data.Comments as comment}
+				<CommentLimited data={comment} />
+			{/each}
 		</div>
+		{#if data.Comments.length < data.TotalComments}
+			<div class="text-center mt-2 mb-4">
+				<Link href="/article/{data.ArticleId}" background="fill">
+					View all comments
+				</Link>
+			</div>
+		{/if}
 	{/if}
 </Block>
