@@ -7,6 +7,7 @@
 	import DropdownItem from '$components/dropdown/DropdownItem.svelte';
 	import { goto } from '$app/navigation';
 	import SearchBar from './SearchBar.svelte';
+	import { page } from '$app/state';
 
 	async function logout() {
 		await logoutUser();
@@ -21,7 +22,9 @@
 			SkillForge
 		{/snippet}
 
-		<SearchBar />
+		{#if page.url.pathname !== '/search'}
+			<SearchBar />
+		{/if}
 
 		{#snippet linksSnippet()}
 			<NavLink href="#" isActive={true}>Articles</NavLink>

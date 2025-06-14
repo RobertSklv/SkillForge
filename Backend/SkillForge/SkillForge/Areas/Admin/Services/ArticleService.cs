@@ -326,6 +326,14 @@ public class ArticleService : CrudService<Article>, IArticleService
         {
             gridState.SortBy = nameof(BaseEntity.CreatedAt);
         }
+        else if (gridState.SortBy == "rating")
+        {
+            gridState.SortBy = nameof(Article.ThumbsUp);
+        }
+        else if (gridState.SortBy == "views")
+        {
+            gridState.SortBy = nameof(Article.ViewCount);
+        }
 
         ListingModel listingQuery = new()
         {

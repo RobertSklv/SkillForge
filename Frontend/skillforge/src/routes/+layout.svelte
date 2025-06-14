@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { onMount, type Snippet } from "svelte";
+	import { type Snippet } from "svelte";
 	import Footer from "$components/footer/Footer.svelte";
 	import Header from "$components/header/Header.svelte";
-	import { loadCurrentUser } from "$lib/stores/currentUserStore";
     import 'bootswatch/dist/vapor/bootstrap.min.css';
     import 'bootstrap-icons/font/bootstrap-icons.min.css';
 	import CookieConsentBanner from "$components/cookie-consent/CookieConsentBanner.svelte";
@@ -12,6 +11,9 @@
 
     onNavigate((navigation) => {
         if (!document.startViewTransition) return;
+
+        // Disabled view transitions when only query param changes are present.
+        if (navigation.from?.route.id === navigation.to?.route.id) return;
 
         return new Promise((resolve) => {
             document.startViewTransition(async () => {
@@ -26,10 +28,6 @@
     }: {
         children: Snippet
     } = $props();
-
-    onMount(() => {
-        loadCurrentUser();
-    });
 </script>
 
 <Header />

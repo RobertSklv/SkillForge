@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type GridContext from "$lib/types/GridContext";
 	import type GridState from '$lib/types/GridState';
 	import { clamp } from '$lib/util';
 	import { getContext } from 'svelte';
@@ -13,7 +14,9 @@
 
 	let { totalItems, defaultLimit }: Props = $props();
 
-	let gridStateStore = getContext<Writable<GridState>>('grid_state');
+	let gridStateStore = getContext<Writable<GridState>>('grid_state_store');
+
+	let gridContext = getContext<GridContext>('grid_context');
 
 	let currentPage = $derived<number>($gridStateStore.p ?? 1);
 	let totalPages = $derived<number>(
@@ -30,12 +33,17 @@
 		)
 	);
 
+	function getPageUrl(page: number): string {
+		return gridContext.generateSearchUrl('p', page);
+	}
+
 	function setPage(
 		e: MouseEvent & { currentTarget: EventTarget & HTMLAnchorElement },
 		page: number
 	) {
 		e.preventDefault();
-		$gridStateStore.p = page;
+
+		gridContext.updateState('p', page);
 	}
 </script>
 
@@ -44,7 +52,7 @@
 		<li class="page-item">
 			<a
 				class="page-link"
-				href="/"
+				href={getPageUrl(currentPage - 1)}
 				class:disabled={currentPage === 1}
 				tabindex={currentPage === 1 ? -1 : undefined}
 				onclick={(e) => setPage(e, currentPage - 1)}>Previous</a
@@ -58,7 +66,7 @@
 			<li class="page-item">
 				<a
 					class="page-link"
-					href="?p={pageIndex}"
+					href={getPageUrl(pageIndex)}
 					class:active={page === currentPage}
 					aria-current={page === currentPage ? 'page' : undefined}
 					onclick={(e) => setPage(e, pageIndex)}
@@ -75,7 +83,7 @@
 		<li class="page-item">
 			<a
 				class="page-link"
-				href="/"
+				href={getPageUrl(currentPage + 1)}
 				class:disabled={currentPage === totalLinks}
 				tabindex={currentPage === totalLinks ? -1 : undefined}
 				onclick={(e) => setPage(e, currentPage + 1)}>Next</a

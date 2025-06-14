@@ -306,7 +306,7 @@ function toString(val: any): string {
 	return val.toString();
 }
 
-function createURLSearchParams(params: QueryParams): URLSearchParams {
+export function createURLSearchParams(params: QueryParams): URLSearchParams {
 	const filtered: {
 		[key: string]: string;
 	} = {};

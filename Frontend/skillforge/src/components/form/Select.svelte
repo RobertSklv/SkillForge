@@ -1,24 +1,24 @@
 <script lang="ts">
-	import type ValidatedField from '$lib/types/ValidatedField';
 	import { getContext, onMount, setContext, type Snippet } from 'svelte';
-	import FieldValidation from './FieldValidation.svelte';
 	import type SelectFieldContext from '$lib/types/SelectFieldContext';
     import type OptionType from '$lib/types/OptionType';
+	import Option from './Option.svelte';
 	import type FormContext from '$lib/types/FormContext';
-	import Select from './Select.svelte';
 
     interface Props {
         id: string,
         name?: string,
-        label?: string,
         value: any,
         size?: any,
         mod?: string,
         disabled?: boolean,
         multiple?: boolean,
-        validateTogether?: string[],
         options?: OptionType[],
         children?: Snippet,
+        onValueChange?: (value: any) => void,
+        oninput?: (e: Event & { currentTarget: EventTarget & HTMLSelectElement; }) => void,
+        onfocus?: (e: FocusEvent & { currentTarget: EventTarget & HTMLSelectElement; }) => void,
+        onfocusout?: (e: FocusEvent & { currentTarget: EventTarget & HTMLSelectElement; }) => void,
     }
 
     interface Options {
@@ -30,22 +30,21 @@
     var {
         id,
         name = id,
-        label = name,
         value = $bindable(),
         size,
         mod,
         disabled,
         multiple,
-        validateTogether,
         options,
         children,
+        onValueChange,
+        oninput,
+        onfocus,
+        onfocusout,
     }: Props = $props();
 
     const formContext = getContext<FormContext>('form');
 
-    let isValid = $state<boolean>(true);
-    let isVisited = $state<boolean>(false);
-    let fieldValidation: ValidatedField;
     let opts: Options = {};
 
     $effect(() => {
@@ -68,7 +67,7 @@
         }
     }
 
-    function oninput(e: Event & { currentTarget: EventTarget & HTMLSelectElement; }) {
+    function oninputPrivate(e: Event & { currentTarget: EventTarget & HTMLSelectElement; }) {
         if (e.target != null) {
             if (multiple) {
                 value = Array.from((e.target as HTMLSelectElement).selectedOptions).map(option => option.value);
@@ -77,15 +76,8 @@
             }
         }
 
-        fieldValidation?.validate();
-    }
-
-    function onfocus() {
-        isVisited = true;
-    }
-
-    function onfocusout() {
-        fieldValidation?.validate();
+        onValueChange?.(value);
+        oninput?.(e);
     }
 
     export function reset() {
@@ -97,19 +89,20 @@
     })
 </script>
 
-<div class="mb-4">
-    <label for={id} class="form-label">{label}:</label>
-    <Select {id}
-            {name}
-            {size}
-            mod="{mod} {!isValid ? 'is-invalid' : ''}"
-            {oninput}
-            {onfocus}
-            {onfocusout}
-            {disabled}
-            {multiple}
-            bind:value>
-        {@render children?.()}
-    </Select>
-    <FieldValidation {name} {label} {value} shouldValidate={isVisited} bind:isValid bind:this={fieldValidation} {validateTogether} />
-</div>
+<select {id}
+        {name}
+        {size}
+        class="form-select {mod}"
+        oninput={oninputPrivate}
+        {onfocus}
+        {onfocusout}
+        {disabled}
+        {value}
+        {multiple}>
+    {@render children?.()}
+    {#if options}
+        {#each options as o}
+            <Option value={o.Value}>{o.Label}</Option>
+        {/each}
+    {/if}
+</select>

@@ -42,9 +42,12 @@ public class Article : BaseEntity
 
     public List<ArticleTag>? Tags { get; set; }
 
+    [TableColumn]
     public int ViewCount { get; set; }
 
+    [TableColumn]
     public int ThumbsUp { get; set; }
 
+    [TableColumn]
     public int ThumbsDown { get; set; }
 }

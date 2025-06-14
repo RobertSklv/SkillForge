@@ -1,19 +1,22 @@
 <script lang="ts" generics="T">
-	import Pagination from '$components/pagination/Pagination.svelte';
+	import { goto } from '$app/navigation';
+	import { createURLSearchParams } from '$lib/api/client';
+	import type GridContext from '$lib/types/GridContext';
 	import type GridState from '$lib/types/GridState';
 	import type { GutterLevel } from '$lib/types/GutterLevel';
 	import type PaginationResponse from '$lib/types/PaginationResponse';
-	import { onDestroy, onMount, setContext, type Snippet } from 'svelte';
-	import { writable, type Unsubscriber, type Writable } from 'svelte/store';
+	import { setContext, type Snippet } from 'svelte';
+	import { writable, type Writable } from 'svelte/store';
 
 	interface Props {
 		gridState: GridState;
-		initialData: PaginationResponse<T>;
+		defaultState: GridState;
+		data: PaginationResponse<T>;
+		url: string,
 		cols: number;
 		mdCols: number;
 		lgCols: number;
 		gap?: GutterLevel;
-		update: (gridState: GridState) => Promise<PaginationResponse<T>>;
 		item: Snippet<[T]>;
 		header?: Snippet;
 		footer?: Snippet;
@@ -21,41 +24,90 @@
 
 	let {
 		gridState,
-		initialData,
+		defaultState,
+		data,
+		url,
 		cols,
 		mdCols,
 		lgCols,
 		gap,
-		update,
 		item,
 		header,
 		footer
 	}: Props = $props();
 
-	let data = $state<PaginationResponse<T>>(initialData);
 	let colClasses = $derived(
 		`col-${getColumnSize(cols)} col-md-${getColumnSize(mdCols)} col-lg-${getColumnSize(lgCols)}`
 	);
 
-	// setContext<GridState>('grid_state', gridState);
-	let gridStateStore = writable<GridState>(gridState);
-	setContext<Writable<GridState>>('grid_state', gridStateStore);
+	let gridStateWithDefaults = $derived<GridState>({
+		p: gridState.p ?? defaultState.p,
+		limit: gridState.limit ?? defaultState.limit,
+		q: gridState.q ?? defaultState.q,
+		sortBy: gridState.sortBy ?? defaultState.sortBy,
+		sortOrder: gridState.sortOrder ?? defaultState.sortOrder,
+	});
 
-	let unsubscribeFromGridStateStore: Unsubscriber;
+	let gridStateStore = writable<GridState>(gridStateWithDefaults);
+
+	setContext<GridContext>('grid_context', {
+		generateSearchUrl,
+		updateState,
+	});
+	setContext<Writable<GridState>>('grid_state_store', gridStateStore);
+
+	$effect(() => {
+		gridStateStore.set(gridStateWithDefaults);
+	})
 
 	function getColumnSize(columnsCount: number): number {
 		return 12 / columnsCount;
 	}
 
-	onMount(() => {
-		unsubscribeFromGridStateStore = gridStateStore.subscribe(async (newState) => {
-			data = await update(newState);
-		});
-	});
+	function getUpdatedState(param: string, value: any): GridState {
+		let stateCopy = JSON.parse(JSON.stringify(gridState));
+		stateCopy[param] = value;
 
-	onDestroy(() => {
-		unsubscribeFromGridStateStore?.();
-	});
+		if (stateCopy.p === defaultState.p) {
+			delete stateCopy.p;
+		}
+		if (stateCopy.limit === defaultState.limit) {
+			delete stateCopy.limit;
+		}
+		if (stateCopy.q === defaultState.q) {
+			delete stateCopy.q;
+		}
+		if (stateCopy.sortBy === defaultState.sortBy) {
+			delete stateCopy.sortBy;
+		}
+		if (stateCopy.sortOrder === defaultState.sortOrder) {
+			delete stateCopy.sortOrder;
+		}
+
+		return stateCopy;
+	}
+
+	export async function updateState(param: string, value: any): Promise<void> {
+		let searchUrl = generateSearchUrl(param, value);
+
+		await goto(searchUrl, {
+			replaceState: false,
+			keepFocus: true,
+			noScroll: true
+		});
+	}
+
+	export function generateSearchUrl(param: string, value: any): string {
+
+		let updatedState = getUpdatedState(param, value);
+		let query = createURLSearchParams(updatedState).toString();
+
+		if (!url.startsWith('/')) {
+			url = '/' + url;
+		}
+
+		return url + '?' + query;
+	}
 </script>
 
 {@render header?.()}

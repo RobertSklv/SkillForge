@@ -2,14 +2,26 @@
 	import { goto } from '$app/navigation';
 	import { searchArticles } from '$lib/api/client';
 	import type ArticleSearchItemType from '$lib/types/ArticleSearchItemType';
+	import type GridContext from '$lib/types/GridContext';
 	import moment from 'moment';
+	import { getContext } from 'svelte';
 	import { fade } from 'svelte/transition';
+
+	interface Props {
+		enableSuggestions?: boolean
+	}
+
+	let {
+		enableSuggestions = true
+	}: Props = $props();
 
 	let suggestionsElement: HTMLElement;
 
 	let inputValue = $state('');
 	let suggestions = $state<ArticleSearchItemType[]>([]);
 	let showSuggestions = $state<boolean>(false);
+
+	let gridContext = getContext<GridContext>('grid_context');
 
 	async function updateSuggestions() {
 		if (inputValue) {
@@ -39,7 +51,19 @@
 	}
 
 	function search() {
-		goto(`/search?q=${encodeURIComponent(inputValue)}`);
+		if (gridContext) {
+			gridContext.updateState('q', inputValue);
+		} else {
+			goto(`/search?q=${encodeURIComponent(inputValue)}`);
+		}
+	}
+
+	function onkeydown(e: KeyboardEvent & { currentTarget: EventTarget & HTMLInputElement }) {
+		if (e.code === 'Enter') {
+			if (inputValue.length) {
+				search();
+			}
+		}
 	}
 </script>
 
@@ -56,11 +80,12 @@
 			{oninput}
 			{onfocus}
 			{onfocusout}
+			{onkeydown}
 			bind:value={inputValue}
 		/>
 		<button class="btn btn-light rounded-end-3" type="button" id="search_button" onclick={search}>Search</button>
 	</div>
-	{#if showSuggestions && suggestions.length}
+	{#if showSuggestions && enableSuggestions && suggestions.length}
 		<div
 			class="position-absolute w-100 z-3 mt-1 shadow"
 			bind:this={suggestionsElement}

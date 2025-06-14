@@ -35,6 +35,10 @@
             return null;
         }
 
+        if (!formContext) {
+            return null;
+        }
+
         errorMessages = [];
         let rules: ValidationRule[] = formContext.getValidationRules(name);
 
@@ -67,7 +71,7 @@
     }
 
     onMount(() => {
-        formContext.registerFieldValidation(name, validate, setErrors);
+        formContext?.registerFieldValidation(name, validate, setErrors);
     });
 </script>
 

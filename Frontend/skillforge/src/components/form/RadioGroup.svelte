@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type Option from "$lib/types/Option";
+	import type Option from "$lib/types/OptionType";
 	import type { Snippet } from "svelte";
 	import RadioField from "./RadioField.svelte";
 	import FieldValidation from "./FieldValidation.svelte";
