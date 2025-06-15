@@ -24,7 +24,7 @@
 
 <nav class="navbar navbar-expand-lg fixed-top bg-primary">
 	<div class="container">
-		<a class="navbar-brand" href={logoLink}>
+		<a class="navbar-brand" href={logoLink} title="To homepage">
 			{@render logoSnippet()}
 		</a>
 		<button

@@ -31,7 +31,7 @@
     });
 </script>
 
-<div
+<aside
 	class="cookie-consent-banner offcanvas offcanvas-bottom"
 	class:show
     class:hiding={!show}
@@ -55,7 +55,7 @@
 		<Button color="primary" size="lg" mod="me-3" onclick={accept}>Accept</Button>
 		<Button color="secondary" size="lg" onclick={close}>Deny</Button>
     </div>
-</div>
+</aside>
 {#if show}
     <div class="offcanvas-backdrop show" transition:fade={{ duration: 150 }}></div>
 {/if}

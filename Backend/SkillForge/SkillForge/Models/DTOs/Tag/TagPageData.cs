@@ -17,5 +17,7 @@ public class TagPageData
 
     public List<UserListItem> LatestFollowers { get; set; }
 
+    public List<ArticleCard> LatestArticles { get; set; }
+
     public List<TopArticleItem> TopArticles { get; set; }
 }

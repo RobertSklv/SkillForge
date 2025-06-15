@@ -8,3 +8,7 @@
 **/wwwroot/images/**/*.png
 **/wwwroot/images/**/*.jpg
 **/wwwroot/images/**/*.jpeg
+**/sitemap-index.xml
+**/sitemap-users.xml
+**/sitemap-articles.xml
+**/sitemap-tags.xml

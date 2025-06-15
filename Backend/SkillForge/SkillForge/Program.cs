@@ -5,6 +5,7 @@ using Newtonsoft.Json.Serialization;
 using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Areas.Admin.Services;
 using SkillForge.BackgroundTasks;
+using SkillForge.Configuration;
 using SkillForge.Data;
 using SkillForge.Data.Seeders;
 using SkillForge.Middleware;
@@ -88,13 +89,15 @@ builder.Services.AddScoped<IUserAuthService, UserAuthService>();
 builder.Services.AddSingleton<IFrontendService, FrontendService>();
 builder.Services.AddScoped<IUserFeedService, UserFeedService>();
 
+builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site"));
+
 // Frontend config
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost",
         policy =>
         {
-            policy.WithOrigins(builder.Configuration["FrontendDomain"])
+            policy.WithOrigins(builder.Configuration["Site:FrontendUrl"])
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();
@@ -109,6 +112,7 @@ builder.Services.AddHostedService<AggregateTagFollowService>();
 builder.Services.AddHostedService<AggregateTagArticleService>();
 builder.Services.AddHostedService<AggregateUserArticlesService>();
 builder.Services.AddHostedService<AggregateCategoryArticlesService>();
+builder.Services.AddHostedService<GenerateXmlSitemapService>();
 
 var app = builder.Build();
 

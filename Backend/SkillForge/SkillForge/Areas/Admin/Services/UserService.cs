@@ -180,6 +180,7 @@ public class UserService : CrudService<User>, IUserService
         User? user = await GetByName(name) ?? throw new RecordNotFoundException($"User '{name}' does not exist.");
 
         List<TopArticleItem> topArticles = await userFeedService.GetTopArticlesByAuthor(user.Id, 5);
+        List<ArticleCard> latestArticles = await userFeedService.GetLatestArticlesByAuthor(name, currentUserId, 0, 4);
         List<UserListItem> latestFollowers = await userFeedService.GetLatestUserFollowers(user.Id, currentUserId, 6);
         List<UserListItem> latestFollowings = await userFeedService.GetLatestUserFollowings(user.Id, currentUserId, 6);
         List<TagListItem> latestTagFollowings = await userFeedService.GetLatestUserTagFollowings(user.Id, currentUserId, 6);
@@ -194,6 +195,7 @@ public class UserService : CrudService<User>, IUserService
             FollowingsCount = user.FollowingsCount,
             TagFollowingsCount = user.TagFollowingsCount,
             IsFollowedByCurrentUser = currentUserId != null && await IsFollowedBy(user.Id, (int)currentUserId),
+            LatestArticles = latestArticles,
             LatestFollowers = latestFollowers,
             LatestFollowings = latestFollowings,
             LatestTagFollowings = latestTagFollowings,

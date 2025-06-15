@@ -19,7 +19,7 @@
     const BORDER_RADIUS: 1 | 2 | 3 | 4 | 5 = 3;
 </script>
 
-<div class="card border-dark border-1 rounded-{BORDER_RADIUS} bg-dark {mod}" transition:fade={{ duration: 120 }}>
+<section class="card border-dark border-1 rounded-{BORDER_RADIUS} bg-dark {mod}" transition:fade={{ duration: 120 }}>
     {#if header}
         <div class="card-header border-bottom-0 rounded-top-{BORDER_RADIUS}">
             {@render header?.()}
@@ -33,4 +33,4 @@
             {@render footer?.()}
         </div>
     {/if}
-</div>
+</section>

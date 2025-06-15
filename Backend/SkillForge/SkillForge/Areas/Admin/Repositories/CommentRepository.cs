@@ -25,6 +25,8 @@ public class CommentRepository : CrudRepository<Comment>, ICommentRepository
 
         entity.Content = sanitizer.Sanitize(entity.Content);
 
+        entity.Content = entity.Content.Replace("<a", "<a rel=\"nofollow ugc\"");
+
         return base.Upsert(entity);
     }
 

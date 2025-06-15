@@ -27,12 +27,14 @@ public class HomeService : IHomeService
         List<TopArticleItem> topArticles = await userFeedService.GetTopArticles(5);
         List<UserLink> topUsers = await userService.GetMostPopularLinks();
         List<TagLink> topTags = await tagService.GetMostFollowedLinks();
+        List<ArticleCard> latestArticles = await userFeedService.GetLatestArticles(userId, 0, 6);
 
         return new HomePageData
         {
             TopArticles = topArticles,
             TopUsers = topUsers,
             TopTags = topTags,
+            LatestArticles = latestArticles,
         };
     }
 }

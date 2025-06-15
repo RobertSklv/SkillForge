@@ -1,6 +1,6 @@
 {
   "ConnectionStrings": {
-    "DefaultConnection": <connection_string>
+    "DefaultConnection": "<connection_string>"
   },
   "Logging": {
     "LogLevel": {
@@ -9,6 +9,9 @@
     }
   },
   "AllowedHosts": "*",
-  "AdminPanelInstallationKey": <secret_key>,
-  "FrontendDomain": <frontend_domain>
+  "AdminPanelInstallationKey": "<secret_key>",
+  "Site": {
+    "BackendUrl": "<backend_domain>",
+    "FrontendUrl": "<frontend_domain>"
+  }
 }

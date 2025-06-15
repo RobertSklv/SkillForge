@@ -162,8 +162,9 @@ export function loadHomePage(fetch: SvelteFetch): Promise<HomePageData> {
 	});
 }
 
-export function loadUserPage(name: string): Promise<UserPageData> {
+export function loadUserPage(name: string, fetch?: SvelteFetch): Promise<UserPageData> {
 	return requestApi(`/User/Load/${name}`, {
+		fetchFunction: fetch,
 		init: {
 			credentials: 'include'
 		}
@@ -238,8 +239,9 @@ export function loadAccountInfoForm() {
 	});
 }
 
-export function loadTagPage(name: string): Promise<TagPageData> {
+export function loadTagPage(name: string, fetch?: SvelteFetch): Promise<TagPageData> {
 	return requestApi(`/Tag/Load/${name}`, {
+		fetchFunction: fetch,
 		init: {
 			credentials: 'include'
 		}

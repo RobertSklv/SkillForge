@@ -12,8 +12,10 @@
 	import AuthorBox from '$components/user/AuthorBox.svelte';
 	import { PUBLIC_BACKEND_DOMAIN } from '$env/static/public';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
+	import { generateUserLinkSchema } from '$lib/structuredDataUtil';
 	import type ArticlePageModel from '$lib/types/ArticlePageModel';
 	import type CommentModel from '$lib/types/CommentModel';
+	import { getFrontendUrl, getImagePath, htmlToText, truncateText } from '$lib/util';
 	import { writable } from 'svelte/store';
 
 	interface Props {
@@ -98,7 +100,7 @@
 			></div>
 		{/if}
 
-		<div class="card-body">
+		<article class="card-body">
 			{#each data.Tags as tag}
 				<a href="/tag/{tag}" class="me-2">#{tag}</a>
 			{/each}
@@ -106,7 +108,7 @@
 			<div class="card-text text-break">
 				{@html data.Content}
 			</div>
-		</div>
+		</article>
 
 		{#snippet footer()}
 			<div class="row">
@@ -135,7 +137,12 @@
 	{#if $currentUserStore}
 		<Block>
 			<div class="card-body">
-				<Form action="/Comment/Add" formData={$commentFormData} onSuccess={addComment} resetMode="onsuccess">
+				<Form
+					action="/Comment/Add"
+					formData={$commentFormData}
+					onSuccess={addComment}
+					resetMode="onsuccess"
+				>
 					<TextEditor
 						id="Content"
 						label={null}
@@ -153,6 +160,31 @@
 	{/if}
 
 	<LoginCta ctaText="Log in" description="to comment and rate content." inline={true} />
+
+	{@html `<script type="application/ld+json">
+		${JSON.stringify({
+			'@context': 'https://schema.org',
+			'@type': 'Article',
+			author: generateUserLinkSchema(data.Author),
+			mainEntityOfPage: getFrontendUrl('/article/' + data.ArticleId),
+			articleBody: truncateText(htmlToText(data.Content), 400),
+			datePublished: data.DatePublished,
+			headline: data.Title,
+			image: data.CoverImage ? getImagePath(data.CoverImage) : '',
+			keywords: data.Tags.join(','),
+			commentCount: data.Comments.length,
+			comments: data.Comments.map(c => {
+				return {
+					'@type': 'Comment',
+					author: generateUserLinkSchema(c.User),
+					text: truncateText(htmlToText(c.Content), 80),
+					upvoteCount: c.RatingData.ThumbsUp,
+					downvoteCount: c.RatingData.ThumbsDown,
+					datePublished: c.DateWritten,
+				}
+			})
+		})}
+	</script>`}
 </div>
 
 <style>

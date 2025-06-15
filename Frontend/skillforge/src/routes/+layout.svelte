@@ -1,19 +1,21 @@
 <script lang="ts">
-	import { type Snippet } from "svelte";
+	import { onMount, type Snippet } from "svelte";
 	import Footer from "$components/footer/Footer.svelte";
 	import Header from "$components/header/Header.svelte";
+    import { loadCurrentUser } from "$lib/stores/currentUserStore";
     import 'bootswatch/dist/vapor/bootstrap.min.css';
     import 'bootstrap-icons/font/bootstrap-icons.min.css';
 	import CookieConsentBanner from "$components/cookie-consent/CookieConsentBanner.svelte";
     import '$styles/global.scss';
     import { onNavigate } from '$app/navigation';
 	import ToastContainer from "$components/toast-container/ToastContainer.svelte";
+	import { getFrontendUrl } from "$lib/util";
 
     onNavigate((navigation) => {
         if (!document.startViewTransition) return;
 
         // Disabled view transitions when only query param changes are present.
-        if (navigation.from?.route.id === navigation.to?.route.id) return;
+        if (navigation.from?.url.pathname === navigation.to?.url.pathname) return;
 
         return new Promise((resolve) => {
             document.startViewTransition(async () => {
@@ -28,6 +30,10 @@
     }: {
         children: Snippet
     } = $props();
+
+    onMount(() => {
+        loadCurrentUser();
+    });
 </script>
 
 <Header />
@@ -41,6 +47,16 @@
 <CookieConsentBanner />
 
 <ToastContainer />
+
+{@html `<script type="application/ld+json">
+    ${JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'SkillForge',
+        description: "Discover and share high-quality articles on technology, development, and more. Follow tags and authors, engage with the community, and explore trending content.",
+        url: getFrontendUrl()
+    })}
+</script>`}
 
 <style>
     @keyframes fade-in {

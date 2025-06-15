@@ -11,3 +11,9 @@
         <RegisterForm />
     </div>
 </div>
+
+<svelte:head>
+	<title>SkillForge | Join us</title>
+	<meta name="description" content="Register or Login to SkillForge">
+	<meta name="robots" content="noindex,nofollow">
+</svelte:head>

@@ -5,7 +5,8 @@
 	import InputField from '$components/form/InputField.svelte';
 	import TextAreaField from '$components/form/TextAreaField.svelte';
 	import Block from '$components/layout/Block.svelte';
-	import Columns from '$components/layout/Columns.svelte';
+	import ThreeColumns from '$components/layout/ThreeColumns.svelte';
+	import { PUBLIC_BASE_URL } from '$env/static/public';
 	import { loadAccountInfoForm } from '$lib/api/client';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
 	import { addToast } from '$lib/stores/toastStore';
@@ -98,7 +99,14 @@
 	});
 </script>
 
-<Columns>
+<svelte:head>
+	<title>SkillForge | Edit account</title>
+	<meta name="description" content="Edit account">
+	<meta name="robots" content="noindex,nofollow">
+	<link rel="canonical" href="{PUBLIC_BASE_URL}/user/{$currentUserStore?.Name}">
+</svelte:head>
+
+<ThreeColumns>
 	{#if $accountInfoFormData}
 		<Block mod="mb-5">
 			<div class="card-body">
@@ -175,4 +183,4 @@
 			</div>
 		</div>
 	{/if}
-</Columns>
+</ThreeColumns>

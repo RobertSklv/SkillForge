@@ -19,7 +19,10 @@
 <header>
 	<Navbar logoLink="/">
 		{#snippet logoSnippet()}
-			SkillForge
+			<div class="d-flex justify-content-center align-items-center">
+				<img src="/logo.png" class="me-1" style:height="22px" alt="Logo">
+				<span>SkillForge</span>
+			</div>
 		{/snippet}
 
 		{#if page.url.pathname !== '/search'}

@@ -30,7 +30,9 @@
 	<div class="author-box__info-col d-flex flex-column">
         <a href="/user/{name}" class="text-decoration-none">{name}</a>
         <div class="small text-tertiary">
-            {moment(date).format('ddd, MMMM D, YYYY HH:mm')}
+            <time datetime={moment(date).format('YYYY-MM-DD HH:mm')}>
+                {moment(date).format('ddd, MMMM D, YYYY HH:mm')}
+            </time>
             <span class="text-muted ms-2">({formatRelativeTime(date)})</span>
         </div>
 	</div>

@@ -31,6 +31,7 @@
 			class="dropdown-toggle nav-link"
 			{onclick}
 			type="button"
+			aria-label="Button"
 			aria-expanded={isOpen}
 			use:clickOutside={closeDropdown}
 		>
@@ -46,6 +47,7 @@
 			class="dropdown-toggle btn btn-outline-primary rounded-3 border-1"
 			{onclick}
 			type="button"
+			aria-label="Button"
 			aria-expanded={isOpen}
 			use:clickOutside={closeDropdown}
 		>

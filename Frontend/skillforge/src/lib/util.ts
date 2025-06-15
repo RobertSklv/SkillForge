@@ -1,4 +1,4 @@
-import { PUBLIC_BACKEND_DOMAIN } from "$env/static/public";
+import { PUBLIC_BACKEND_DOMAIN, PUBLIC_BASE_URL } from "$env/static/public";
 
 
 export function clickOutside(
@@ -52,6 +52,22 @@ export function formatRelativeTime(date: string): string {
 	return rtf.format(Math.round(value), unit as Intl.RelativeTimeFormatUnit);
 }
 
+export function getFrontendUrl(relativePath: string | null = null): string {
+	if (!relativePath) {
+		return PUBLIC_BASE_URL;
+	}
+
+	return PUBLIC_BASE_URL + relativePath;
+}
+
+export function getBackendUrl(relativePath: string | null = null): string {
+	if (!relativePath) {
+		return PUBLIC_BACKEND_DOMAIN;
+	}
+
+	return PUBLIC_BACKEND_DOMAIN + relativePath;
+}
+
 export function getImagePath(relativePath?: string | null) {
 	if (!relativePath) {
 		return '/user.png';
@@ -68,4 +84,19 @@ export function clamp(value: number, lowerBound: number, upperBound: number) {
 	}
 
 	return value;
+}
+
+export function htmlToText(html: string) {
+	return html
+		.replace(/<\/?[^>]+(>|$)/g, '')
+		.replace('&nbsp;', ' ')
+		.replace('<br>', "\n");
+}
+
+export function truncateText(text: string, limit: number) {
+	if (text.length > limit) {
+		return text.substring(0, limit) + '...';
+	}
+
+	return text;
 }

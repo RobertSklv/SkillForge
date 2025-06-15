@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type TopArticleItemType from "$lib/types/TopArticleItemType";
 	import { formatRelativeTime } from "$lib/util";
+	import moment from "moment";
 
 	interface Props {
 		data: TopArticleItemType;
@@ -24,6 +25,8 @@
 		<i class="bi bi-chat-fill"></i>
 		<span>{data.CommentCount}</span>
         &nbsp;&nbsp;|&nbsp;&nbsp;
-        <span>{formatRelativeTime(data.DatePublished)}</span>
+        <time datetime={moment(data.DatePublished).format('YYYY-MM-DD HH:mm')}>
+			{formatRelativeTime(data.DatePublished)}
+		</time>
 	</small>
 </a>

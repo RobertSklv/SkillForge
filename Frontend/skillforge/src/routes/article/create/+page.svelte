@@ -14,4 +14,10 @@
 	setContext('page', data);
 </script>
 
+<svelte:head>
+	<title>SkillForge | Create article</title>
+	<meta name="description" content="Create article">
+	<meta name="robots" content="noindex,nofollow">
+</svelte:head>
+
 <ArticleCreateForm />

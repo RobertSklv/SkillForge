@@ -3,23 +3,27 @@
 	import { getContext, onDestroy, onMount, type Snippet } from 'svelte';
 
 	interface Props {
-		mod?: string,
+		mod?: string;
 		batchSize: number;
-        loadMore: (batchIndex: number) => Promise<T[]>,
-		itemSnippet: Snippet<[T]>,
-		placeholderSnippet?: Snippet,
+		autoLoadOnMount?: boolean;
+		preloadedBatches?: [T[]];
+		loadMore: (batchIndex: number) => Promise<T[]>;
+		itemSnippet: Snippet<[T]>;
+		placeholderSnippet?: Snippet;
 	}
 
 	let {
 		mod,
-        batchSize,
-        loadMore,
-        itemSnippet,
-		placeholderSnippet,
-    }: Props = $props();
+		batchSize,
+		autoLoadOnMount,
+		preloadedBatches,
+		loadMore,
+		itemSnippet,
+		placeholderSnippet
+	}: Props = $props();
 
-	let items = $state<T[]>([]);
-	let batchIndex = $state<number>(0);
+	let items = $state<T[]>(preloadedBatches?.flat() ?? []);
+	let batchIndex = $state<number>(preloadedBatches?.length ?? 0);
 	let outOfItems = $state<boolean>(false);
 	let containerElement: HTMLElement;
 	let isLoading = $state<boolean>(false);
@@ -27,7 +31,11 @@
 	const scrollable = getContext<ScrollableStore>('scrollable');
 
 	function getScrollableHeight() {
-		if (scrollable && typeof scrollable.getClientHeight !== 'undefined' && scrollable.getClientHeight != null) {
+		if (
+			scrollable &&
+			typeof scrollable.getClientHeight !== 'undefined' &&
+			scrollable.getClientHeight != null
+		) {
 			return scrollable.getClientHeight();
 		}
 
@@ -63,7 +71,7 @@
 		}
 
 		if (containerElement.getBoundingClientRect().bottom <= getScrollableHeight()) {
-            await loadMoreAndUpdateItemList();
+			await loadMoreAndUpdateItemList();
 		}
 	}
 
@@ -74,13 +82,15 @@
 			window.addEventListener('scroll', onScroll);
 		}
 
-		await loadMoreAndUpdateItemList();
+		if (autoLoadOnMount) {
+			await loadMoreAndUpdateItemList();
+		}
 	});
 
 	onDestroy(() => {
-        if (typeof window !== 'undefined') {
-		    window.removeEventListener('scroll', onScroll);
-        }
+		if (typeof window !== 'undefined') {
+			window.removeEventListener('scroll', onScroll);
+		}
 	});
 </script>
 

@@ -43,6 +43,8 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
 
         entity.Content = sanitizer.Sanitize(entity.Content);
 
+        entity.Content = entity.Content.Replace("<a", "<a rel=\"nofollow ugc\"");
+
         return base.Upsert(entity);
     }
 

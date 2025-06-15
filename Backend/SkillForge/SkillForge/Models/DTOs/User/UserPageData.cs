@@ -21,6 +21,8 @@ public class UserPageData
 
     public bool IsFollowedByCurrentUser { get; set; }
 
+    public List<ArticleCard> LatestArticles { get; set; }
+
     public List<TagListItem> LatestTagFollowings { get; set; }
 
     public List<UserListItem> LatestFollowers { get; set; }

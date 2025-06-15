@@ -11,4 +11,6 @@ public class HomePageData
     public List<UserLink> TopUsers { get; set; }
 
     public List<TagLink> TopTags { get; set; }
+
+    public List<ArticleCard> LatestArticles { get; set; }
 }

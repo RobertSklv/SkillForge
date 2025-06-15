@@ -5,6 +5,7 @@
 	import Grid from '$components/grid/Grid.svelte';
 	import SearchBar from '$components/header/SearchBar.svelte';
 	import Pagination from '$components/pagination/Pagination.svelte';
+	import { PUBLIC_BASE_URL } from '$env/static/public';
 	import type ArticleCardType from '$lib/types/ArticleCardType';
 	import type GridState from '$lib/types/GridState';
 	import type PaginationResponse from '$lib/types/PaginationResponse';
@@ -28,6 +29,13 @@
 		sortOrder: 'desc'
 	};
 </script>
+
+<svelte:head>
+	<title>SkillForge | Search: '{data.gridState?.q}'</title>
+	<meta name="description" content="Search results for: '{data.gridState?.q}'">
+	<meta name="robots" content="noindex,nofollow">
+	<link rel="canonical" href="{PUBLIC_BASE_URL}/search">
+</svelte:head>
 
 <div class="mb-5">
 	<h1>Search results for '{data.gridState?.q}':</h1>

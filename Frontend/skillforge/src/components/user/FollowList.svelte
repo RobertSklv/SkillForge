@@ -43,7 +43,7 @@
         {/if}
         <Modal bind:show={isModalOpen} verticallyCentered scrollable>
             <ModalHeader {title} />
-            <InfiniteScroll {batchSize} {loadMore}>
+            <InfiniteScroll {batchSize} {loadMore} autoLoadOnMount>
                 {#snippet itemSnippet(item)}
                     {@render itemSnippet(item)}
                 {/snippet}
