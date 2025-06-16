@@ -36,7 +36,7 @@
 </script>
 
 {#if show}
-    <div
+    <aside
         class="modal fade show d-block"
         tabindex="-1"
         aria-modal={show ? 'true' : undefined}
@@ -69,6 +69,6 @@
                 {/if}
             </div>
         </div>
-    </div>
+    </aside>
     <div class="modal-backdrop show"></div>
 {/if}

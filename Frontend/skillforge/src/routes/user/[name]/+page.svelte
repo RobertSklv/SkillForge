@@ -196,7 +196,7 @@
 			loadMore={loadMoreFollowers}
 		>
 			{#snippet itemSnippet(item)}
-				<UserListItem mod="mb-3" data={item} />
+				<UserListItem data={item} />
 			{/snippet}
 		</FollowList>
 		<FollowList
@@ -206,7 +206,7 @@
 			loadMore={loadMoreFollowings}
 		>
 			{#snippet itemSnippet(item)}
-				<UserListItem mod="mb-3" data={item} />
+				<UserListItem data={item} />
 			{/snippet}
 		</FollowList>
 		<FollowList
@@ -216,14 +216,14 @@
 			loadMore={loadMoreTagFollowings}
 		>
 			{#snippet itemSnippet(item)}
-				<TagListItem mod="mb-3" data={item} />
+				<TagListItem data={item} />
 			{/snippet}
 		</FollowList>
 	{/snippet}
 
 	{#key backendData.Name}
 		<InfiniteScroll
-			mod="d-flex flex-column gap-4"
+			gap={4}
 			batchSize={ARTICLE_BATCH_SIZE}
 			loadMore={loadMoreArticles}
 			preloadedBatches={[backendData.LatestArticles]}

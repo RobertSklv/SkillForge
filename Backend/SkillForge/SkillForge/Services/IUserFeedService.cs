@@ -27,6 +27,8 @@ public interface IUserFeedService
 
     Task<List<TagListItem>> CreateTagListItems(List<TagFollow> followers, int? userId);
 
+    Task<List<UserListItem>> CreateUserListItems(List<User> users, int? userId);
+
     Task<List<UserListItem>> CreateUserListItems<T>(List<T> followEntities, int? userId) where T : IFollowEntity;
 
     Task<List<UserListItem>> GetTagFollowers(int tagId, int? userId, int batchIndex, int batchSize);

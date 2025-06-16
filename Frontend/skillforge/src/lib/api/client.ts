@@ -82,6 +82,27 @@ export function rate(id: number, rate: -1 | 0 | 1, type: 'article' | 'comment') 
 	});
 }
 
+export function getRating(id: number, rateType: 'positive' | 'negative', type: 'article' | 'comment', batchIndex: number, batchSize: number): Promise<UserListItemType[]> {
+	const controllers = {
+		article: 'Article',
+		comment: 'Comment'
+	};
+	const actions = {
+		positive: 'PositiveRates',
+		negative: 'NegativeRates'
+	};
+
+	return requestApi(`/${controllers[type]}/${actions[rateType]}/${id}`, {
+		init: {
+			credentials: 'include',
+		},
+		query: {
+			batchIndex,
+			batchSize
+		}
+	});
+}
+
 export function getLatestArticles(batchIndex: number, batchSize: number): Promise<ArticleCardType[]> {
 	return requestApi('/Article/Latest', {
 		init: {

@@ -9,12 +9,7 @@
 	import ThreeColumns from '$components/layout/ThreeColumns.svelte';
 	import LoginCta from '$components/login-cta/LoginCta.svelte';
 	import UserListItem from '$components/user/UserListItem.svelte';
-	import {
-		followTag,
-		getLatestArticlesByTag,
-		getTagFollowers,
-		unfollowTag
-	} from '$lib/api/client';
+	import { followTag, getLatestArticlesByTag, getTagFollowers, unfollowTag } from '$lib/api/client';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
 	import type ArticleCardType from '$lib/types/ArticleCardType';
 	import type TagPageData from '$lib/types/TagPageData';
@@ -22,7 +17,10 @@
 	import type UserListItemType from '$lib/types/UserListItemType';
 	import FollowList from '$components/user/FollowList.svelte';
 	import { PUBLIC_BASE_URL } from '$env/static/public';
-	import { generateArticleCardItemsSchema, generateTopArticleItemsSchema } from '$lib/structuredDataUtil';
+	import {
+		generateArticleCardItemsSchema,
+		generateTopArticleItemsSchema
+	} from '$lib/structuredDataUtil';
 
 	const ARTICLE_BATCH_SIZE: number = 4;
 	const TAG_FOLLOWER_BATCH_SIZE: number = 15;
@@ -31,9 +29,7 @@
 		data: TagPageData;
 	}
 
-	let {
-		data
-	}: Props = $props();
+	let { data }: Props = $props();
 
 	let backendData = $state<TagPageData>(data);
 
@@ -123,13 +119,18 @@
 			loadMore={loadMoreTagFollowers}
 		>
 			{#snippet itemSnippet(item)}
-				<UserListItem mod="mb-3" data={item} />
+				<UserListItem data={item} />
 			{/snippet}
 		</FollowList>
 	{/snippet}
 
 	{#key backendData.Name}
-		<InfiniteScroll mod="d-flex flex-column gap-4" batchSize={ARTICLE_BATCH_SIZE} loadMore={loadMoreArticles} preloadedBatches={[backendData.LatestArticles]}>
+		<InfiniteScroll
+			gap={4}
+			batchSize={ARTICLE_BATCH_SIZE}
+			loadMore={loadMoreArticles}
+			preloadedBatches={[backendData.LatestArticles]}
+		>
 			{#snippet itemSnippet(item)}
 				<ArticleCard data={item} />
 			{/snippet}

@@ -132,6 +132,24 @@ public class UserFeedService : IUserFeedService
         });
     }
 
+    public async Task<List<UserListItem>> CreateUserListItems(List<User> users, int? userId)
+    {
+        List<UserFollow> followings = new();
+
+        if (userId != null)
+        {
+            List<int> userIds = users.ConvertAll(u => u.Id);
+
+            followings = await userRepository.GetFollowings((int)userId, userIds);
+        }
+
+        return users.ConvertAll(u => new UserListItem
+        {
+            Link = frontendService.CreateUserLink(u),
+            IsFollowedByCurrentUser = followings.Any(uf => uf.FollowedUserId == u.Id)
+        });
+    }
+
     public async Task<List<UserListItem>> CreateUserListItems<T>(List<T> followEntities, int? userId)
         where T : IFollowEntity
     {

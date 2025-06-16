@@ -1,4 +1,5 @@
 <script lang="ts" generics="T">
+	import type { GutterLevel } from '$lib/types/GutterLevel';
 	import type ScrollableStore from '$lib/types/ScrollableStore';
 	import { getContext, onDestroy, onMount, type Snippet } from 'svelte';
 
@@ -7,6 +8,8 @@
 		batchSize: number;
 		autoLoadOnMount?: boolean;
 		preloadedBatches?: [T[]];
+		listDirection?: 'row' | 'column',
+		gap?: GutterLevel,
 		loadMore: (batchIndex: number) => Promise<T[]>;
 		itemSnippet: Snippet<[T]>;
 		placeholderSnippet?: Snippet;
@@ -17,6 +20,8 @@
 		batchSize,
 		autoLoadOnMount,
 		preloadedBatches,
+		listDirection = 'column',
+		gap = 3,
 		loadMore,
 		itemSnippet,
 		placeholderSnippet
@@ -94,7 +99,7 @@
 	});
 </script>
 
-<div bind:this={containerElement} class={mod}>
+<div bind:this={containerElement} class="d-flex flex-{listDirection} gap-{gap} {mod}">
 	{#each items as item}
 		{@render itemSnippet(item)}
 	{/each}

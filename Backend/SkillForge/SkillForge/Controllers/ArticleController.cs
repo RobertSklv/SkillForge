@@ -8,6 +8,7 @@ using SkillForge.Models.Database;
 using SkillForge.Services;
 using SkillForge.Models.DTOs.Search;
 using SkillForge.Exceptions;
+using SkillForge.Models.DTOs.User;
 
 namespace SkillForge.Controllers;
 
@@ -187,5 +188,31 @@ public class ArticleController : ApiController
         await service.Rate(UserId, id, rate);
 
         return Ok();
+    }
+
+    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("/Api/Article/PositiveRates/{id}")]
+    public async Task<IActionResult> PositiveRates([FromRoute] int id, [FromQuery] int batchIndex, [FromQuery] int batchSize)
+    {
+        TryGetUserId(out int? userId);
+
+        List<UserListItem> items = await service.GetRating(id, userId, batchIndex, batchSize, positive: true);
+
+        return Ok(items);
+    }
+
+    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("/Api/Article/NegativeRates/{id}")]
+    public async Task<IActionResult> NegativeRates([FromRoute] int id, [FromQuery] int batchIndex, [FromQuery] int batchSize)
+    {
+        TryGetUserId(out int? userId);
+
+        List<UserListItem> items = await service.GetRating(id, userId, batchIndex, batchSize, positive: false);
+
+        return Ok(items);
     }
 }

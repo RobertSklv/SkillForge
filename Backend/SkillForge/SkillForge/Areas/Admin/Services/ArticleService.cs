@@ -21,18 +21,21 @@ public class ArticleService : CrudService<Article>, IArticleService
     private readonly ITagService tagService;
     private readonly IArticleTagMtmRepository articleTagRepository;
     private readonly IFrontendService frontendService;
+    private readonly IUserFeedService userFeedService;
 
     public ArticleService(
         IArticleRepository repository,
         ITagService tagService,
         IArticleTagMtmRepository articleTagRepository,
-        IFrontendService frontendService)
+        IFrontendService frontendService,
+        IUserFeedService userFeedService)
         : base(repository)
     {
         this.repository = repository;
         this.tagService = tagService;
         this.articleTagRepository = articleTagRepository;
         this.frontendService = frontendService;
+        this.userFeedService = userFeedService;
     }
 
     public override Table<Article> CreateEditRowAction(Table<Article> table)
@@ -359,5 +362,12 @@ public class ArticleService : CrudService<Article>, IArticleService
         };
 
         return response;
+    }
+
+    public async Task<List<UserListItem>> GetRating(int articleId, int? currentUserId, int batchIndex, int batchSize, bool positive)
+    {
+        List<ArticleRating> ratings = await repository.GetRating(articleId, batchIndex, batchSize, positive);
+
+        return await userFeedService.CreateUserListItems(ratings.ConvertAll(rating => rating.User!), currentUserId);
     }
 }

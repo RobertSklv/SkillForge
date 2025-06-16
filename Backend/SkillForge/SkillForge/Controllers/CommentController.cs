@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SkillForge.Areas.Admin.Models.DTOs;
-using SkillForge.Areas.Admin.Models.DTOs.Article;
 using SkillForge.Areas.Admin.Services;
 using SkillForge.Models.Database;
 using SkillForge.Models.DTOs.Comment;
 using SkillForge.Models.DTOs.Rating;
+using SkillForge.Models.DTOs.User;
 
 namespace SkillForge.Controllers;
 
@@ -38,5 +37,31 @@ public class CommentController : ApiController
         await service.Rate(UserId, id, rate);
 
         return Ok();
+    }
+
+    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("/Api/Comment/PositiveRates/{id}")]
+    public async Task<IActionResult> PositiveRates([FromRoute] int id, [FromQuery] int batchIndex, [FromQuery] int batchSize)
+    {
+        TryGetUserId(out int? userId);
+
+        List<UserListItem> items = await service.GetRating(id, userId, batchIndex, batchSize, positive: true);
+
+        return Ok(items);
+    }
+
+    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("/Api/Comment/NegativeRates/{id}")]
+    public async Task<IActionResult> NegativeRates([FromRoute] int id, [FromQuery] int batchIndex, [FromQuery] int batchSize)
+    {
+        TryGetUserId(out int? userId);
+
+        List<UserListItem> items = await service.GetRating(id, userId, batchIndex, batchSize, positive: false);
+
+        return Ok(items);
     }
 }

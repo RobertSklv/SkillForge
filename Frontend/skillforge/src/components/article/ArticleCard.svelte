@@ -50,7 +50,7 @@
 				<div class="d-flex align-items-center">
 					<RateButtons data={data.RatingData} subjectId={data.ArticleId} size="small" type="article" readonly={true} />
 					{#if data.Comments.length}
-						<div class="text-primary ms-2">
+						<div class="text-primary ms-3">
 							<i class="bi bi-chat fs-6"></i>
 							<small>{data.TotalComments}</small>
 						</div>

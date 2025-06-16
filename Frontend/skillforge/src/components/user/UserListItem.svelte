@@ -15,7 +15,7 @@
     }: Props = $props();
 </script>
 
-<li class="d-flex justify-content-between align-items-center {mod}">
+<div class="d-flex justify-content-between align-items-center {mod}">
     <UserLink data={data.Link} />
     {#if $currentUserStore && $currentUserStore.Name != data.Link.Name}
         {#if data.IsFollowedByCurrentUser}
@@ -24,4 +24,4 @@
             <Button size="sm">Follow</Button>
         {/if}
     {/if}
-</li>
+</div>

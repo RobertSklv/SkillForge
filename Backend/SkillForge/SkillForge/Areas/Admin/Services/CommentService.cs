@@ -1,20 +1,21 @@
-﻿using SkillForge.Areas.Admin.Models.DTOs;
-using SkillForge.Areas.Admin.Repositories;
+﻿using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Models.Database;
-using SkillForge.Models.DTOs.Article;
 using SkillForge.Models.DTOs.Rating;
 using SkillForge.Models.DTOs.User;
+using SkillForge.Services;
 
 namespace SkillForge.Areas.Admin.Services;
 
 public class CommentService : CrudService<Comment>, ICommentService
 {
     private readonly ICommentRepository repository;
+    private readonly IUserFeedService userFeedService;
 
-    public CommentService(ICommentRepository repository)
+    public CommentService(ICommentRepository repository, IUserFeedService userFeedService)
         : base(repository)
     {
         this.repository = repository;
+        this.userFeedService = userFeedService;
     }
 
     public async Task<Comment> Add(int userId, int articleId, string content)
@@ -79,5 +80,12 @@ public class CommentService : CrudService<Comment>, ICommentService
     public Task<CommentRating?> GetUserRating(int userId, int commentId)
     {
         return repository.GetUserRating(userId, commentId);
+    }
+
+    public async Task<List<UserListItem>> GetRating(int articleId, int? currentUserId, int batchIndex, int batchSize, bool positive)
+    {
+        List<CommentRating> ratings = await repository.GetRating(articleId, batchIndex, batchSize, positive);
+
+        return await userFeedService.CreateUserListItems(ratings.ConvertAll(rating => rating.User!), currentUserId);
     }
 }

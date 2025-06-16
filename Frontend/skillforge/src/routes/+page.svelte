@@ -59,7 +59,7 @@
 	{/snippet}
 
 	<InfiniteScroll
-		mod="d-flex flex-column gap-4"
+		gap={4}
 		batchSize={BATCH_SIZE}
 		{loadMore}
 		preloadedBatches={[data.LatestArticles]}

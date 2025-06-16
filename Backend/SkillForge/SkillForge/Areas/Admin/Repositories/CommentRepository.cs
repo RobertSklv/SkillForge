@@ -48,4 +48,17 @@ public class CommentRepository : CrudRepository<Comment>, ICommentRepository
 
         return db.SaveChangesAsync();
     }
+
+    public Task<List<CommentRating>> GetRating(int commentId, int batchIndex, int batchSize, bool positive)
+    {
+        int rate = positive ? 1 : -1;
+
+        return db.CommentRatings
+            .Include(e => e.User)
+            .Where(e => e.CommentId == commentId && e.Rate == rate)
+            .OrderByDescending(e => e.CreatedAt)
+            .Skip(batchIndex * batchSize)
+            .Take(batchSize)
+            .ToListAsync();
+    }
 }

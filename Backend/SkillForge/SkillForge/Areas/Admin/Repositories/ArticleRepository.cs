@@ -229,6 +229,19 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
             .ToListAsync();
     }
 
+    public Task<List<ArticleRating>> GetRating(int articleId, int batchIndex, int batchSize, bool positive)
+    {
+        int rate = positive ? 1 : -1;
+
+        return db.ArticleRatings
+            .Include(e => e.User)
+            .Where(e => e.ArticleId == articleId && e.Rate == rate)
+            .OrderByDescending(e => e.CreatedAt)
+            .Skip(batchIndex * batchSize)
+            .Take(batchSize)
+            .ToListAsync();
+    }
+
     public async Task<List<Article>> GetTopArticlesByTag(int tagId, int count)
     {
         List<ArticleTag> articleTags = await db.ArticleTags
