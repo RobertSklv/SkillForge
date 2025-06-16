@@ -7,6 +7,7 @@ using SkillForge.Areas.Admin.Services;
 using SkillForge.Models.Database;
 using SkillForge.Services;
 using SkillForge.Models.DTOs.Search;
+using SkillForge.Exceptions;
 
 namespace SkillForge.Controllers;
 
@@ -37,7 +38,14 @@ public class ArticleController : ApiController
             return ValidationProblem(ModelState);
         }
 
-        await service.UserUpsert(form, (int)userId);
+        try
+        {
+            await service.UserUpsert(form, (int)userId);
+        }
+        catch (NotOwnedByUserException e)
+        {
+            return Unauthorized(e.Message);
+        }
 
         if (form.Id == 0)
         {

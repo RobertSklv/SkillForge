@@ -11,6 +11,7 @@ using SkillForge.Models.Database;
 using SkillForge.Models.DTOs.User;
 using SkillForge.Services;
 using SkillForge.Models.DTOs.Search;
+using SkillForge.Exceptions;
 
 namespace SkillForge.Areas.Admin.Services;
 
@@ -138,15 +139,19 @@ public class ArticleService : CrudService<Article>, IArticleService
 
     public async Task UserUpsert(ArticleUpsertDTO model, int userId)
     {
-        Article entity = new()
+        Article entity = await Get(model.Id) ?? new();
+
+        if (entity.Id != 0 && userId != entity.AuthorId)
         {
-            Id = model.Id,
-            CategoryId = model.CategoryId,
-            AuthorId = userId,
-            Image = model.Image,
-            Title = model.Title,
-            Content = model.Content,
-        };
+            throw new NotOwnedByUserException("The article is not owned by the current user.");
+        }
+
+        entity.Id = model.Id;
+        entity.CategoryId = model.CategoryId;
+        entity.AuthorId = userId;
+        entity.Image = model.Image;
+        entity.Title = model.Title;
+        entity.Content = model.Content;
 
         await repository.Upsert(entity);
 
