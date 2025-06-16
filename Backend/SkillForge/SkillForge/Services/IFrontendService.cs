@@ -7,7 +7,10 @@ namespace SkillForge.Services;
 
 public interface IFrontendService
 {
-    ArticlePageData CreateArticlePageData(Article article);
+    ArticlePageData CreateArticlePageData(
+        Article article,
+        bool isAuthorFollowedByCurrentUser,
+        List<Article> latestArticleByAuthor);
 
     ArticleCard CreateArticleCard(Article article);
 

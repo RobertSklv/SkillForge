@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from "$components/button/Button.svelte";
+	import FollowButton from "$components/button/FollowButton.svelte";
 	import UserLink from "$components/link/UserLink.svelte";
 	import { currentUserStore } from "$lib/stores/currentUserStore";
 	import type UserListItemType from "$lib/types/UserListItemType";
@@ -18,10 +18,11 @@
 <div class="d-flex justify-content-between align-items-center {mod}">
     <UserLink data={data.Link} />
     {#if $currentUserStore && $currentUserStore.Name != data.Link.Name}
-        {#if data.IsFollowedByCurrentUser}
-            <Button size="sm" isOutline>Unfollow</Button>
-        {:else}
-            <Button size="sm">Follow</Button>
-        {/if}
+        <FollowButton
+            subjectName={data.Link.Name}
+            type="user"
+            isFollowedByCurrentUser={data.IsFollowedByCurrentUser}
+            btnSize="sm"
+        />
     {/if}
 </div>

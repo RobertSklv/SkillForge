@@ -229,6 +229,16 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
             .ToListAsync();
     }
 
+    public async Task<List<Article>> GetLatestByAuthorExcluding(int authorId, int excludedArticleId, int count)
+    {
+        return await db.Articles
+            .Include(e => e.Comments)
+            .Where(e => e.ApprovalId != null && e.AuthorId == authorId && e.Id != excludedArticleId)
+            .OrderByDescending(e => e.CreatedAt)
+            .Take(count)
+            .ToListAsync();
+    }
+
     public Task<List<ArticleRating>> GetRating(int articleId, int batchIndex, int batchSize, bool positive)
     {
         int rate = positive ? 1 : -1;

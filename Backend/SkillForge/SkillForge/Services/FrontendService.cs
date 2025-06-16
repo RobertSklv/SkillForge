@@ -36,12 +36,21 @@ public class FrontendService : IFrontendService
         };
     }
 
-    public ArticlePageData CreateArticlePageData(Article article)
+    public ArticlePageData CreateArticlePageData(
+        Article article,
+        bool isAuthorFollowedByCurrentUser,
+        List<Article> latestArticleByAuthor)
     {
         return new ArticlePageData
         {
             ArticleId = article.Id,
-            Author = CreateUserLink(article.Author!),
+            Author = new Author
+            {
+                Link = CreateUserLink(article.Author!),
+                Bio = article.Author!.Bio,
+                DateJoined = (DateTime)article.Author.CreatedAt!,
+                IsFollowedByCurrentUser = isAuthorFollowedByCurrentUser,
+            },
             Title = article.Title,
             CategoryCode = article.Category!.Code,
             CategoryName = article.Category.DisplayedName,
@@ -55,7 +64,8 @@ public class FrontendService : IFrontendService
                 ThumbsDown = article.ThumbsDown,
             },
             Views = article.ViewCount,
-            Comments = article.Comments!.ConvertAll(CreateCommentModel)
+            Comments = article.Comments!.ConvertAll(CreateCommentModel),
+            LatestArticlesByAuthor = latestArticleByAuthor.ConvertAll(CreateTopArticleItem)
         };
     }
 

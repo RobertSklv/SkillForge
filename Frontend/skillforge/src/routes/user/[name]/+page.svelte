@@ -3,19 +3,16 @@
 	import ArticleCard from '$components/article/ArticleCard.svelte';
 	import ArticleCardPlaceholder from '$components/article/ArticleCardPlaceholder.svelte';
 	import TopArticleLink from '$components/article/TopArticleLink.svelte';
-	import Button from '$components/button/Button.svelte';
 	import InfiniteScroll from '$components/infinite-scroll/InfiniteScroll.svelte';
 	import Block from '$components/layout/Block.svelte';
 	import ThreeColumns from '$components/layout/ThreeColumns.svelte';
 	import LoginCta from '$components/login-cta/LoginCta.svelte';
 	import UserListItem from '$components/user/UserListItem.svelte';
 	import {
-		followUser,
 		getLatestArticlesByAuthor,
 		getUserFollowers,
 		getUserFollowings,
-		getUserTagFollowings,
-		unfollowUser
+		getUserTagFollowings
 	} from '$lib/api/client';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
 	import type ArticleCardType from '$lib/types/ArticleCardType';
@@ -31,7 +28,12 @@
 	import DropdownItem from '$components/dropdown/DropdownItem.svelte';
 	import DropdownDivider from '$components/dropdown/DropdownDivider.svelte';
 	import { PUBLIC_BASE_URL } from '$env/static/public';
-	import { generateArticleCardItemsSchema, generateTopArticleItemsSchema } from '$lib/structuredDataUtil';
+	import {
+		generateArticleCardItemsSchema,
+		generateTopArticleItemsSchema
+	} from '$lib/structuredDataUtil';
+	import FollowButton from '$components/button/FollowButton.svelte';
+	import OutOfArticlesBlock from '$components/article/OutOfArticlesBlock.svelte';
 
 	const ARTICLE_BATCH_SIZE: number = 4;
 	const FOLLOW_LIST_BATCH_SIZE: number = 15;
@@ -40,9 +42,7 @@
 		data: UserPageData;
 	}
 
-	let {
-		data
-	}: Props = $props();
+	let { data }: Props = $props();
 
 	let backendData = $state<UserPageData>(data);
 	let isAvatarModalOpen = $state<boolean>(false);
@@ -79,22 +79,6 @@
 		if (!backendData) return Promise.resolve([]);
 
 		return getUserTagFollowings(backendData?.Name, batchIndex, FOLLOW_LIST_BATCH_SIZE);
-	}
-
-	async function follow() {
-		if (!backendData) return;
-
-		await followUser(backendData.Name);
-
-		backendData.IsFollowedByCurrentUser = true;
-	}
-
-	async function unfollow() {
-		if (!backendData) return;
-
-		await unfollowUser(backendData.Name);
-
-		backendData.IsFollowedByCurrentUser = false;
 	}
 </script>
 
@@ -176,11 +160,11 @@
 			</div>
 			{#if $currentUserStore && $currentUserStore.Name != backendData.Name}
 				<div class="col-2 text-center">
-					{#if backendData.IsFollowedByCurrentUser}
-						<Button isOutline={true} onclick={unfollow}>Unfollow</Button>
-					{:else}
-						<Button onclick={follow}>Follow</Button>
-					{/if}
+					<FollowButton
+						subjectName={backendData.Name}
+						type="user"
+						isFollowedByCurrentUser={backendData.IsFollowedByCurrentUser}
+					/>
 				</div>
 			{/if}
 		</div>
@@ -222,32 +206,38 @@
 	{/snippet}
 
 	{#key backendData.Name}
-		<InfiniteScroll
-			gap={4}
-			batchSize={ARTICLE_BATCH_SIZE}
-			loadMore={loadMoreArticles}
-			preloadedBatches={[backendData.LatestArticles]}
-		>
-			{#snippet itemSnippet(item)}
-				<ArticleCard data={item} />
-			{/snippet}
-			{#snippet placeholderSnippet()}
-				<ArticleCardPlaceholder />
-				<ArticleCardPlaceholder />
-				<ArticleCardPlaceholder />
-			{/snippet}
-		</InfiniteScroll>
+		{#if backendData.LatestArticles}
+			<InfiniteScroll
+				gap={4}
+				batchSize={ARTICLE_BATCH_SIZE}
+				loadMore={loadMoreArticles}
+				preloadedBatches={[backendData.LatestArticles]}
+			>
+				{#snippet itemSnippet(item)}
+					<ArticleCard data={item} />
+				{/snippet}
+				{#snippet placeholderSnippet()}
+					<ArticleCardPlaceholder />
+					<ArticleCardPlaceholder />
+					<ArticleCardPlaceholder />
+				{/snippet}
+			</InfiniteScroll>
+		{:else}
+			<OutOfArticlesBlock message="No articles published yet." />
+		{/if}
 	{/key}
 
 	{#snippet rightColumn()}
 		<div class="d-flex flex-column gap-4">
-			<AnchorList title="Top Articles" items={backendData.TopArticles}>
-				{#snippet itemSnippet(item)}
-					<li class="list-group-item p-0">
-						<TopArticleLink data={item} />
-					</li>
-				{/snippet}
-			</AnchorList>
+			{#if backendData.TopArticles.length > 0}
+				<AnchorList title="Top Articles" items={backendData.TopArticles}>
+					{#snippet itemSnippet(item)}
+						<li class="list-group-item p-0">
+							<TopArticleLink data={item} />
+						</li>
+					{/snippet}
+				</AnchorList>
+			{/if}
 			<LoginCta
 				ctaText="Join us"
 				description="to receive personalized content and interact with the rest of the community."
@@ -263,7 +253,7 @@
 		mainEntityOfPage: getFrontendUrl('/user/' + backendData.Name),
 		name: backendData.Name,
 		description: backendData.Bio,
-		image: getImagePath(backendData.AvatarImage),
+		image: getImagePath(backendData.AvatarImage)
 	})}
 </script>`}
 

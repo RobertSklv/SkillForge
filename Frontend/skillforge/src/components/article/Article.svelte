@@ -12,10 +12,8 @@
 	import AuthorBox from '$components/user/AuthorBox.svelte';
 	import { PUBLIC_BACKEND_DOMAIN } from '$env/static/public';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
-	import { generateUserLinkSchema } from '$lib/structuredDataUtil';
 	import type ArticlePageModel from '$lib/types/ArticlePageModel';
 	import type CommentModel from '$lib/types/CommentModel';
-	import { getFrontendUrl, getImagePath, htmlToText, truncateText } from '$lib/util';
 	import { writable } from 'svelte/store';
 
 	interface Props {
@@ -66,8 +64,8 @@
 			<div class="row mb-3 pt-2">
 				<div class="col-10">
 					<AuthorBox
-						name={data.Author.Name}
-						avatarImage={data.Author.AvatarImage}
+						name={data.Author.Link.Name}
+						avatarImage={data.Author.Link.AvatarImage}
 						date={data.DatePublished}
 						indent={false}
 					/>
@@ -77,7 +75,7 @@
 						{#snippet buttonSnippet()}
 							<i class="bi bi-three-dots-vertical"></i>
 						{/snippet}
-						{#if $currentUserStore && $currentUserStore.Name == data.Author.Name}
+						{#if $currentUserStore && $currentUserStore.Name == data.Author.Link.Name}
 							<DropdownItem href="/article/{data.ArticleId}/edit">
 								<i class="bi bi-pencil-square"></i>
 								Edit
@@ -160,31 +158,6 @@
 	{/if}
 
 	<LoginCta ctaText="Log in" description="to comment and rate content." inline={true} />
-
-	{@html `<script type="application/ld+json">
-		${JSON.stringify({
-			'@context': 'https://schema.org',
-			'@type': 'Article',
-			author: generateUserLinkSchema(data.Author),
-			mainEntityOfPage: getFrontendUrl('/article/' + data.ArticleId),
-			articleBody: truncateText(htmlToText(data.Content), 400),
-			datePublished: data.DatePublished,
-			headline: data.Title,
-			image: data.CoverImage ? getImagePath(data.CoverImage) : '',
-			keywords: data.Tags.join(','),
-			commentCount: data.Comments.length,
-			comments: data.Comments.map(c => {
-				return {
-					'@type': 'Comment',
-					author: generateUserLinkSchema(c.User),
-					text: truncateText(htmlToText(c.Content), 80),
-					upvoteCount: c.RatingData.ThumbsUp,
-					downvoteCount: c.RatingData.ThumbsDown,
-					datePublished: c.DateWritten,
-				}
-			})
-		})}
-	</script>`}
 </div>
 
 <style>

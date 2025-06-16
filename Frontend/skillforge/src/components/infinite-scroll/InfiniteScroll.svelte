@@ -13,6 +13,7 @@
 		loadMore: (batchIndex: number) => Promise<T[]>;
 		itemSnippet: Snippet<[T]>;
 		placeholderSnippet?: Snippet;
+		outOfItemsSnippet?: Snippet;
 	}
 
 	let {
@@ -24,7 +25,8 @@
 		gap = 3,
 		loadMore,
 		itemSnippet,
-		placeholderSnippet
+		placeholderSnippet,
+		outOfItemsSnippet
 	}: Props = $props();
 
 	let items = $state<T[]>(preloadedBatches?.flat() ?? []);
@@ -103,6 +105,9 @@
 	{#each items as item}
 		{@render itemSnippet(item)}
 	{/each}
+	{#if outOfItems}
+		{@render outOfItemsSnippet?.()}
+	{/if}
 	{#if isLoading}
 		{@render placeholderSnippet?.()}
 	{/if}

@@ -22,13 +22,15 @@ public class ArticleService : CrudService<Article>, IArticleService
     private readonly IArticleTagMtmRepository articleTagRepository;
     private readonly IFrontendService frontendService;
     private readonly IUserFeedService userFeedService;
+    private readonly IUserService userService;
 
     public ArticleService(
         IArticleRepository repository,
         ITagService tagService,
         IArticleTagMtmRepository articleTagRepository,
         IFrontendService frontendService,
-        IUserFeedService userFeedService)
+        IUserFeedService userFeedService,
+        IUserService userService)
         : base(repository)
     {
         this.repository = repository;
@@ -36,6 +38,7 @@ public class ArticleService : CrudService<Article>, IArticleService
         this.articleTagRepository = articleTagRepository;
         this.frontendService = frontendService;
         this.userFeedService = userFeedService;
+        this.userService = userService;
     }
 
     public override Table<Article> CreateEditRowAction(Table<Article> table)
@@ -185,7 +188,9 @@ public class ArticleService : CrudService<Article>, IArticleService
             await RecordView(viewRecord);
         }
 
-        ArticlePageData model = frontendService.CreateArticlePageData(article);
+        List<Article> latestByAuthor = await repository.GetLatestByAuthorExcluding(article.AuthorId, articleId, 3);
+        bool isAuthorFollowedByCurrentUser = await userService.IsFollowedBy(article.AuthorId, userId);
+        ArticlePageData model = frontendService.CreateArticlePageData(article, isAuthorFollowedByCurrentUser, latestByAuthor);
         ArticleRating? userRating = await GetUserRating(userId, articleId);
         List<int> commentIds = model.Comments.ConvertAll(c => c.CommentId);
         List<CommentRating> commentUserRatings = await GetUserCommentRating(userId, commentIds);
@@ -228,7 +233,8 @@ public class ArticleService : CrudService<Article>, IArticleService
             await RecordView(viewRecord);
         }
 
-        ArticlePageData model = frontendService.CreateArticlePageData(article);
+        List<Article> latestByAuthor = await repository.GetLatestByAuthorExcluding(article.AuthorId, articleId, 3);
+        ArticlePageData model = frontendService.CreateArticlePageData(article, false, latestByAuthor);
 
         return model;
     }

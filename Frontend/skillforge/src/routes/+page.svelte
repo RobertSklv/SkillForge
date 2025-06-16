@@ -2,8 +2,10 @@
 	import AnchorList from '$components/anchor-list/AnchorList.svelte';
 	import ArticleCard from '$components/article/ArticleCard.svelte';
 	import ArticleCardPlaceholder from '$components/article/ArticleCardPlaceholder.svelte';
+	import OutOfArticlesBlock from '$components/article/OutOfArticlesBlock.svelte';
 	import TopArticleLink from '$components/article/TopArticleLink.svelte';
 	import InfiniteScroll from '$components/infinite-scroll/InfiniteScroll.svelte';
+	import Block from '$components/layout/Block.svelte';
 	import ThreeColumns from '$components/layout/ThreeColumns.svelte';
 	import TagLink from '$components/link/TagLink.svelte';
 	import UserLink from '$components/link/UserLink.svelte';
@@ -71,6 +73,9 @@
 			<ArticleCardPlaceholder />
 			<ArticleCardPlaceholder />
 			<ArticleCardPlaceholder />
+		{/snippet}
+		{#snippet outOfItemsSnippet()}
+			<OutOfArticlesBlock />
 		{/snippet}
 	</InfiniteScroll>
 

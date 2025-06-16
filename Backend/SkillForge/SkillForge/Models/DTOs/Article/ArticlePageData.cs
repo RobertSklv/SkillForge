@@ -7,7 +7,7 @@ public class ArticlePageData
 {
     public int ArticleId { get; set; }
 
-    public UserLink Author { get; set; }
+    public Author Author { get; set; }
 
     public string? CoverImage { get; set; }
 
@@ -28,4 +28,6 @@ public class ArticlePageData
     public RatingData RatingData { get; set; }
 
     public int Views { get; set; }
+
+    public List<TopArticleItem> LatestArticlesByAuthor { get; set; }
 }
