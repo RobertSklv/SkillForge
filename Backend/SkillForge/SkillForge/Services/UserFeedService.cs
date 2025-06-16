@@ -139,17 +139,26 @@ public class UserFeedService : IUserFeedService
 
         if (userId != null)
         {
-            List<int> userIds = followings
-                .ConvertAll(f => f.FollowedUserId)
-                .Concat(followings.ConvertAll(f => f.FollowerId))
-                .ToList();
+            List<int> userIds = new();
 
-            followings = await userRepository.GetFollowings((int)userId, userIds);
+            foreach (T f in followEntities)
+            {
+                if (f is IFollower follower)
+                {
+                    userIds.Add(follower.FollowerId);
+                }
+                if (f is IFollowedUser followedUser)
+                {
+                    userIds.Add(followedUser.FollowedUserId);
+                }
+            }
+
+            followings = await userRepository.GetFollowings((int)userId, userIds.Distinct().ToList());
         }
 
         return followEntities.ConvertAll(fe =>
         {
-            if ((typeof(T).Equals(typeof(IFollower)) || typeof(T).Equals(typeof(TagFollow))) && fe is IFollower f)
+            if ((typeof(T).IsAssignableFrom(typeof(IFollower)) || typeof(T).Equals(typeof(TagFollow))) && fe is IFollower f)
             {
                 return new UserListItem
                 {
@@ -157,7 +166,7 @@ public class UserFeedService : IUserFeedService
                     IsFollowedByCurrentUser = followings.Any(uf => uf.FollowedUserId == f.FollowerId)
                 };
             }
-            else if (typeof(T).Equals(typeof(IFollowedUser)) && fe is IFollowedUser fu)
+            else if (typeof(T).IsAssignableFrom(typeof(IFollowedUser)) && fe is IFollowedUser fu)
             {
                 return new UserListItem
                 {
