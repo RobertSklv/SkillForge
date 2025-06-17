@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Icon from '$components/icon/Icon.svelte';
 	import { PUBLIC_BACKEND_DOMAIN } from '$env/static/public';
 	import { uploadImage } from '$lib/api/client';
 	import type { ImageUploadType } from '$lib/types/ImageUploadType';
@@ -67,7 +68,7 @@
                 <img src={PUBLIC_BACKEND_DOMAIN + url} alt={imageAlt} class="rounded preview-image" />
                 <div class="d-flex justify-content-end position-absolute start-0 top-0 end-0">
                     <Button color="danger" onclick={onRemoveClick}>
-                        <i class="bi bi-trash-fill"></i>
+                        <Icon type="trash-fill" />
                     </Button>
                 </div>
             </div>

@@ -6,6 +6,7 @@
 	import FieldValidation from './FieldValidation.svelte';
 	import type FormContext from '$lib/types/FormContext';
 	import { fade } from 'svelte/transition';
+	import Icon from '$components/icon/Icon.svelte';
 
 	interface Props {
 		id: string;
@@ -157,7 +158,7 @@
 					>
 						<div class="ms-2 me-auto">
 							<div class="fw-bold" style="margin-left: -4px;">
-								<i class="bi bi-hash"></i>{tag.Name}
+								<Icon type="hash" />{tag.Name}
 							</div>
 							<small class="text-body-tertiary">{tag.Description}</small>
 						</div>

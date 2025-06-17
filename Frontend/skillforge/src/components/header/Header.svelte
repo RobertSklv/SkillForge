@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Icon from '../../icon/Icon.svelte';
+	import Icon from '$components/icon/Icon.svelte';
 	import Navbar from '../navbar/Navbar.svelte';
 	import NavLink from '../navbar/NavLink.svelte';
 	import { currentUserStore, logoutUser } from '$lib/stores/currentUserStore';

@@ -2,6 +2,7 @@
 	import { fade } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
 	import { removeToast, toastStore } from '$lib/stores/toastStore';
+	import Icon from '$components/icon/Icon.svelte';
 
 	const iconMap = {
 		success: 'check-circle-fill',
@@ -21,13 +22,13 @@
 			transition:fade={{ duration: 200 }}
 			animate:flip={{ duration: 200 }}
 		>
-			<i class="bi bi-{iconMap[toast.type]} me-2"></i>
+			<Icon type={iconMap[toast.type]} mod="me-2" />
 			<div>{toast.message}</div>
 			<button
 				type="button"
 				class="btn-close"
 				aria-label="Close"
-				on:click={() => removeToast(toast.uid)}
+				onclick={() => removeToast(toast.uid)}
 			></button>
 		</div>
 	{/each}

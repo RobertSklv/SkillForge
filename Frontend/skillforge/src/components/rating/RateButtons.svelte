@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Icon from '$components/icon/Icon.svelte';
 	import InfiniteScroll from '$components/infinite-scroll/InfiniteScroll.svelte';
 	import Modal from '$components/modal/Modal.svelte';
 	import ModalHeader from '$components/modal/ModalHeader.svelte';
@@ -17,13 +18,7 @@
 		readonly?: boolean;
 	}
 
-	let {
-		data,
-		subjectId,
-		type,
-		size = 'normal',
-		readonly
-	}: Props = $props();
+	let { data, subjectId, type, size = 'normal', readonly }: Props = $props();
 
 	let thumbsUp = $state<number>(data.ThumbsUp);
 	let thumbsDown = $state<number>(data.ThumbsDown);
@@ -89,11 +84,10 @@
 		onclick={toggleThumbsUp}
 		disabled={readonly}
 	>
-		<i
-			class="bi bi-hand-thumbs-up{currentUserRate == 1 ? '-fill' : ''} {size === 'normal'
-				? 'fs-3'
-				: 'fs-6'}"
-		></i>
+		<Icon
+			type="hand-thumbs-up{currentUserRate == 1 ? '-fill' : ''}"
+			mod={size === 'normal' ? 'fs-3' : 'fs-6'}
+		/>
 	</button>
 	<button
 		type="button"
@@ -137,11 +131,10 @@
 		onclick={toggleThumbsDown}
 		disabled={readonly}
 	>
-		<i
-			class="bi bi-hand-thumbs-down{currentUserRate == -1 ? '-fill' : ''} {size === 'normal'
-				? 'fs-3'
-				: 'fs-6'}"
-		></i>
+		<Icon
+			type="hand-thumbs-down{currentUserRate == -1 ? '-fill' : ''}"
+			mod={size === 'normal' ? 'fs-3' : 'fs-6'}
+		/>
 	</button>
 	<button
 		type="button"

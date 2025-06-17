@@ -34,6 +34,7 @@
 	} from '$lib/structuredDataUtil';
 	import FollowButton from '$components/button/FollowButton.svelte';
 	import OutOfArticlesBlock from '$components/article/OutOfArticlesBlock.svelte';
+	import Icon from '$components/icon/Icon.svelte';
 
 	const ARTICLE_BATCH_SIZE: number = 4;
 	const FOLLOW_LIST_BATCH_SIZE: number = 15;
@@ -98,17 +99,17 @@
 			<div class="col-2 text-end">
 				<Dropdown>
 					{#snippet buttonSnippet()}
-						<i class="bi bi-three-dots-vertical"></i>
+						<Icon type="three-dots-vertical" />
 					{/snippet}
 					{#if $currentUserStore && $currentUserStore.Name == backendData.Name}
 						<DropdownItem href="/account">
-							<i class="bi bi-pencil-square"></i>
+							<Icon type="pencil-square" />
 							Edit
 						</DropdownItem>
 						<DropdownDivider />
 					{/if}
 					<DropdownItem href="/">
-						<i class="bi bi-exclamation-triangle"></i>
+						<Icon type="exclamation-triangle" />
 						Report
 					</DropdownItem>
 				</Dropdown>

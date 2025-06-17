@@ -14,6 +14,7 @@
 	import type ValidationRules from '$lib/types/ValidationRules';
 	import { regex, required } from '$lib/validation/rules';
 	import { addToast } from '$lib/stores/toastStore';
+	import Icon from '$components/icon/Icon.svelte';
 
 	let pageContext = getContext<ArticleUpsertPageModel>('page');
 
@@ -77,7 +78,7 @@
 
 {#if pageContext.CurrentState && !pageContext.CurrentState.IsApproved}
 	<div class="alert alert-info" role="alert">
-		<i class="bi bi-info-circle-fill me-2"></i>
+		<Icon type="info-circle-fill" mod="me-2" />
 		This article is pending approval by the moderators. Please wait.
 	</div>
 {/if}

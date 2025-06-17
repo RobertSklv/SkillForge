@@ -15,6 +15,7 @@
 	import type ArticlePageModel from '$lib/types/ArticlePageModel';
 	import type CommentModel from '$lib/types/CommentModel';
 	import { writable } from 'svelte/store';
+	import Icon from '$components/icon/Icon.svelte';
 
 	interface Props {
 		data: ArticlePageModel;
@@ -73,17 +74,17 @@
 				<div class="col-2 text-end">
 					<Dropdown>
 						{#snippet buttonSnippet()}
-							<i class="bi bi-three-dots-vertical"></i>
+							<Icon type="three-dots-vertical" />
 						{/snippet}
 						{#if $currentUserStore && $currentUserStore.Name == data.Author.Link.Name}
 							<DropdownItem href="/article/{data.ArticleId}/edit">
-								<i class="bi bi-pencil-square"></i>
+								<Icon type="pencil-square" />
 								Edit
 							</DropdownItem>
 							<DropdownDivider />
 						{/if}
 						<DropdownItem href="/">
-							<i class="bi bi-exclamation-triangle"></i>
+							<Icon type="exclamation-triangle" />
 							Report
 						</DropdownItem>
 					</Dropdown>
@@ -111,7 +112,7 @@
 		{#snippet footer()}
 			<div class="row">
 				<div class="col fs-5 d-flex align-items-center">
-					<i class="bi bi-eye me-1"></i>
+					<Icon type="eye" mod="me-1" />
 					<small class="text-muted">{data.Views}</small>
 				</div>
 				<div class="col">

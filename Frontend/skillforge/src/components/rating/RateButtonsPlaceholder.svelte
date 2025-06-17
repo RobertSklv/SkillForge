@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Icon from "$components/icon/Icon.svelte";
+
     interface Props {
         size?: 'normal' | 'small',
     }
@@ -10,11 +12,11 @@
 
 <div class="text-end d-flex">
     <div class="rate-btn text-primary d-flex align-items-center mx-1">
-        <i class="bi bi-hand-thumbs-up {size === 'normal' ? 'fs-5' : 'fs-6'}"></i>
+        <Icon type="hand-thumbs-up" mod={size === 'normal' ? 'fs-5' : 'fs-6'} />
         <span class="placeholder placeholder-sm col-4 ms-1 h-auto"></span>
     </div>
     <div class="rate-btn text-primary d-flex align-items-center mx-1">
-        <i class="bi bi-hand-thumbs-down {size === 'normal' ? 'fs-5' : 'fs-6'}"></i>
+        <Icon type="hand-thumbs-down" mod={size === 'normal' ? 'fs-5' : 'fs-6'} />
         <span class="placeholder placeholder-sm col-4 ms-1 h-auto"></span>
     </div>
 </div>

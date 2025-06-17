@@ -2,6 +2,7 @@
 	import Button from '$components/button/Button.svelte';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
+	import Icon from '$components/icon/Icon.svelte';
 
 	let show = $state<boolean>(false);
 
@@ -43,7 +44,7 @@
 >
 	<div class="offcanvas-header">
 		<h2 class="offcanvas-title" id="offcanvasBottomLabel">
-            <i class="bi bi-cookie me-2"></i>
+            <Icon type="cookie" mod="me-2" />
             Cookies
         </h2>
 		<button type="button" class="btn-close" aria-label="Close" onclick={close}></button>

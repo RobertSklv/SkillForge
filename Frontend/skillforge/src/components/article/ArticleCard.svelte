@@ -8,6 +8,7 @@
 	import { PUBLIC_BACKEND_DOMAIN } from '$env/static/public';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
 	import type ArticleCardType from '$lib/types/ArticleCardType';
+	import Icon from '$components/icon/Icon.svelte';
 
 	interface Props {
 		data: ArticleCardType;
@@ -34,7 +35,7 @@
 			</h2>
 			{#if $currentUserStore}
 				<button class="bg-transparent border-0 text-primary ms-auto" aria-label="Save article">
-					<i class="bi bi-bookmark fs-5"></i>
+					<Icon type="bookmark" mod="fs-5" />
 				</button>
 			{/if}
 		</div>
@@ -51,7 +52,7 @@
 					<RateButtons data={data.RatingData} subjectId={data.ArticleId} size="small" type="article" readonly={true} />
 					{#if data.Comments.length}
 						<div class="text-primary ms-3">
-							<i class="bi bi-chat fs-6"></i>
+							<Icon type="chat" mod="fs-6" />
 							<small>{data.TotalComments}</small>
 						</div>
 					{/if}

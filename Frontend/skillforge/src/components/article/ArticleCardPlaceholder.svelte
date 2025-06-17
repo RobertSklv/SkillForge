@@ -1,5 +1,6 @@
 <script lang="ts">
 	import CommentLimitedPlaceholder from '$components/comment/CommentLimitedPlaceholder.svelte';
+	import Icon from '$components/icon/Icon.svelte';
 	import Block from '$components/layout/Block.svelte';
 	import LinkPlaceholder from '$components/link/LinkPlaceholder.svelte';
 	import TagLinkPlaceholder from '$components/link/TagLinkPlaceholder.svelte';
@@ -27,7 +28,7 @@
 				<div class="d-flex align-items-center">
 					<RateButtonsPlaceholder size="small" />
                     <div class="text-primary d-flex align-items-center px-2">
-                        <i class="bi bi-chat fs-6"></i>
+                        <Icon type="chat" mod="fs-6" />
                         <span class="placeholder placeholder-sm col-3 ms-1 h-auto"></span>
                     </div>
 				</div>
