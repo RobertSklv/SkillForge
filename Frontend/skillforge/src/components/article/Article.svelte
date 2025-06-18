@@ -143,7 +143,8 @@
 					resetMode="onsuccess"
 				>
 					<TextEditor
-						id="Content"
+						id="CommentContent"
+						name="Content"
 						label={null}
 						height={200}
 						bind:content={$commentFormData.Content}

@@ -10,6 +10,7 @@
 
     interface Props {
         id: string,
+        name?: string,
         label?: string | null,
         content: string,
         height?: number,
@@ -18,7 +19,8 @@
 
     let {
         id,
-        label = id,
+        name = id,
+        label = name,
         content = $bindable(),
         height = 300,
         imageUploadType,
@@ -55,12 +57,12 @@
     }
 
     export function reset() {
-        content = formContext?.getFieldDefaultValue(id);
+        content = formContext?.getFieldDefaultValue(name);
         setContent(content);
     }
 
     onMount(async () => {
-        formContext?.registerField(id, reset);
+        formContext?.registerField(name, reset);
 
         const toolbarOptions = [
             ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -130,7 +132,7 @@
         <p class="form-label">{label}:</p>
     {/if}
     <div class="quill-editor-wrapper" class:is-invalid={!isValid} bind:this={editorWrapperElement}>
-        <div {id} style="height: {height}px"></div>
+        <div {id} style:height="{height}px"></div>
     </div>
-    <FieldValidation name={id} label={label ?? id} value={content} shouldValidate={isVisited} bind:isValid />
+    <FieldValidation {name} label={label ?? id} value={content} shouldValidate={isVisited} bind:isValid />
 </div>
