@@ -40,7 +40,7 @@
 </script>
 
 {#if isFollowedByCurrentUser}
-    <Button onclick={unfollow} size={btnSize} isOutline>Unfollow</Button>
+    <Button onclick={unfollow} size={btnSize} mod="follow-button" isOutline>Unfollow</Button>
 {:else}
-    <Button onclick={follow} size={btnSize} mod="border border-2 border-primary">Follow</Button>
+    <Button onclick={follow} size={btnSize} mod="follow-button border border-2 border-primary">Follow</Button>
 {/if}

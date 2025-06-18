@@ -15,7 +15,7 @@
     }: Props = $props();
 </script>
 
-<div class="d-flex justify-content-between align-items-center {mod}">
+<div class="d-flex justify-content-center justify-content-lg-between align-items-center {mod}">
     <TagLink data={data.Link} />
     {#if $currentUserStore}
         <FollowButton

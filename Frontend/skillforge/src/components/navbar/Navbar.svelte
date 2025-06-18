@@ -1,19 +1,15 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { fade } from 'svelte/transition';
 
 	interface Props {
 		logoLink: string;
 		logoSnippet: Snippet;
 		children?: Snippet;
-		linksSnippet?: Snippet,
+		linksSnippet?: Snippet;
 	}
 
-	const {
-		logoLink,
-		logoSnippet,
-		children,
-		linksSnippet,
-	}: Props = $props();
+	const { logoLink, logoSnippet, children, linksSnippet }: Props = $props();
 
 	let isOpen = $state(false);
 
@@ -27,6 +23,11 @@
 		<a class="navbar-brand" href={logoLink} title="To homepage">
 			{@render logoSnippet()}
 		</a>
+		<div class="d-flex justify-content-center flex-shrink-1" style:flex-grow="0.5">
+			<div class="w-100">
+				{@render children?.()}
+			</div>
+		</div>
 		<button
 			class="navbar-toggler"
 			class:collapsed={!isOpen}
@@ -39,12 +40,8 @@
 			<span class="navbar-toggler-icon"></span>
 		</button>
 
-		<div class="d-flex justify-content-center w-100">
-			{@render children?.()}
-		</div>
-
 		<div
-			class="collapse navbar-collapse justify-content-end flex-shrink-0"
+			class="collapse navbar-collapse justify-content-end flex-shrink-0 flex-grow-0"
 			class:show={isOpen}
 			id="navbarNavDropdown"
 		>

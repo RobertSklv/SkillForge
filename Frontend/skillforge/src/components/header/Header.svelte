@@ -6,7 +6,7 @@
 	import Dropdown from '$components/dropdown/Dropdown.svelte';
 	import DropdownItem from '$components/dropdown/DropdownItem.svelte';
 	import { goto } from '$app/navigation';
-	import SearchBar from './SearchBar.svelte';
+	import HeaderSearchBar from './HeaderSearchBar.svelte';
 	import { page } from '$app/state';
 
 	async function logout() {
@@ -21,17 +21,15 @@
 		{#snippet logoSnippet()}
 			<div class="d-flex justify-content-center align-items-center">
 				<img src="/logo.png" class="me-1" style:height="22px" alt="Logo">
-				<span>SkillForge</span>
+				<span class="d-none d-md-block">SkillForge</span>
 			</div>
 		{/snippet}
 
 		{#if page.url.pathname !== '/search'}
-			<SearchBar />
+			<HeaderSearchBar />
 		{/if}
 
 		{#snippet linksSnippet()}
-			<NavLink href="#" isActive={true}>Articles</NavLink>
-			<NavLink href="#" isActive={false}>About us</NavLink>
 			<NavLink href="#" isActive={false}>Contact us</NavLink>
 			{#if $currentUserStore}
 				<Dropdown isNav={true}>

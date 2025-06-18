@@ -93,7 +93,7 @@
 <Block mod="mb-4">
 	{#snippet header()}
 		<div class="row">
-			<div class="col offset-2">
+			<div class="col offset-0 offset-lg-2">
 				<h1 class="h2">{backendData.Name}</h1>
 			</div>
 			<div class="col-2 text-end">
@@ -119,7 +119,7 @@
 
 	<div class="card-body">
 		<div class="row align-items-center">
-			<div class="col-2 d-flex justify-content-center">
+			<div class="col-4 col-lg-2 d-flex justify-content-center">
 				<button
 					class="bg-transparent border-0 rounded-circle avatar-image-wrapper"
 					type="button"
@@ -139,7 +139,7 @@
 					/>
 				</Modal>
 			</div>
-			<div class="col-4">
+			<div class="col-8 col-lg-4">
 				{#if backendData.Bio}
 					<p>{backendData.Bio}</p>
 				{/if}
@@ -160,7 +160,7 @@
 				<span>followings</span>
 			</div>
 			{#if $currentUserStore && $currentUserStore.Name != backendData.Name}
-				<div class="col-2 text-center">
+				<div class="col text-center">
 					<FollowButton
 						subjectName={backendData.Name}
 						type="user"
@@ -172,38 +172,46 @@
 	</div>
 </Block>
 
-<ThreeColumns>
+<ThreeColumns hideRightColumnOnMobile>
 	{#snippet leftColumn()}
-		<FollowList
-			title="Followers"
-			totalCount={backendData.FollowersCount}
-			initiallyVisibleItems={backendData.LatestFollowers}
-			loadMore={loadMoreFollowers}
-		>
-			{#snippet itemSnippet(item)}
-				<UserListItem data={item} />
-			{/snippet}
-		</FollowList>
-		<FollowList
-			title="Users followed"
-			totalCount={backendData.FollowingsCount}
-			initiallyVisibleItems={backendData.LatestFollowings}
-			loadMore={loadMoreFollowings}
-		>
-			{#snippet itemSnippet(item)}
-				<UserListItem data={item} />
-			{/snippet}
-		</FollowList>
-		<FollowList
-			title="Tags Followed"
-			totalCount={backendData.TagFollowingsCount}
-			initiallyVisibleItems={backendData.LatestTagFollowings}
-			loadMore={loadMoreTagFollowings}
-		>
-			{#snippet itemSnippet(item)}
-				<TagListItem data={item} />
-			{/snippet}
-		</FollowList>
+		<div class="row flex-row flex-xl-column text-center text-xl-start">
+			<div class="col-4 col-xl-12">
+				<FollowList
+					title="Followers"
+					totalCount={backendData.FollowersCount}
+					initiallyVisibleItems={backendData.LatestFollowers}
+					loadMore={loadMoreFollowers}
+				>
+					{#snippet itemSnippet(item)}
+						<UserListItem data={item} />
+					{/snippet}
+				</FollowList>
+			</div>
+			<div class="col-4 col-xl-12">
+				<FollowList
+					title="Users followed"
+					totalCount={backendData.FollowingsCount}
+					initiallyVisibleItems={backendData.LatestFollowings}
+					loadMore={loadMoreFollowings}
+				>
+					{#snippet itemSnippet(item)}
+						<UserListItem data={item} />
+					{/snippet}
+				</FollowList>
+			</div>
+			<div class="col-4 col-xl-12">
+				<FollowList
+					title="Tags Followed"
+					totalCount={backendData.TagFollowingsCount}
+					initiallyVisibleItems={backendData.LatestTagFollowings}
+					loadMore={loadMoreTagFollowings}
+				>
+					{#snippet itemSnippet(item)}
+						<TagListItem data={item} />
+					{/snippet}
+				</FollowList>
+			</div>
+		</div>
 	{/snippet}
 
 	{#key backendData.Name}
@@ -221,6 +229,9 @@
 					<ArticleCardPlaceholder />
 					<ArticleCardPlaceholder />
 					<ArticleCardPlaceholder />
+				{/snippet}
+				{#snippet outOfItemsSnippet()}
+					<OutOfArticlesBlock />
 				{/snippet}
 			</InfiniteScroll>
 		{:else}
@@ -280,6 +291,11 @@
 	.avatar-image-wrapper {
 		width: 130px;
 		height: 130px;
-		margin-top: -50px;
+	}
+
+	@media (min-width: 992px) {
+		.avatar-image-wrapper {
+			margin-top: -50px;
+		}
 	}
 </style>

@@ -12,7 +12,11 @@
 	import LoginCta from '$components/login-cta/LoginCta.svelte';
 	import { PUBLIC_BASE_URL } from '$env/static/public';
 	import { getLatestArticles } from '$lib/api/client';
-	import { generateArticleCardItemsSchema, generateTopArticleItemsSchema, generateTopUserItemsSchema } from '$lib/structuredDataUtil';
+	import {
+		generateArticleCardItemsSchema,
+		generateTopArticleItemsSchema,
+		generateTopUserItemsSchema
+	} from '$lib/structuredDataUtil';
 	import type ArticleCardType from '$lib/types/ArticleCardType';
 	import type HomePageData from '$lib/types/HomePageData';
 	import { getFrontendUrl, getImagePath } from '$lib/util';
@@ -40,7 +44,7 @@
 	<link rel="canonical" href={PUBLIC_BASE_URL} />
 </svelte:head>
 
-<ThreeColumns>
+<ThreeColumns hideLeftColumnOnMobile hideRightColumnOnMobile>
 	{#snippet leftColumn()}
 		<div class="d-flex flex-column gap-4">
 			<AnchorList title="Top Users" items={data.TopUsers}>

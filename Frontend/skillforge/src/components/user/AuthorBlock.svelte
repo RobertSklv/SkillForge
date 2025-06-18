@@ -20,17 +20,18 @@
 	{/snippet}
 
 	<div class="card-body">
-		<div class="p-4">
+		<div class="p-4 text-center">
 			<a href="/user/{data.Link.Name}">
 				<img
 					src={getImagePath(data.Link.AvatarImage)}
 					alt="{data.Link.Name} avatar"
 					class="rounded-circle w-100 object-fit-cover border border-2 border-primary mb-4"
 					style:aspect-ratio="1"
+					style:max-width="300px"
 				/>
 			</a>
 		</div>
-		<dl class="mb-0">
+		<dl class="mb-0 text-center text-lg-start">
 			<dt>Nickname</dt>
 			<dd class="text-body-tertiary">
 				{data.Link.Name}

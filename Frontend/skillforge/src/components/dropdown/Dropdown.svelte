@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { clickOutside } from '$lib/util';
 	import { type Snippet } from 'svelte';
+	import { fade } from 'svelte/transition';
 
 	interface Props {
 		isNav?: boolean;
@@ -28,7 +29,7 @@
 {#if isNav}
 	<li class="dropdown nav-item">
 		<button
-			class="dropdown-toggle nav-link"
+			class="dropdown-toggle nav-link text-start w-100"
 			{onclick}
 			type="button"
 			aria-label="Button"
@@ -37,9 +38,11 @@
 		>
 			{@render buttonSnippet()}
 		</button>
-		<ul class="dropdown-menu" class:show={isOpen}>
-			{@render children()}
-		</ul>
+		{#if isOpen}
+			<ul class="dropdown-menu show" transition:fade={{ duration: 100 }}>
+				{@render children()}
+			</ul>
+		{/if}
 	</li>
 {:else}
 	<div class="btn-group">
@@ -53,9 +56,11 @@
 		>
 			{@render buttonSnippet()}
 		</button>
-		<ul class="dropdown-menu" class:show={isOpen}>
-			{@render children()}
-		</ul>
+		{#if isOpen}
+			<ul class="dropdown-menu show" transition:fade={{ duration: 100 }}>
+				{@render children()}
+			</ul>
+		{/if}
 	</div>
 {/if}
 
@@ -70,5 +75,6 @@
 		top: 100%;
 		left: 0;
 		margin-top: var(--bs-dropdown-spacer);
+		background-color: #30115e;
 	}
 </style>

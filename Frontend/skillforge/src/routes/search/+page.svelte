@@ -3,7 +3,7 @@
 	import SortBySelect from '$components/grid-filters/SortBySelect.svelte';
 	import SortOrderSelect from '$components/grid-filters/SortOrderSelect.svelte';
 	import Grid from '$components/grid/Grid.svelte';
-	import SearchBar from '$components/header/SearchBar.svelte';
+	import SearchBar from '$components/grid-filters/SearchBar.svelte';
 	import Pagination from '$components/pagination/Pagination.svelte';
 	import { PUBLIC_BASE_URL } from '$env/static/public';
 	import type ArticleCardType from '$lib/types/ArticleCardType';
@@ -32,9 +32,9 @@
 
 <svelte:head>
 	<title>SkillForge | Search: '{data.gridState?.q}'</title>
-	<meta name="description" content="Search results for: '{data.gridState?.q}'">
-	<meta name="robots" content="noindex,nofollow">
-	<link rel="canonical" href="{PUBLIC_BASE_URL}/search">
+	<meta name="description" content="Search results for: '{data.gridState?.q}'" />
+	<meta name="robots" content="noindex,nofollow" />
+	<link rel="canonical" href="{PUBLIC_BASE_URL}/search" />
 </svelte:head>
 
 <div class="mb-5">
@@ -53,13 +53,18 @@
 	gap={3}
 >
 	{#snippet header()}
+		<div class="row mb-5">
+			<div class="col-12 col-md-6 mb-4 mb-md-0">
+				<SearchBar />
+			</div>
 
-		<div class="d-flex justify-content-center gap-5 mb-5">
-			<SearchBar enableSuggestions={false} />
+			<div class="col-6 col-md-3">
+				<SortBySelect />
+			</div>
 
-			<SortBySelect />
-
-			<SortOrderSelect />
+			<div class="col-6 col-md-3">
+				<SortOrderSelect />
+			</div>
 		</div>
 		{#if data.response.TotalItems > DEFAULT_LIMIT}
 			<div class="d-flex justify-content-center mb-3">

@@ -8,11 +8,11 @@
 	import { fade } from 'svelte/transition';
 
 	interface Props {
-		enableSuggestions?: boolean
+		mod?: string;
 	}
 
 	let {
-		enableSuggestions = true
+		mod,
 	}: Props = $props();
 
 	let suggestionsElement: HTMLElement;
@@ -51,11 +51,7 @@
 	}
 
 	function search() {
-		if (gridContext) {
-			gridContext.updateState('q', inputValue);
-		} else {
-			goto(`/search?q=${encodeURIComponent(inputValue)}`);
-		}
+		goto(`/search?q=${encodeURIComponent(inputValue)}`);
 	}
 
 	function onkeydown(e: KeyboardEvent & { currentTarget: EventTarget & HTMLInputElement }) {
@@ -67,7 +63,7 @@
 	}
 </script>
 
-<div class="position-relative w-50">
+<div class="position-relative {mod}">
 	<div class="input-group">
 		<input
 			id="search"
@@ -85,7 +81,7 @@
 		/>
 		<button class="btn btn-light rounded-end-3" type="button" id="search_button" onclick={search}>Search</button>
 	</div>
-	{#if showSuggestions && enableSuggestions && suggestions.length}
+	{#if showSuggestions && suggestions.length}
 		<div
 			class="position-absolute w-100 z-3 mt-1 shadow"
 			bind:this={suggestionsElement}
@@ -111,3 +107,11 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	@media (max-width: 425px) {
+		input[type=search] {
+			max-width: 110px;
+		}
+	}
+</style>

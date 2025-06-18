@@ -42,23 +42,23 @@
 			<div class="text-center">
 				<Button mod="px-4" onclick={() => (isModalOpen = true)}>View all</Button>
 			</div>
-		{/if}
-		<Modal bind:show={isModalOpen} verticallyCentered scrollable>
-			{#snippet header()}
-				<ModalHeader {title} />
-			{/snippet}
-			<InfiniteScroll gap={3} {batchSize} {loadMore} autoLoadOnMount>
-				{#snippet itemSnippet(item)}
-					{@render itemSnippet(item)}
+			<Modal bind:show={isModalOpen} verticallyCentered scrollable>
+				{#snippet header()}
+					<ModalHeader {title} />
 				{/snippet}
-				{#snippet placeholderSnippet()}
-					<div class="d-flex justify-content-center">
-						<div class="spinner-border" role="status">
-							<span class="visually-hidden">Loading...</span>
+				<InfiniteScroll gap={3} {batchSize} {loadMore} autoLoadOnMount>
+					{#snippet itemSnippet(item)}
+						{@render itemSnippet(item)}
+					{/snippet}
+					{#snippet placeholderSnippet()}
+						<div class="d-flex justify-content-center">
+							<div class="spinner-border" role="status">
+								<span class="visually-hidden">Loading...</span>
+							</div>
 						</div>
-					</div>
-				{/snippet}
-			</InfiniteScroll>
-		</Modal>
+					{/snippet}
+				</InfiniteScroll>
+			</Modal>
+		{/if}
 	</div>
 {/if}

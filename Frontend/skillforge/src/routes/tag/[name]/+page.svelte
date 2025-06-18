@@ -83,7 +83,7 @@
 				<span>followers</span>
 			</div>
 			{#if $currentUserStore}
-				<div class="col-2 text-center">
+				<div class="col text-center">
 					<FollowButton
 						subjectName={backendData.Name}
 						type="tag"
@@ -95,18 +95,22 @@
 	</div>
 </Block>
 
-<ThreeColumns>
+<ThreeColumns hideRightColumnOnMobile>
 	{#snippet leftColumn()}
-		<FollowList
-			title="Followers"
-			totalCount={backendData.FollowersCount}
-			initiallyVisibleItems={backendData.LatestFollowers}
-			loadMore={loadMoreTagFollowers}
-		>
-			{#snippet itemSnippet(item)}
-				<UserListItem data={item} />
-			{/snippet}
-		</FollowList>
+		<div class="row flex-row flex-lg-column text-center text-lg-start">
+			<div class="offset-4 col-4 offset-lg-0 col-lg-12">
+				<FollowList
+					title="Followers"
+					totalCount={backendData.FollowersCount}
+					initiallyVisibleItems={backendData.LatestFollowers}
+					loadMore={loadMoreTagFollowers}
+				>
+					{#snippet itemSnippet(item)}
+						<UserListItem data={item} />
+					{/snippet}
+				</FollowList>
+			</div>
+		</div>
 	{/snippet}
 
 	{#key backendData.Name}
@@ -124,6 +128,9 @@
 					<ArticleCardPlaceholder />
 					<ArticleCardPlaceholder />
 					<ArticleCardPlaceholder />
+				{/snippet}
+				{#snippet outOfItemsSnippet()}
+					<OutOfArticlesBlock />
 				{/snippet}
 			</InfiniteScroll>
 		{:else}

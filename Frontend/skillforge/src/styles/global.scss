@@ -20,3 +20,15 @@ body {
     object-fit: cover;
     border: 2px solid var(--bs-primary-border-subtle);
 }
+
+@media (max-width: 992px) {
+    .follow-button {
+        display: none;
+    }
+
+    .modal {
+        .follow-button {
+            display: block;
+        }
+    }
+}

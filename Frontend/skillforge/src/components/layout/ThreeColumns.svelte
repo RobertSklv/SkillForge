@@ -6,25 +6,42 @@
 		leftColumn?: Snippet;
 		children: Snippet;
 		rightColumn?: Snippet;
+		hideLeftColumnOnMobile?: boolean;
+		hideRightColumnOnMobile?: boolean;
 	}
 
-	const { mod, leftColumn, children, rightColumn }: Props = $props();
+	const {
+		mod,
+		leftColumn,
+		children,
+		rightColumn,
+		hideLeftColumnOnMobile,
+		hideRightColumnOnMobile
+	}: Props = $props();
 </script>
 
-<div class="row {mod}">
-	<div class="d-none d-lg-block left-column">
+<div class="row flex-column flex-xl-row {mod}">
+	<div
+		class="left-column"
+		class:d-none={hideLeftColumnOnMobile}
+		class:d-xl-block={hideLeftColumnOnMobile}
+	>
 		{@render leftColumn?.()}
 	</div>
 	<div class="col-12 middle-column">
 		{@render children()}
 	</div>
-	<div class="d-none d-lg-block right-column">
+	<div
+		class="right-column"
+		class:d-none={hideRightColumnOnMobile}
+		class:d-xl-block={hideRightColumnOnMobile}
+	>
 		{@render rightColumn?.()}
 	</div>
 </div>
 
 <style>
-	@media (min-width: 992px) {
+	@media (min-width: 1200px) {
 		.left-column {
 			flex-basis: 20%;
 		}

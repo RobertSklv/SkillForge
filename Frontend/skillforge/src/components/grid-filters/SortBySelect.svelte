@@ -29,4 +29,4 @@
 	}
 </script>
 
-<Select id="sort_by" value={$gridStateStore.sortBy} {onValueChange} options={sortOptions} mod="w-25" />
+<Select id="sort_by" value={$gridStateStore.sortBy} {onValueChange} options={sortOptions} />
