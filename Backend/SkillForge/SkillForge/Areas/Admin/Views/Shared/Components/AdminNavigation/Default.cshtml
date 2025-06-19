@@ -11,7 +11,7 @@
     if (item is NavMenu menu)
     {
         <li class="nav-item dropdown w-100">
-            <a class="nav-link dropdown-toggle @(menu.IsActive ? "show" : string.Empty)"
+            <a class="fs-5 nav-link dropdown-toggle @(menu.IsActive ? "show" : string.Empty)"
                 href="#"
                 role="button"
                 data-bs-toggle="dropdown"
@@ -40,7 +40,7 @@
     else if (item is NavLink link)
     {
         <li class="nav-item w-100">
-            <a class="nav-link w-100 @(link.IsActive ? "bg-secondary" : string.Empty)" href="@link.Url">
+            <a class="fs-5 nav-link w-100 @(link.IsActive ? "bg-secondary" : string.Empty)" href="@link.Url">
                 <span>
                     <partial name="_BootstrapIcon" model="@link.Icon" />
                 </span>
@@ -51,3 +51,10 @@
 
     index++;
 }
+
+<style>
+    .nav-link:not(.dropdown-toggle):hover {
+        color: #dee2e6;
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+</style>

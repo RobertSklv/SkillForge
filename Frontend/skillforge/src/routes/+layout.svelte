@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { onMount, type Snippet } from "svelte";
+	import { type Snippet } from "svelte";
 	import Footer from "$components/footer/Footer.svelte";
 	import Header from "$components/header/Header.svelte";
-    import { loadCurrentUser } from "$lib/stores/currentUserStore";
+    import { currentUserStore } from "$lib/stores/currentUserStore";
     import 'bootswatch/dist/vapor/bootstrap.min.css';
     import 'bootstrap-icons/font/bootstrap-icons.min.css';
 	import CookieConsentBanner from "$components/cookie-consent/CookieConsentBanner.svelte";
@@ -10,6 +10,7 @@
     import { onNavigate } from '$app/navigation';
 	import ToastContainer from "$components/toast-container/ToastContainer.svelte";
 	import { getFrontendUrl } from "$lib/util";
+	import type UserInfo from "$lib/types/UserInfo";
 
     onNavigate((navigation) => {
         if (!document.startViewTransition) return;
@@ -25,15 +26,21 @@
         });
     });
 
-    const {
-        children
-    }: {
+    interface Props {
+        data?: UserInfo,
         children: Snippet
-    } = $props();
+    }
 
-    onMount(() => {
-        loadCurrentUser();
-    });
+    let {
+        data,
+        children
+    }: Props = $props();
+    
+    if (data && Object.keys(data).length === 0) {
+        data = undefined;
+    }
+    
+    currentUserStore.set(data);
 </script>
 
 <Header />

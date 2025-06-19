@@ -74,7 +74,7 @@
 	}
 </script>
 
-<h1 class="text-center">{pageContext.CurrentState?.Model?.Id == 0 ? 'Create' : 'Edit'} article</h1>
+<h1 class="text-center">{!pageContext.CurrentState?.Model?.Id ? 'Create' : 'Edit'} article</h1>
 
 {#if pageContext.CurrentState && !pageContext.CurrentState.IsApproved}
 	<div class="alert alert-info" role="alert">

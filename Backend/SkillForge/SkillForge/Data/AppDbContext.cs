@@ -24,6 +24,11 @@ public class AppDbContext : DbContext
     public DbSet<FavoriteArticle> FavoriteArticles { get; set; }
     public DbSet<UserFollow> UserFollows { get; set; }
     public DbSet<TagFollow> TagFollows { get; set; }
+    public DbSet<Report> Reports { get; set; }
+    public DbSet<ArticleReport> ArticleReports { get; set; }
+    public DbSet<CommentReport> CommentReports { get; set; }
+    public DbSet<UserReport> UserReports { get; set; }
+    public DbSet<AccountSuspension> AccountSuspensions { get; set; }
 
     private readonly IAdminRoleSeeder adminRoleSeeder;
 

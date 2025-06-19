@@ -6,6 +6,20 @@ namespace SkillForge.Areas.Admin.Repositories;
 
 public interface IArticleRepository : ICrudRepository<Article>
 {
+    Task<int> SoftDelete(Article article, Violation reason);
+
+    Task<int> SoftDelete(int id, Violation reason);
+
+    Task SoftDelete(int id, ArticleReport report);
+
+    Task<int> SoftDeleteMultiple(List<Article> articles, Violation reason);
+
+    Task<int> SoftDeleteMultiple(List<int> ids, Violation reason);
+
+    Task<int> Restore(Article article);
+
+    Task<int> Restore(int id);
+
     Task<Article> GetWithComments(int id);
 
     Task<ArticleRating?> GetUserRating(int userId, int articleId);
@@ -25,6 +39,8 @@ public interface IArticleRepository : ICrudRepository<Article>
     Task RecordView(GuestArticleView view);
 
     Task<PaginatedList<Article>> ListPending(ListingModel listingModel, Func<IQueryable<Article>, IQueryable<Article>>? queryCallback = null);
+
+    Task<PaginatedList<Article>> ListDeleted(ListingModel listingModel, Func<IQueryable<Article>, IQueryable<Article>>? queryCallback = null);
 
     Task<PaginatedList<Article>> ListByTag(ListingModel listingModel, int tagId);
 

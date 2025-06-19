@@ -4,10 +4,8 @@
 
 @{
     Layout = "_AdminPageLayout";
-    ViewData["PageHeading"] = "Preview Article #" + Model.Id;
+    ViewData["PageHeading"] = "Delete Article #" + Model.Id;
     ViewData["Title"] = ViewData["PageHeading"];
 }
-
-<partial name="_PreviewFieldset" model="@Model" />
 
 <partial name="_DeleteForm" model="@Model" />

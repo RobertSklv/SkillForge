@@ -8,6 +8,7 @@
         label?: string,
         value: any,
         group: any,
+        mod?: string,
         disabled?: boolean,
         isSwitch?: boolean,
         isInline?: boolean,
@@ -16,10 +17,11 @@
 
     var {
         id,
-        name = id,
+        name,
         label = name,
         value,
         group = $bindable(),
+        mod,
         disabled,
         isSwitch,
         isInline,
@@ -37,7 +39,7 @@
     })
 </script>
 
-<div class="form-check"
+<div class="form-check {mod}"
      class:form-switch={isSwitch}
      class:form-check-inline={isInline}
      class:form-check-reverse={isReverse}>

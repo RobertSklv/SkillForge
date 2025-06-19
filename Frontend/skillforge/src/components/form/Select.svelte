@@ -97,7 +97,6 @@
         {onfocus}
         {onfocusout}
         {disabled}
-        {value}
         {multiple}>
     {@render children?.()}
     {#if options}

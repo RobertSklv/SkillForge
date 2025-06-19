@@ -42,12 +42,18 @@ public class Article : BaseEntity
 
     public List<ArticleTag>? Tags { get; set; }
 
-    [TableColumn]
+    public List<ArticleReport>? Reports { get; set; }
+
+    [Column(TypeName = "tinyint")]
+    [TableColumn(Name = "Delete reason")]
+    public Violation? DeleteReason { get; set; }
+
+    [TableColumn(Name = "Views")]
     public int ViewCount { get; set; }
 
-    [TableColumn]
+    [TableColumn(Name = "Thumbs up")]
     public int ThumbsUp { get; set; }
 
-    [TableColumn]
+    [TableColumn(Name = "Thumbs down")]
     public int ThumbsDown { get; set; }
 }

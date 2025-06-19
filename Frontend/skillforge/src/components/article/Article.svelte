@@ -16,6 +16,7 @@
 	import type CommentModel from '$lib/types/CommentModel';
 	import { writable } from 'svelte/store';
 	import Icon from '$components/icon/Icon.svelte';
+	import ArticleReportModal from "$components/article/ArticleReportModal.svelte";
 
 	interface Props {
 		data: ArticlePageModel;
@@ -34,6 +35,8 @@
 	});
 
 	let comments = $state<CommentModel[]>(data.Comments);
+
+	let showArticleReportModal = $state<boolean>(false);
 
 	async function addComment() {
 		if (!$currentUserStore) {
@@ -83,7 +86,7 @@
 							</DropdownItem>
 							<DropdownDivider />
 						{/if}
-						<DropdownItem href="/">
+						<DropdownItem type="button" onclick={() => showArticleReportModal = true}>
 							<Icon type="exclamation-triangle" />
 							Report
 						</DropdownItem>
@@ -161,6 +164,8 @@
 
 	<LoginCta ctaText="Log in" description="to comment and rate content." inline={true} />
 </div>
+
+<ArticleReportModal articleId={data.ArticleId} bind:show={showArticleReportModal} />
 
 <style>
 	.cover-image {

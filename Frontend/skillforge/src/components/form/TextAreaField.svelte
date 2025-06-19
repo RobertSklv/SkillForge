@@ -8,7 +8,7 @@
         id: string,
         name?: string,
         label?: string,
-        value: string,
+        value: string | undefined | null,
         placeholder?: string,
         rows?: any,
         cols?: any,

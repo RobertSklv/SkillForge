@@ -11,7 +11,25 @@ namespace SkillForge.Areas.Admin.Services;
 
 public interface IArticleService : ICrudService<Article>
 {
+    Task<bool> SoftDelete(Article article, Violation reason);
+
+    Task<bool> SoftDelete(int id, Violation reason);
+
+    Task SoftDelete(int id, ArticleReport report);
+
+    Task SoftDelete(int id, int articleReportId);
+
+    Task<bool> SoftDeleteMultiple(List<Article> articles, Violation reason);
+
+    Task<bool> SoftDeleteMultiple(List<int> ids, Violation reason);
+
+    Task<bool> Restore(Article article);
+
+    Task<bool> Restore(int id);
+
     Task<ListingModel<Article>> CreatePendingArticlesListing(ListingModel listingQuery);
+
+    Task<ListingModel<Article>> CreateDeletedArticlesListing(ListingModel listingQuery);
 
     Task<ListingModel<Article>> CreateListingByTag(ListingModel listingQuery, int tagId);
 
@@ -46,6 +64,8 @@ public interface IArticleService : ICrudService<Article>
     Task<ArticlePageData> View(int userId, int articleId);
 
     Task<ArticlePageData> View(string guestId, int articleId);
+
+    Task<ArticleUpsertPageModel> LoadUpsertPage(int? id, int userId);
 
     Task Rate(int userId, int articleId, UserRatingData rate);
 

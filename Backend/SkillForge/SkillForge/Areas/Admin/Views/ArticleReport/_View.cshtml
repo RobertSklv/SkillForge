@@ -1,0 +1,30 @@
+﻿@using SkillForge.Models.Database
+
+@model ArticleReport
+
+<div class="row mb-4">
+    <div class="col-12 col-lg-4">
+        <span>Article:</span>
+    </div>
+    <div class="col-12 col-lg-8">
+        <a href="/Admin/Article/View/@(Model.ArticleId)">@Model.Article!.Title</a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12 col-lg-4">
+        <span>Reporter:</span>
+    </div>
+    <div class="col-12 col-lg-8">
+        <a href="/Admin/User/View/@(Model.ReporterId)">@Model.Reporter!.Name</a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12 col-lg-4">
+        <span>Reason:</span>
+    </div>
+    <div class="col-12 col-lg-8">
+        <span>@(Model.Reason != Violation.Other ? Model.Reason : Model.Message)</span>
+    </div>
+</div>

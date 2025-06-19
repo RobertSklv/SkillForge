@@ -1,0 +1,12 @@
+﻿@using SkillForge.Areas.Admin.Models.DTOs
+@using SkillForge.Models.Database
+
+@model ListingModel<ArticleReport>
+
+@{
+    Layout = "_AdminPageLayout";
+    ViewData["Title"] = "Closed Article Reports";
+    ViewData["PageHeading"] = "Closed Article Reports";
+}
+
+<partial name="_Table" model="@Model.Table" />

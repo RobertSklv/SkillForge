@@ -23,6 +23,8 @@ public class ArticleService : CrudService<Article>, IArticleService
     private readonly IFrontendService frontendService;
     private readonly IUserFeedService userFeedService;
     private readonly IUserService userService;
+    private readonly IArticleReportService articleReportService;
+    private readonly ICategoryService categoryService;
 
     public ArticleService(
         IArticleRepository repository,
@@ -30,7 +32,9 @@ public class ArticleService : CrudService<Article>, IArticleService
         IArticleTagMtmRepository articleTagRepository,
         IFrontendService frontendService,
         IUserFeedService userFeedService,
-        IUserService userService)
+        IUserService userService,
+        IArticleReportService articleReportService,
+        ICategoryService categoryService)
         : base(repository)
     {
         this.repository = repository;
@@ -39,6 +43,8 @@ public class ArticleService : CrudService<Article>, IArticleService
         this.frontendService = frontendService;
         this.userFeedService = userFeedService;
         this.userService = userService;
+        this.articleReportService = articleReportService;
+        this.categoryService = categoryService;
     }
 
     public override Table<Article> CreateEditRowAction(Table<Article> table)
@@ -48,7 +54,18 @@ public class ArticleService : CrudService<Article>, IArticleService
         return table.AddRowAction("View");
     }
 
-    public virtual async Task<ListingModel<Article>> CreatePendingArticlesListing(ListingModel listingQuery)
+    public override Table<Article> CreateDeleteRowAction(Table<Article> table)
+    {
+        return table;
+    }
+
+    public override async Task<Table<Article>> CreateListingTable(ListingModel<Article> listingModel, PaginatedList<Article> items)
+    {
+        return (await base.CreateListingTable(listingModel, items))
+            .RemoveColumn(nameof(Article.DeleteReason));
+    }
+
+    public async Task<ListingModel<Article>> CreatePendingArticlesListing(ListingModel listingQuery)
     {
         ListingModel<Article> model = new();
         model = InitializeListingModel(model, listingQuery);
@@ -58,8 +75,27 @@ public class ArticleService : CrudService<Article>, IArticleService
 
         model.Table = new Table<Article>(model, items)
             .AddRowAction("Preview")
-            .AddChainCall(CreateDeleteRowAction)
             .AddMassAction("MassApprove", "Approve selected")
+            .RemoveColumn(nameof(Article.DeleteReason))
+            .SetAdjustablePageSize(true)
+            .SetFilterable(true)
+            .SetOrderable(true)
+            .SetSearchable(true)
+            .AddPagination(true);
+
+        return model;
+    }
+
+    public async Task<ListingModel<Article>> CreateDeletedArticlesListing(ListingModel listingQuery)
+    {
+        ListingModel<Article> model = new();
+        model = InitializeListingModel(model, listingQuery);
+        model.ActionName = "Deleted";
+
+        PaginatedList<Article> items = await repository.ListDeleted(model);
+
+        model.Table = new Table<Article>(model, items)
+            .AddRowAction("View")
             .SetAdjustablePageSize(true)
             .SetFilterable(true)
             .SetOrderable(true)
@@ -79,6 +115,7 @@ public class ArticleService : CrudService<Article>, IArticleService
         listing.Table = new Table<Article>(listing, items)
             .AddRowActionGeneric("View", customizationCallback: e => e.SetRoute(article =>
                 $"/Admin/Article/View/{article.Id}"))
+            .RemoveColumn(nameof(Article.DeleteReason))
             .AddPagination(true)
             .SetOrderable(true)
             .SetSearchable(true)
@@ -90,6 +127,48 @@ public class ArticleService : CrudService<Article>, IArticleService
     public Task<PaginatedList<Article>> ListByTag(ListingModel listingModel, int tagId)
     {
         return repository.ListByTag(listingModel, tagId);
+    }
+
+    public async Task<bool> SoftDelete(Article article, Violation reason)
+    {
+        return await repository.SoftDelete(article, reason) > 0;
+    }
+
+    public async Task<bool> SoftDelete(int id, Violation reason)
+    {
+        return await repository.SoftDelete(id, reason) > 0;
+    }
+
+    public Task SoftDelete(int id, ArticleReport report)
+    {
+        return repository.SoftDelete(id, report);
+    }
+
+    public async Task SoftDelete(int id, int articleReportId)
+    {
+        ArticleReport report = await articleReportService.GetStrict(articleReportId);
+
+        await SoftDelete(id, report);
+    }
+
+    public async Task<bool> SoftDeleteMultiple(List<Article> articles, Violation reason)
+    {
+        return await repository.SoftDeleteMultiple(articles, reason) > 0;
+    }
+
+    public async Task<bool> SoftDeleteMultiple(List<int> ids, Violation reason)
+    {
+        return await repository.SoftDeleteMultiple(ids, reason) > 0;
+    }
+
+    public async Task<bool> Restore(Article article)
+    {
+        return await repository.Restore(article) > 0;
+    }
+
+    public async Task<bool> Restore(int id)
+    {
+        return await repository.Restore(id) > 0;
     }
 
     public void CreateArticleApproval(Article article, int adminId)
@@ -147,6 +226,11 @@ public class ArticleService : CrudService<Article>, IArticleService
     {
         Article entity = await Get(model.Id) ?? new();
 
+        if (entity.DeleteReason != null)
+        {
+            throw new RecordDeletedException("The article is deleted");
+        }
+
         if (entity.Id != 0 && userId != entity.AuthorId)
         {
             throw new NotOwnedByUserException("The article is not owned by the current user.");
@@ -173,6 +257,12 @@ public class ArticleService : CrudService<Article>, IArticleService
     public async Task<ArticlePageData> View(int userId, int articleId)
     {
         Article article = await GetWithComments(articleId);
+
+        if (article.DeleteReason != null)
+        {
+            throw new RecordDeletedException("The article is deleted");
+        }
+
         RegisteredArticleView? viewRecord = await GetView(userId, articleId);
 
         if (viewRecord == null)
@@ -218,6 +308,12 @@ public class ArticleService : CrudService<Article>, IArticleService
     public async Task<ArticlePageData> View(string guestId, int articleId)
     {
         Article article = await GetWithComments(articleId);
+
+        if (article.DeleteReason != null)
+        {
+            throw new RecordDeletedException("The article is deleted");
+        }
+
         GuestArticleView? viewRecord = await GetView(guestId, articleId);
 
         if (viewRecord == null)
@@ -237,6 +333,51 @@ public class ArticleService : CrudService<Article>, IArticleService
         ArticlePageData model = frontendService.CreateArticlePageData(article, false, latestByAuthor);
 
         return model;
+    }
+
+    public async Task<ArticleUpsertPageModel> LoadUpsertPage(int? id, int userId)
+    {
+        List<Category> categories = await categoryService.GetAll();
+
+        ArticleUpsertPageModel pageModel = new()
+        {
+            CategoryOptions = categories.ConvertAll(c => new EntityOption()
+            {
+                Value = c.Id,
+                Label = c.DisplayedName
+            })
+        };
+
+        if (id != null)
+        {
+            Article article = await GetStrict((int)id);
+
+            if (article.DeleteReason != null)
+            {
+                throw new RecordDeletedException("The article is deleted");
+            }
+
+            if (article.Id != 0 && userId != article.AuthorId)
+            {
+                throw new NotOwnedByUserException("The article is not owned by the current user.");
+            }
+
+            pageModel.CurrentState = new ArticleState
+            {
+                Model = new ArticleUpsertDTO
+                {
+                    Id = article.Id,
+                    Image = article.Image,
+                    Title = article.Title,
+                    Content = article.Content,
+                    CategoryId = article.CategoryId,
+                    Tags = article.Tags!.ConvertAll(t => t.Tag!.Name).ToList(),
+                },
+                IsApproved = article.ApprovalId != null
+            };
+        }
+
+        return pageModel;
     }
 
     public async Task Rate(int userId, int articleId, UserRatingData rate)

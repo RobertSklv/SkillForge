@@ -8,6 +8,7 @@
 	import { goto } from '$app/navigation';
 	import HeaderSearchBar from './HeaderSearchBar.svelte';
 	import { page } from '$app/state';
+	import { getImagePath } from '$lib/util';
 
 	async function logout() {
 		await logoutUser();
@@ -35,7 +36,7 @@
 				<Dropdown isNav={true}>
 					{#snippet buttonSnippet()}
 						<span>{$currentUserStore.Name}</span>
-						<Icon type="person-circle" />
+						<img src={getImagePath($currentUserStore.AvatarPath)} width="20" height="20" class="rounded-circle border-1 ms-1 object-fit-cover" alt="Your avatar" />
 					{/snippet}
 					<DropdownItem href="/user/{$currentUserStore.Name}">Account</DropdownItem>
 					<DropdownItem href="/account">Edit Account</DropdownItem>

@@ -50,6 +50,8 @@ public class User : BaseEntity
 
     public List<TagFollow>? TagsFollowed { get; set; }
 
+    public List<AccountSuspension>? Suspensions { get; set; }
+
     public int FollowersCount { get; set; }
 
     public int FollowingsCount { get; set; }
@@ -57,4 +59,6 @@ public class User : BaseEntity
     public int TagFollowingsCount { get; set; }
 
     public int ArticlesCount { get; set; }
+
+    public bool IsSuspended => (Suspensions ?? throw new Exception("Suspensions not loaded")).Any(s => s.IsActive);
 }

@@ -18,7 +18,7 @@ public class AggregateCategoryArticlesService : AggregateService
         List<Category> categories = await db.Categories.ToListAsync();
 
         var articleAggregates = await db.Articles
-            .Where(e => e.ApprovalId != null)
+            .Where(e => e.ApprovalId != null && e.DeleteReason == null)
             .GroupBy(e => e.CategoryId)
             .Select(g => new
             {

@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using SkillForge.Attributes;
 
 namespace SkillForge.Models.Database;
 
@@ -18,6 +20,10 @@ public class Comment : BaseEntity
     public string Content { get; set; }
 
     public List<CommentRating>? Ratings { get; set; }
+
+    [Column(TypeName = "tinyint")]
+    [TableColumn(Name = "Delete reason")]
+    public Violation? DeleteReason { get; set; }
 
     public int ThumbsUp { get; set; }
 

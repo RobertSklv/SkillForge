@@ -1,0 +1,27 @@
+﻿@using SkillForge.Models.Database
+
+@model Article
+
+@{
+    Layout = "_FieldsetLayout";
+    ViewData["Legend"] = "Delete";
+}
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="@Model.Id" />
+
+    <div class="row mb-4">
+        <div class="col-12 col-lg-4">
+            <label asp-for=@Model.DeleteReason></label>
+        </div>
+        <div class="col-12 col-lg-8">
+            <select asp-for=@Model.DeleteReason
+                    asp-items="Html.GetEnumSelectList<Violation>()"
+                    class="form-select d-block w-100 eav-data-type-switcher">
+            </select>
+            <span asp-validation-for=@Model.DeleteReason class="text-danger"></span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-lg btn-danger mt-4 px-4">Delete</button>
+</form>

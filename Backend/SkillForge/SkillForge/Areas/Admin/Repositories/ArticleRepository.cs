@@ -1,5 +1,6 @@
 ﻿using Ganss.Xss;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using SkillForge.Areas.Admin.Models;
 using SkillForge.Areas.Admin.Models.DTOs;
 using SkillForge.Areas.Admin.Services;
@@ -10,15 +11,19 @@ namespace SkillForge.Areas.Admin.Repositories;
 
 public class ArticleRepository : CrudRepository<Article>, IArticleRepository
 {
+    private readonly IArticleReportRepository articleReportRepository;
+
     public override DbSet<Article> DbSet => db.Articles;
 
     public ArticleRepository(
         AppDbContext db,
         IEntityFilterService filterService,
         IEntitySortService sortService,
-        IEntitySearchService searchService)
+        IEntitySearchService searchService,
+        IArticleReportRepository articleReportRepository)
         : base(db, filterService, sortService, searchService)
     {
+        this.articleReportRepository = articleReportRepository;
     }
 
     public override IQueryable<Article> GetIncludes(IQueryable<Article> query)
@@ -46,6 +51,77 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         entity.Content = entity.Content.Replace("<a", "<a rel=\"nofollow ugc\"");
 
         return base.Upsert(entity);
+    }
+
+    public override Task<int> Delete(int id)
+    {
+        throw new InvalidOperationException($"Invalid delete method. Use {nameof(SoftDelete)} instead.");
+    }
+
+    public override Task<int> DeleteMultiple(List<int> ids)
+    {
+        throw new InvalidOperationException($"Invalid delete method. Use {nameof(SoftDelete)} instead.");
+    }
+
+    public Task<int> SoftDelete(Article article, Violation reason)
+    {
+        article.DeleteReason = reason;
+
+        return db.SaveChangesAsync();
+    }
+
+    public async Task<int> SoftDelete(int id, Violation reason)
+    {
+        Article article = await GetStrict(id);
+
+        return await SoftDelete(article, reason);
+    }
+
+    public async Task SoftDelete(int id, ArticleReport report)
+    {
+        using IDbContextTransaction transaction = await db.Database.BeginTransactionAsync();
+
+        try
+        {
+            await SoftDelete(id, report.Reason);
+            await articleReportRepository.Close(report);
+
+            await transaction.CommitAsync();
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+
+            throw;
+        }
+    }
+
+    public async Task<int> SoftDeleteMultiple(List<Article> articles, Violation reason)
+    {
+        articles.ForEach(article => article.DeleteReason = reason);
+
+        return await db.SaveChangesAsync();
+    }
+
+    public async Task<int> SoftDeleteMultiple(List<int> ids, Violation reason)
+    {
+        List<Article> articles = await GetByIds(ids);
+
+        return await SoftDeleteMultiple(articles, reason);
+    }
+
+    public Task<int> Restore(Article article)
+    {
+        article.DeleteReason = null;
+
+        return db.SaveChangesAsync();
+    }
+
+    public async Task<int> Restore(int id)
+    {
+        Article article = await GetStrict(id);
+
+        return await Restore(article);
     }
 
     public async Task<Article> GetWithComments(int id)
@@ -119,7 +195,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         return base.List(listingModel, query =>
         {
             // List only approved articles by default.
-            query = query.Where(e => e.ApprovalId != null);
+            query = query.Where(e => e.ApprovalId != null && e.DeleteReason == null);
 
             if (queryCallback != null)
             {
@@ -134,7 +210,22 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
     {
         return base.List(listingModel, query =>
         {
-            query = query.Where(e => e.ApprovalId == null);
+            query = query.Where(e => e.ApprovalId == null && e.DeleteReason == null);
+
+            if (queryCallback != null)
+            {
+                query = queryCallback.Invoke(query);
+            }
+
+            return query;
+        });
+    }
+
+    public Task<PaginatedList<Article>> ListDeleted(ListingModel listingModel, Func<IQueryable<Article>, IQueryable<Article>>? queryCallback = null)
+    {
+        return base.List(listingModel, query =>
+        {
+            query = query.Where(e => e.DeleteReason != null);
 
             if (queryCallback != null)
             {
@@ -163,7 +254,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
                 .ThenInclude(e => e.User)
             .Include(e => e.Tags!)
                 .ThenInclude(e => e.Tag)
-            .Where(e => e.ApprovalId != null)
+            .Where(e => e.ApprovalId != null && e.DeleteReason == null)
             .OrderByDescending(e => e.CreatedAt)
             .Skip(batchIndex * batchSize)
             .Take(batchSize)
@@ -184,7 +275,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
                 .ThenInclude(e => e.User)
             .Include(e => e.Tags!)
                 .ThenInclude(e => e.Tag)
-            .Where(e => e.ApprovalId != null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
+            .Where(e => e.ApprovalId != null && e.DeleteReason == null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
             .OrderByDescending(e => e.CreatedAt)
             .Skip(batchIndex * batchSize)
             .Take(batchSize)
@@ -206,7 +297,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
                 .ThenInclude(e => e.User)
             .Include(e => e.Tags!)
                 .ThenInclude(e => e.Tag)
-            .Where(e => e.ApprovalId != null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
+            .Where(e => e.ApprovalId != null && e.DeleteReason == null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
             .OrderByDescending(e => e.CreatedAt)
             .Skip(batchIndex * batchSize)
             .Take(batchSize)
@@ -222,7 +313,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
                 .ThenInclude(e => e.User)
             .Include(e => e.Tags!)
                 .ThenInclude(e => e.Tag)
-            .Where(e => e.ApprovalId != null && e.Author!.Name == authorName)
+            .Where(e => e.ApprovalId != null && e.DeleteReason == null && e.Author!.Name == authorName)
             .OrderByDescending(e => e.CreatedAt)
             .Skip(batchIndex * batchSize)
             .Take(batchSize)
@@ -233,7 +324,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
     {
         return await db.Articles
             .Include(e => e.Comments)
-            .Where(e => e.ApprovalId != null && e.AuthorId == authorId && e.Id != excludedArticleId)
+            .Where(e => e.ApprovalId != null && e.DeleteReason == null && e.AuthorId == authorId && e.Id != excludedArticleId)
             .OrderByDescending(e => e.CreatedAt)
             .Take(count)
             .ToListAsync();
@@ -262,7 +353,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         return await db.Articles
             .Include(e => e.Author)
             .Include(e => e.Comments)
-            .Where(e => e.ApprovalId != null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
+            .Where(e => e.ApprovalId != null && e.DeleteReason == null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
             .OrderByDescending(e => e.ViewCount)
             .Take(count)
             .ToListAsync();
@@ -279,7 +370,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         return await db.Articles
             .Include(e => e.Author)
             .Include(e => e.Comments)
-            .Where(e => e.ApprovalId != null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
+            .Where(e => e.ApprovalId != null && e.DeleteReason == null && e.Tags!.Any(t => articleTagIds.Contains(t.Id)))
             .OrderByDescending(e => e.ViewCount)
             .Take(count)
             .ToListAsync();
@@ -290,7 +381,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         return await db.Articles
             .Include(e => e.Author)
             .Include(e => e.Comments)
-            .Where(e => e.ApprovalId != null && e.AuthorId == authorId)
+            .Where(e => e.ApprovalId != null && e.DeleteReason == null && e.AuthorId == authorId)
             .OrderByDescending(e => e.ViewCount)
             .Take(count)
             .ToListAsync();
@@ -301,7 +392,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         return DbSet
             .Include(e => e.Author)
             .Include(e => e.Comments)
-            .Where(e => e.ApprovalId != null)
+            .Where(e => e.ApprovalId != null && e.DeleteReason == null)
             .OrderByDescending(e => e.ViewCount)
             .Take(count)
             .ToListAsync();
@@ -319,7 +410,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         }
 
         return query
-            .Where(e => e.ApprovalId != null)
+            .Where(e => e.ApprovalId != null && e.DeleteReason == null)
             .OrderByDescending(e => e.CreatedAt)
             .Take(6)
             .ToListAsync();

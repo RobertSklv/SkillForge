@@ -1,0 +1,26 @@
+﻿@using SkillForge.Models.Database
+
+@model ArticleReport
+
+@{
+    Layout = "_AdminPageLayout";
+    ViewData["PageHeading"] = "Article Report #" + Model.Id;
+    ViewData["Title"] = ViewData["PageHeading"];
+}
+
+<partial name="_View" model="@Model" />
+
+@if (!Model.IsClosed)
+{
+    <div class="d-flex gap-4">
+        <form asp-action="DeleteArticle" asp-route-id="@Model.ArticleId">
+            <input type="hidden" name="articleReportId" value="@Model.Id" />
+
+            <button type="submit" class="btn btn-lg btn-danger mt-4 px-4">Delete article</button>
+        </form>
+
+        <form asp-action="Close" asp-route-id="@Model.Id">
+            <button type="submit" class="btn btn-lg btn-primary mt-4 px-4">Close report</button>
+        </form>
+    </div>
+}

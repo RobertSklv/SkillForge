@@ -1,0 +1,11 @@
+﻿@using SkillForge.Models.Database
+
+@model Article
+
+@{
+    Layout = "_AdminPageLayout";
+    ViewData["PageHeading"] = "Restore Article #" + Model.Id;
+    ViewData["Title"] = ViewData["PageHeading"];
+}
+
+<partial name="_RestoreForm" model="@Model" />

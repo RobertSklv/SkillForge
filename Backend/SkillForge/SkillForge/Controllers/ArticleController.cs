@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SkillForge.Areas.Admin.Models.DTOs;
 using SkillForge.Models.DTOs.Article;
 using SkillForge.Models.DTOs.Rating;
 using SkillForge.Areas.Admin.Services;
-using SkillForge.Models.Database;
 using SkillForge.Services;
 using SkillForge.Models.DTOs.Search;
 using SkillForge.Exceptions;
@@ -47,6 +45,10 @@ public class ArticleController : ApiController
         {
             return Unauthorized(e.Message);
         }
+        catch (RecordDeletedException)
+        {
+            return NotFound();
+        }
 
         if (form.Id == 0)
         {
@@ -62,42 +64,20 @@ public class ArticleController : ApiController
     [HttpGet]
     public async Task<IActionResult> LoadUpsertPage(int? id)
     {
-        List<Category> categories = await categoryService.GetAll();
-
-        ArticleUpsertPageModel pageModel = new()
+        try
         {
-            CategoryOptions = categories.ConvertAll(c => new EntityOption()
-            {
-                Value = c.Id,
-                Label = c.DisplayedName
-            })
-        };
+            ArticleUpsertPageModel pageModel = await service.LoadUpsertPage(id, UserId);
 
-        if (id != null)
-        {
-            Article article = await service.GetStrict((int)id);
-
-            if (article.AuthorId != UserId)
-            {
-                return Unauthorized();
-            }
-
-            pageModel.CurrentState = new ArticleState
-            {
-                Model = new ArticleUpsertDTO
-                {
-                    Id = article.Id,
-                    Image = article.Image,
-                    Title = article.Title,
-                    Content = article.Content,
-                    CategoryId = article.CategoryId,
-                    Tags = article.Tags!.ConvertAll(t => t.Tag!.Name).ToList(),
-                },
-                IsApproved = article.ApprovalId != null
-            };
+            return Ok(pageModel);
         }
-
-        return Ok(pageModel);
+        catch (NotOwnedByUserException e)
+        {
+            return Unauthorized(e.Message);
+        }
+        catch (RecordDeletedException)
+        {
+            return NotFound();
+        }
     }
 
     [Authorize(AuthenticationSchemes = "FrontendCookie")]
@@ -168,13 +148,20 @@ public class ArticleController : ApiController
     {
         ArticlePageData model;
 
-        if (TryGetUserId(out int? _))
+        try
         {
-            model = await service.View(UserId, id);
+            if (TryGetUserId(out int? _))
+            {
+                model = await service.View(UserId, id);
+            }
+            else
+            {
+                model = await service.View(GuestId, id);
+            }
         }
-        else
+        catch (RecordDeletedException)
         {
-            model = await service.View(GuestId, id);
+            return NotFound();
         }
 
         return Ok(model);

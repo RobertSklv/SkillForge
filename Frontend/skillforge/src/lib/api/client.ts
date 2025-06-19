@@ -8,7 +8,6 @@ import type SvelteFetch from "$lib/types/SvelteFetch";
 import type UserInfo from "$lib/types/UserInfo";
 import type TagLinkType from "$lib/types/TagLinkType";
 import type QueryParams from "$lib/types/QueryParams";
-import type QueryParamsFiltered from "$lib/types/QueryParamsFiltered";
 import type FetchData from "$lib/types/FetchData";
 import type TagPageData from "$lib/types/TagPageData";
 import type UserListItemType from "$lib/types/UserListItemType";
@@ -17,16 +16,18 @@ import type TagListItemType from "$lib/types/TagListItemType";
 import type ArticleSearchItemType from "$lib/types/ArticleSearchItemType";
 import type GridState from "$lib/types/GridState";
 import type PaginationResponse from "$lib/types/PaginationResponse";
+import type ArticleReportCreateFormOptions from "$lib/types/ArticleReportCreateFormOptions";
 
-export async function getCurrentUser(): Promise<UserInfo | null> {
+export async function getCurrentUser(fetch?: SvelteFetch): Promise<UserInfo | undefined> {
 	try {
 		return await requestApi('/User/Me', {
+			fetchFunction: fetch,
 			init: {
 				credentials: 'include'
 			}
 		});
 	} catch {
-		return null;
+		return undefined;
 	}
 }
 
@@ -173,6 +174,15 @@ export function loadArticleUpsertPage(fetch: SvelteFetch, id?: number): Promise<
 		},
 		query: {
 			id: id?.toString()
+		}
+	});
+}
+
+export function getArticleReportFormOptions(fetch?: SvelteFetch): Promise<ArticleReportCreateFormOptions> {
+	return requestApi('/ArticleReport/FormOptions', {
+		fetchFunction: fetch,
+		init: {
+			credentials: 'include'
 		}
 	});
 }

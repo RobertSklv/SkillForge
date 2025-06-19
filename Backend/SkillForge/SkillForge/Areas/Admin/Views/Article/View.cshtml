@@ -10,4 +10,11 @@
     bool approvalMode = ViewData["ApprovalMode"] as bool? ?? false;
 }
 
+@if (Model.DeleteReason != null)
+{
+    <div class="alert alert-warning">
+        This article is deleted.
+    </div>
+}
+
 <partial name="_View" model="@Model" />

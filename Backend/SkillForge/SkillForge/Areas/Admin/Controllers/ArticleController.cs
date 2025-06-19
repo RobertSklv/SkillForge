@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillForge.Areas.Admin.Models.Components.Common;
+using SkillForge.Areas.Admin.Models.Components.Pages;
 using SkillForge.Areas.Admin.Models.DTOs;
 using SkillForge.Areas.Admin.Services;
 using SkillForge.Attributes;
@@ -12,6 +13,10 @@ namespace SkillForge.Areas.Admin.Controllers;
 [AdminNavLink("All Articles", "Index")]
 public class ArticleController : CrudController<Article>
 {
+    public const string VIEW_LINK = "view";
+    public const string DELETE_LINK = "delete";
+    public const string RESTORE_LINK = "restore";
+
     private readonly IArticleService service;
 
     protected override bool AddCreateActionOnIndexPage => false;
@@ -24,12 +29,27 @@ public class ArticleController : CrudController<Article>
         this.service = service;
     }
 
+    public override Task<IActionResult> ViewWithBackAction(Article? viewModel)
+    {
+        GenerateSidebarLinks(viewModel, VIEW_LINK);
+
+        return base.ViewWithBackAction(viewModel);
+    }
+
     [AdminNavLink("Pending")]
     [HttpGet]
     [Authorize(Roles = "admin, mod")]
     public async Task<IActionResult> Pending([FromQuery] ListingModel listingModel)
     {
         return View(await service.CreatePendingArticlesListing(listingModel));
+    }
+
+    [AdminNavLink("Deleted")]
+    [HttpGet]
+    [Authorize(Roles = "admin, mod")]
+    public async Task<IActionResult> Deleted([FromQuery] ListingModel listingModel)
+    {
+        return View(await service.CreateDeletedArticlesListing(listingModel));
     }
 
     public async Task<IActionResult> Preview(int id)
@@ -91,5 +111,110 @@ public class ArticleController : CrudController<Article>
         else throw new Exception("Action not defined");
 
         return nameof(Pending);
+    }
+
+    [HttpGet]
+    public async new Task<IActionResult> Delete(int id)
+    {
+        Article article = await service.GetStrict(id);
+
+        if (article.DeleteReason != null)
+        {
+            return Redirect($"/Admin/Article/View/{id}");
+        }
+
+        GenerateSidebarLinks(article, DELETE_LINK);
+
+        return View(article);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id, Violation deleteReason)
+    {
+        Article article = await service.GetStrict(id);
+
+        try
+        {
+            await service.SoftDelete(article, deleteReason);
+
+            Alert("Article successfully deleted", ColorClass.Success);
+        }
+        catch (Exception)
+        {
+            Alert("An error ocurred", ColorClass.Danger);
+        }
+
+        return Redirect($"/Admin/Article/View/{id}");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Restore(int id)
+    {
+        Article article = await service.GetStrict(id);
+
+        if (article.DeleteReason == null)
+        {
+            return Redirect($"/Admin/Article/View/{id}");
+        }
+
+        GenerateSidebarLinks(article, RESTORE_LINK);
+
+        return View(article);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RestorePost(int id)
+    {
+        Article article = await service.GetStrict(id);
+
+        try
+        {
+            await service.Restore(article);
+
+            Alert("Article successfully restored", ColorClass.Success);
+        }
+        catch (Exception)
+        {
+            Alert("An error ocurred", ColorClass.Danger);
+        }
+
+        return Redirect($"/Admin/Article/View/{id}");
+    }
+
+    public void GenerateSidebarLinks(Article? article, string activeLink)
+    {
+        if (article == null)
+        {
+            return;
+        }
+
+        SidebarLinkGroup sidebar = GetOrCreateSidebarLinkGroup();
+        sidebar.ActiveLinkId = activeLink;
+
+        sidebar.Add(new SidebarLink
+        {
+            Id = VIEW_LINK,
+            Content = "General",
+            Route = $"/Admin/Article/View/{article.Id}",
+        });
+
+        if (article.DeleteReason == null)
+        {
+            sidebar.Add(new SidebarLink
+            {
+                Id = DELETE_LINK,
+                Content = "Delete",
+                Route = $"/Admin/Article/Delete/{article.Id}",
+            });
+        }
+        else
+        {
+            sidebar.Add(new SidebarLink
+            {
+                Id = DELETE_LINK,
+                Content = "Restore",
+                Route = $"/Admin/Article/Restore/{article.Id}",
+            });
+        }
     }
 }

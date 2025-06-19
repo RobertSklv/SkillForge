@@ -14,7 +14,9 @@ public class AggregateUserArticlesService : AggregateService
 
     public override async Task Aggregate(AppDbContext db)
     {
-        List<Article> allArticles = await db.Articles.ToListAsync();
+        List<Article> allArticles = await db.Articles
+            .Where(e => e.ApprovalId != null && e.DeleteReason == null)
+            .ToListAsync();
         List<User> users = await db.Users.ToListAsync();
 
         var articleAggregates = await db.Articles

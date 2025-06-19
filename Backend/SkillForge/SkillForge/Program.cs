@@ -80,6 +80,8 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<IArticleReportService, ArticleReportService>();
+builder.Services.AddScoped<IArticleReportRepository, ArticleReportRepository>();
 builder.Services.AddScoped<IArticleTagMtmRepository, ArticleTagMtmRepository>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
