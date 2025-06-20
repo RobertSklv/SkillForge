@@ -43,8 +43,9 @@ git clone https://github.com/RobertSklv/SkillForge.git
 
 ### 2. Setup Svelte
 
-- Instantiate the environment file.
+- Navigate to Svelte's root directory and instantiate the environment file.
 ```powershell
+cd Frontend/skillforge
 copy .env.example .env
 ```
 
@@ -53,7 +54,6 @@ copy .env.example .env
 - Install the dependencies and run the project.
 
 ```powershell
-cd Frontend/skillforge
 npm install
 npm run dev -- --open
 ```
