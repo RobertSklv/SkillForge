@@ -9,6 +9,5 @@ public enum Violation
     InappropriateContent,
     OffTopic,
     CopyrightInfringement,
-    Impersonation,
     Other,
 }

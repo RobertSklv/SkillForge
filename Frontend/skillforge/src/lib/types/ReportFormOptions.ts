@@ -1,5 +1,5 @@
 import type OptionType from "./OptionType";
 
-export default interface ArticleReportCreateFormOptions {
+export default interface ReportFormOptions {
     ViolationOptions: OptionType[]
 }

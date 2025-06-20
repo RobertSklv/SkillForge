@@ -1,10 +1,10 @@
 ﻿using SkillForge.Models.Database;
 
-namespace SkillForge.Models.DTOs.ArticleReport;
+namespace SkillForge.Models.DTOs.Report;
 
-public class ArticleReportCreate
+public class ReportCreateFormData
 {
-    public int ArticleId { get; set; }
+    public int Id { get; set; }
 
     public Violation Reason { get; set; }
 

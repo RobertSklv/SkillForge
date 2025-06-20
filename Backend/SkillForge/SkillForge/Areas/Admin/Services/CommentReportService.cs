@@ -1,33 +1,33 @@
-﻿using SkillForge.Areas.Admin.Models;
-using SkillForge.Areas.Admin.Models.Components.Common;
-using SkillForge.Areas.Admin.Models.Components.Grid;
+﻿using SkillForge.Areas.Admin.Models.Components.Grid;
 using SkillForge.Areas.Admin.Models.DTOs;
+using SkillForge.Areas.Admin.Models;
 using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Models.Database;
 using SkillForge.Models.DTOs.Report;
+using SkillForge.Areas.Admin.Models.Components.Common;
 
 namespace SkillForge.Areas.Admin.Services;
 
-public class ArticleReportService : CrudService<ArticleReport>, IArticleReportService
+public class CommentReportService : CrudService<CommentReport>, ICommentReportService
 {
-    private readonly IArticleReportRepository repository;
+    private readonly ICommentReportRepository repository;
     private readonly IUserService userService;
 
-    public ArticleReportService(IArticleReportRepository repository, IUserService userService)
+    public CommentReportService(ICommentReportRepository repository, IUserService userService)
         : base(repository)
     {
         this.repository = repository;
         this.userService = userService;
     }
 
-    public override Table<ArticleReport> CreateEditRowAction(Table<ArticleReport> table)
+    public override Table<CommentReport> CreateEditRowAction(Table<CommentReport> table)
     {
         // Creates a View action instead of Edit.
 
         return table.AddRowAction("View");
     }
 
-    public override Table<ArticleReport> CreateDeleteRowAction(Table<ArticleReport> table)
+    public override Table<CommentReport> CreateDeleteRowAction(Table<CommentReport> table)
     {
         // Creates a Close action instead of Delete.
 
@@ -37,22 +37,22 @@ public class ArticleReportService : CrudService<ArticleReport>, IArticleReportSe
         });
     }
 
-    public override async Task<Table<ArticleReport>> CreateListingTable(ListingModel<ArticleReport> listingModel, PaginatedList<ArticleReport> items)
+    public override async Task<Table<CommentReport>> CreateListingTable(ListingModel<CommentReport> listingModel, PaginatedList<CommentReport> items)
     {
         return (await base.CreateListingTable(listingModel, items))
-            .SetSelectableOptionsSource(nameof(ArticleReport.Reporter), await userService.GetAll())
+            .SetSelectableOptionsSource(nameof(CommentReport.Reporter), await userService.GetAll())
             .AddMassAction("MassClose", "Close selected");
     }
 
-    public async Task<ListingModel<ArticleReport>> CreateClosedReportsListing(ListingModel listingQuery)
+    public async Task<ListingModel<CommentReport>> CreateClosedReportsListing(ListingModel listingQuery)
     {
-        ListingModel<ArticleReport> model = new();
+        ListingModel<CommentReport> model = new();
         model = InitializeListingModel(model, listingQuery);
         model.ActionName = "Closed";
 
-        PaginatedList<ArticleReport> items = await repository.ListClosed(model);
+        PaginatedList<CommentReport> items = await repository.ListClosed(model);
 
-        model.Table = new Table<ArticleReport>(model, items)
+        model.Table = new Table<CommentReport>(model, items)
             .AddRowAction("View")
             .SetAdjustablePageSize(true)
             .SetFilterable(true)
@@ -65,9 +65,9 @@ public class ArticleReportService : CrudService<ArticleReport>, IArticleReportSe
 
     public async Task Create(int userId, ReportCreateFormData form)
     {
-        ArticleReport entity = new()
+        CommentReport entity = new()
         {
-            ArticleId = form.Id,
+            CommentId = form.Id,
             Reason = form.Reason,
             Message = form.Message,
             ReporterId = userId,

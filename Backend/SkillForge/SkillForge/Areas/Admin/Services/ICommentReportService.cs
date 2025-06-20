@@ -4,9 +4,9 @@ using SkillForge.Models.DTOs.Report;
 
 namespace SkillForge.Areas.Admin.Services;
 
-public interface IArticleReportService : ICrudService<ArticleReport>
+public interface ICommentReportService : ICrudService<CommentReport>
 {
-    Task<ListingModel<ArticleReport>> CreateClosedReportsListing(ListingModel listingQuery);
+    Task<ListingModel<CommentReport>> CreateClosedReportsListing(ListingModel listingQuery);
 
     Task Create(int userId, ReportCreateFormData form);
 

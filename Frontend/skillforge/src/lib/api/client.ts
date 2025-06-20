@@ -16,7 +16,7 @@ import type TagListItemType from "$lib/types/TagListItemType";
 import type ArticleSearchItemType from "$lib/types/ArticleSearchItemType";
 import type GridState from "$lib/types/GridState";
 import type PaginationResponse from "$lib/types/PaginationResponse";
-import type ArticleReportCreateFormOptions from "$lib/types/ArticleReportCreateFormOptions";
+import type ReportFormOptions from "$lib/types/ReportFormOptions";
 
 export async function getCurrentUser(fetch?: SvelteFetch): Promise<UserInfo | undefined> {
 	try {
@@ -178,8 +178,8 @@ export function loadArticleUpsertPage(fetch: SvelteFetch, id?: number): Promise<
 	});
 }
 
-export function getArticleReportFormOptions(fetch?: SvelteFetch): Promise<ArticleReportCreateFormOptions> {
-	return requestApi('/ArticleReport/FormOptions', {
+export function getReportFormOptions(fetch?: SvelteFetch): Promise<ReportFormOptions> {
+	return requestApi('/Report/FormOptions', {
 		fetchFunction: fetch,
 		init: {
 			credentials: 'include'

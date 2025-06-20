@@ -1,0 +1,26 @@
+﻿@using SkillForge.Models.Database
+
+@model CommentReport
+
+@{
+    Layout = "_AdminPageLayout";
+    ViewData["PageHeading"] = "Comment Report #" + Model.Id;
+    ViewData["Title"] = ViewData["PageHeading"];
+}
+
+<partial name="_View" model="@Model" />
+
+@if (!Model.IsClosed)
+{
+    <div class="d-flex gap-4">
+        <form asp-action="DeleteComment" asp-route-id="@Model.CommentId">
+            <input type="hidden" name="commentReportId" value="@Model.Id" />
+
+            <button type="submit" class="btn btn-lg btn-danger mt-4 px-4">Delete comment</button>
+        </form>
+
+        <form asp-action="Close" asp-route-id="@Model.Id">
+            <button type="submit" class="btn btn-lg btn-primary mt-4 px-4">Close report</button>
+        </form>
+    </div>
+}

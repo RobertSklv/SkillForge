@@ -1,0 +1,12 @@
+﻿@using SkillForge.Areas.Admin.Models.DTOs
+@using SkillForge.Models.Database
+
+@model ListingModel<CommentReport>
+
+@{
+    Layout = "_AdminPageLayout";
+    ViewData["Title"] = "Closed Comment Reports";
+    ViewData["PageHeading"] = "Closed Comment Reports";
+}
+
+<partial name="_Table" model="@Model.Table" />

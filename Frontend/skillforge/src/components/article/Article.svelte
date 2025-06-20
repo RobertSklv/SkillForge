@@ -16,7 +16,7 @@
 	import type CommentModel from '$lib/types/CommentModel';
 	import { writable } from 'svelte/store';
 	import Icon from '$components/icon/Icon.svelte';
-	import ArticleReportModal from "$components/article/ArticleReportModal.svelte";
+	import ReportModal from '$components/report/ReportModal.svelte';
 
 	interface Props {
 		data: ArticlePageModel;
@@ -36,7 +36,7 @@
 
 	let comments = $state<CommentModel[]>(data.Comments);
 
-	let showArticleReportModal = $state<boolean>(false);
+	let showReportModal = $state<boolean>(false);
 
 	async function addComment() {
 		if (!$currentUserStore) {
@@ -79,17 +79,19 @@
 						{#snippet buttonSnippet()}
 							<Icon type="three-dots-vertical" />
 						{/snippet}
-						{#if $currentUserStore && $currentUserStore.Name == data.Author.Link.Name}
-							<DropdownItem href="/article/{data.ArticleId}/edit">
-								<Icon type="pencil-square" />
-								Edit
+						{#if $currentUserStore}
+							{#if $currentUserStore.Name == data.Author.Link.Name}
+								<DropdownItem href="/article/{data.ArticleId}/edit">
+									<Icon type="pencil-square" />
+									Edit
+								</DropdownItem>
+								<DropdownDivider />
+							{/if}
+							<DropdownItem type="button" onclick={() => (showReportModal = true)}>
+								<Icon type="exclamation-triangle" />
+								Report
 							</DropdownItem>
-							<DropdownDivider />
 						{/if}
-						<DropdownItem type="button" onclick={() => showArticleReportModal = true}>
-							<Icon type="exclamation-triangle" />
-							Report
-						</DropdownItem>
 					</Dropdown>
 				</div>
 			</div>
@@ -165,7 +167,7 @@
 	<LoginCta ctaText="Log in" description="to comment and rate content." inline={true} />
 </div>
 
-<ArticleReportModal articleId={data.ArticleId} bind:show={showArticleReportModal} />
+<ReportModal entityId={data.ArticleId} action="/ArticleReport/Create" bind:show={showReportModal} />
 
 <style>
 	.cover-image {

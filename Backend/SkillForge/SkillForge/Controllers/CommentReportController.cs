@@ -6,11 +6,11 @@ using SkillForge.Models.DTOs.Report;
 namespace SkillForge.Controllers;
 
 [Authorize(AuthenticationSchemes = "FrontendCookie")]
-public class ArticleReportController : ApiController
+public class CommentReportController : ApiController
 {
-    private readonly IArticleReportService service;
+    private readonly ICommentReportService service;
 
-    public ArticleReportController(IArticleReportService service)
+    public CommentReportController(ICommentReportService service)
     {
         this.service = service;
     }

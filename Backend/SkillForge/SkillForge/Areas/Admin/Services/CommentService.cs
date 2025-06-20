@@ -10,12 +10,14 @@ public class CommentService : CrudService<Comment>, ICommentService
 {
     private readonly ICommentRepository repository;
     private readonly IUserFeedService userFeedService;
+    private readonly ICommentReportService commentReportService;
 
-    public CommentService(ICommentRepository repository, IUserFeedService userFeedService)
+    public CommentService(ICommentRepository repository, IUserFeedService userFeedService, ICommentReportService commentReportService)
         : base(repository)
     {
         this.repository = repository;
         this.userFeedService = userFeedService;
+        this.commentReportService = commentReportService;
     }
 
     public async Task<Comment> Add(int userId, int articleId, string content)
@@ -87,5 +89,47 @@ public class CommentService : CrudService<Comment>, ICommentService
         List<CommentRating> ratings = await repository.GetRating(articleId, batchIndex, batchSize, positive);
 
         return await userFeedService.CreateUserListItems(ratings.ConvertAll(rating => rating.User!), currentUserId);
+    }
+
+    public async Task<bool> SoftDelete(Comment comment, Violation reason)
+    {
+        return await repository.SoftDelete(comment, reason) > 0;
+    }
+
+    public async Task<bool> SoftDelete(int id, Violation reason)
+    {
+        return await repository.SoftDelete(id, reason) > 0;
+    }
+
+    public Task SoftDelete(int id, CommentReport report)
+    {
+        return repository.SoftDelete(id, report);
+    }
+
+    public async Task SoftDelete(int id, int commentReportId)
+    {
+        CommentReport report = await commentReportService.GetStrict(commentReportId);
+
+        await SoftDelete(id, report);
+    }
+
+    public async Task<bool> SoftDeleteMultiple(List<Comment> comments, Violation reason)
+    {
+        return await repository.SoftDeleteMultiple(comments, reason) > 0;
+    }
+
+    public async Task<bool> SoftDeleteMultiple(List<int> ids, Violation reason)
+    {
+        return await repository.SoftDeleteMultiple(ids, reason) > 0;
+    }
+
+    public async Task<bool> Restore(Comment comment)
+    {
+        return await repository.Restore(comment) > 0;
+    }
+
+    public async Task<bool> Restore(int id)
+    {
+        return await repository.Restore(id) > 0;
     }
 }
