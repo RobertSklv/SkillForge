@@ -40,17 +40,20 @@ public class GenerateXmlSitemapService : BackgroundService
 
         (XmlDocument document, XmlElement root) = CreateXmlSitemap("sitemapindex");
 
-        string sitemapUsersFilename = GenerateUserSitemap(users, siteOptions.Value.FrontendUrl);
-        string sitemapArticlesFilename = GenerateArticleSitemap(articles, siteOptions.Value.FrontendUrl);
-        string sitemapTagsFilename = GenerateTagSitemap(tags, siteOptions.Value.FrontendUrl);
+        string frontendUrl = siteOptions.Value.FrontendUrl.TrimEnd('/');
+        string backendUrl = siteOptions.Value.BackendUrl.TrimEnd('/');
 
-        XmlElement sitemapUsers = CreateSitemapElement(document, string.Join('/', siteOptions.Value.BackendUrl, sitemapUsersFilename));
+        string sitemapUsersFilename = GenerateUserSitemap(users, frontendUrl);
+        string sitemapArticlesFilename = GenerateArticleSitemap(articles, frontendUrl);
+        string sitemapTagsFilename = GenerateTagSitemap(tags, frontendUrl);
+
+        XmlElement sitemapUsers = CreateSitemapElement(document, string.Join('/', backendUrl, sitemapUsersFilename));
         root.AppendChild(sitemapUsers);
 
-        XmlElement sitemapArticles = CreateSitemapElement(document, string.Join('/', siteOptions.Value.BackendUrl, sitemapArticlesFilename));
+        XmlElement sitemapArticles = CreateSitemapElement(document, string.Join('/', backendUrl, sitemapArticlesFilename));
         root.AppendChild(sitemapArticles);
 
-        XmlElement sitemapTags = CreateSitemapElement(document, string.Join('/', siteOptions.Value.BackendUrl, sitemapTagsFilename));
+        XmlElement sitemapTags = CreateSitemapElement(document, string.Join('/', backendUrl, sitemapTagsFilename));
         root.AppendChild(sitemapTags);
 
         document.Save(Path.Combine(webHostEnvironment.WebRootPath, "sitemap-index.xml"));
