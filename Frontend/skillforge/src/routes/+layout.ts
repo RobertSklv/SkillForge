@@ -1,8 +1,16 @@
-import { getCurrentUser } from "$lib/api/client";
-import type UserInfo from "$lib/types/UserInfo";
+import { getCurrentUser, getReportFormOptions } from "$lib/api/client";
 
-export async function load({ fetch }): Promise<UserInfo | undefined> {
-    let currentUserInfo = await getCurrentUser(fetch);
+export async function load({ fetch }): Promise<any> {
+    let [
+        currentUserInfo,
+        reportFormOptions
+    ] = await Promise.all([
+        getCurrentUser(fetch),
+        getReportFormOptions(fetch),
+    ]);
 
-    return currentUserInfo;
+    return {
+        currentUserInfo,
+        reportFormOptions
+    };
 }

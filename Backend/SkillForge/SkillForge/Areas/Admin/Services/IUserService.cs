@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SkillForge.Areas.Admin.Models.DTOs;
 using SkillForge.Models.Database;
 using SkillForge.Models.DTOs.User;
 
@@ -6,6 +7,8 @@ namespace SkillForge.Areas.Admin.Services;
 
 public interface IUserService : ICrudService<User>
 {
+    Task<ListingModel<User>> CreateSuspendedAccountsListing(ListingModel listingQuery);
+
     Task<User?> GetByName(string name);
 
     Task<User?> FindUser(string usernameOrEmail);
@@ -41,4 +44,12 @@ public interface IUserService : ICrudService<User>
     Task<bool> UpdatePassword(int userId, PasswordChangeFormData formData, ModelStateDictionary modelState);
 
     Task<UserPageData> LoadPage(string name, int? currentUserId = null);
+
+    Task<List<AccountSuspension>> GetSuspensions(int id);
+
+    Task<bool> IsSuspended(int id);
+
+    Task Suspend(int id, Violation reason, byte durationDays, int moderatorId);
+
+    Task Suspend(int id, UserReport report, byte durationDays, int moderatorId);
 }

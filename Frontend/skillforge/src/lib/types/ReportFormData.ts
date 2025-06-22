@@ -1,5 +1,6 @@
 export default interface ReportFormData {
-    Id: number,
+    Id?: number,
+    Name?: string,
     Reason: number,
     Message?: string,
 }

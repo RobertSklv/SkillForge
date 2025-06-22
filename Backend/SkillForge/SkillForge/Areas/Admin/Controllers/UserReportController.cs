@@ -9,25 +9,24 @@ using SkillForge.Models.Database;
 
 namespace SkillForge.Areas.Admin.Controllers;
 
-[AdminNavMenu("reports", "Reports", SortOrder = 100)]
-[AdminNavLink("Article Reports", "Index", Menu = "reports", SortOrder = 1)]
-public class ArticleReportController : CrudController<ArticleReport>
+[AdminNavLink("User Reports", "Index", Menu = "reports", SortOrder = 5)]
+public class UserReportController : CrudController<UserReport>
 {
-    private readonly IArticleReportService service;
-    private readonly IArticleService articleService;
+    private readonly IUserReportService service;
+    private readonly IUserService userService;
 
     protected override bool AddCreateActionOnIndexPage => false;
 
-    public ArticleReportController(IArticleReportService service, IArticleService articleService)
+    public UserReportController(IUserReportService service, IUserService userService)
         : base(service)
     {
         this.service = service;
-        this.articleService = articleService;
+        this.userService = userService;
     }
 
     public override Task<IActionResult> Index([FromQuery] ListingModel listingModel)
     {
-        CreateClosedArticleReportsLink();
+        CreateClosedUsersLink();
 
         return base.Index(listingModel);
     }
@@ -41,31 +40,13 @@ public class ArticleReportController : CrudController<ArticleReport>
         return View(await service.CreateClosedReportsListing(listingModel));
     }
 
-    [Authorize(Roles = "admin, mod")]
-    [Route("/Admin/ArticleReport/DeleteArticle/{id}")]
-    public async Task<IActionResult> DeleteArticle([FromRoute] int id, [FromForm] int articleReportId)
-    {
-        try
-        {
-            await articleService.SoftDelete(id, articleReportId);
-
-            Alert("Article deleted", ColorClass.Success);
-        }
-        catch (Exception e)
-        {
-            Alert("An error ocurred: " + e.Message, ColorClass.Danger);
-        }
-
-        return RedirectToAction(nameof(Index));
-    }
-
     public async Task<IActionResult> Close(int id)
     {
         bool success = await service.Close(id);
 
         if (success)
         {
-            Alert("Article report closed", ColorClass.Success);
+            Alert("User report closed", ColorClass.Success);
         }
         else
         {
@@ -88,7 +69,7 @@ public class ArticleReportController : CrudController<ArticleReport>
 
             if (success)
             {
-                Alert("Articles approved", ColorClass.Success);
+                Alert("Users approved", ColorClass.Success);
             }
             else
             {
@@ -100,12 +81,12 @@ public class ArticleReportController : CrudController<ArticleReport>
         return nameof(Closed);
     }
 
-    public void CreateClosedArticleReportsLink()
+    public void CreateClosedUsersLink()
     {
         GetOrCreatePageActionButtonsList().Add(new PageActionButton
         {
             AreaName = "Admin",
-            ControllerName = "ArticleReport",
+            ControllerName = "UserReport",
             ActionName = "Closed",
             Content = "Closed Reports",
             IsLink = true,

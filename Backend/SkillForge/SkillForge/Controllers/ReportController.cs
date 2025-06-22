@@ -4,7 +4,6 @@ using SkillForge.Areas.Admin.Services;
 
 namespace SkillForge.Controllers;
 
-[Authorize(AuthenticationSchemes = "FrontendCookie")]
 public class ReportController : ApiController
 {
     private readonly IReportService service;

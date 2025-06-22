@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SkillForge.Areas.Admin.Models.DTOs;
+using SkillForge.Areas.Admin.Models;
 using SkillForge.Areas.Admin.Services;
 using SkillForge.Data;
 using SkillForge.Models.Database;
@@ -16,6 +18,40 @@ public class UserRepository : CrudRepository<User>, IUserRepository
         IEntitySearchService searchService)
         : base(db, filterService, sortService, searchService)
     {
+    }
+
+    public override Task<PaginatedList<User>> List(ListingModel listingModel, Func<IQueryable<User>, IQueryable<User>>? queryCallback = null)
+    {
+        return base.List(listingModel, query =>
+        {
+            query = query
+                .Include(e => e.Suspensions)
+                .Where(e => !e.Suspensions!.Any(e => DateTime.Now < e.CreatedAt!.Value.AddDays(e.DurationDays)));
+
+            if (queryCallback != null)
+            {
+                query = queryCallback.Invoke(query);
+            }
+
+            return query;
+        });
+    }
+
+    public Task<PaginatedList<User>> ListSuspended(ListingModel listingModel, Func<IQueryable<User>, IQueryable<User>>? queryCallback = null)
+    {
+        return base.List(listingModel, query =>
+        {
+            query = query
+                .Include(e => e.Suspensions)
+                .Where(e => e.Suspensions!.Any(e => DateTime.Now < e.CreatedAt!.Value.AddDays(e.DurationDays)));
+
+            if (queryCallback != null)
+            {
+                query = queryCallback.Invoke(query);
+            }
+
+            return query;
+        });
     }
 
     public Task<User?> GetByName(string name)
@@ -120,5 +156,37 @@ public class UserRepository : CrudRepository<User>, IUserRepository
             .Skip(batchIndex * batchSize)
             .Take(batchSize)
             .ToListAsync();
+    }
+
+    public Task<List<AccountSuspension>> GetSuspensions(int id)
+    {
+        return db.AccountSuspensions
+            .Include(e => e.Moderator)
+            .Where(e => e.UserId == id)
+            .ToListAsync();
+    }
+
+    public Task<bool> IsSuspended(int id)
+    {
+        return db.AccountSuspensions
+            .AnyAsync(e =>
+                e.UserId == id
+                &&
+                DateTime.Now < e.CreatedAt!.Value.AddDays(e.DurationDays));
+    }
+
+    public async Task Suspend(int id, Violation reason, byte durationDays, int moderatorId)
+    {
+        AccountSuspension suspension = new()
+        {
+            UserId = id,
+            DurationDays = durationDays,
+            ModeratorId = moderatorId,
+            Reason = reason,
+        };
+
+        db.AccountSuspensions.Add(suspension);
+
+        await db.SaveChangesAsync();
     }
 }

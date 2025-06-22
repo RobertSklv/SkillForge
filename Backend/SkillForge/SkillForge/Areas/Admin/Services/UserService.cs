@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SkillForge.Areas.Admin.Models.DTOs;
+using SkillForge.Areas.Admin.Models;
 using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Exceptions;
 using SkillForge.Models.Database;
@@ -6,6 +8,7 @@ using SkillForge.Models.DTOs.Article;
 using SkillForge.Models.DTOs.Tag;
 using SkillForge.Models.DTOs.User;
 using SkillForge.Services;
+using SkillForge.Areas.Admin.Models.Components.Grid;
 
 namespace SkillForge.Areas.Admin.Services;
 
@@ -14,22 +17,43 @@ public class UserService : CrudService<User>, IUserService
     private readonly IUserRepository repository;
     private readonly IFrontendService frontendService;
     private readonly IUserFeedService userFeedService;
-    private readonly IUserAuthService userAuthService;
     private readonly IAuthService authService;
 
     public UserService(
         IUserRepository repository,
         IFrontendService frontendService,
         IUserFeedService userFeedService,
-        IUserAuthService userAuthService,
         IAuthService authService)
         : base(repository)
     {
         this.repository = repository;
         this.frontendService = frontendService;
         this.userFeedService = userFeedService;
-        this.userAuthService = userAuthService;
         this.authService = authService;
+    }
+
+    public override Table<User> CreateEditRowAction(Table<User> table)
+    {
+        return table.AddRowAction("View");
+    }
+
+    public async Task<ListingModel<User>> CreateSuspendedAccountsListing(ListingModel listingQuery)
+    {
+        ListingModel<User> model = new();
+        model = InitializeListingModel(model, listingQuery);
+        model.ActionName = "Suspended";
+
+        PaginatedList<User> items = await repository.ListSuspended(model);
+
+        model.Table = new Table<User>(model, items)
+            .AddRowAction("View")
+            .SetAdjustablePageSize(true)
+            .SetFilterable(true)
+            .SetOrderable(true)
+            .SetSearchable(true)
+            .AddPagination(true);
+
+        return model;
     }
 
     public Task<User?> GetByName(string name)
@@ -201,5 +225,25 @@ public class UserService : CrudService<User>, IUserService
             LatestTagFollowings = latestTagFollowings,
             TopArticles = topArticles,
         };
+    }
+
+    public Task<List<AccountSuspension>> GetSuspensions(int id)
+    {
+        return repository.GetSuspensions(id);
+    }
+
+    public Task<bool> IsSuspended(int id)
+    {
+        return repository.IsSuspended(id);
+    }
+
+    public Task Suspend(int id, Violation reason, byte durationDays, int moderatorId)
+    {
+        return repository.Suspend(id, reason, durationDays, moderatorId);
+    }
+
+    public Task Suspend(int id, UserReport report, byte durationDays, int moderatorId)
+    {
+        return Suspend(id, report.Reason, durationDays, moderatorId);
     }
 }

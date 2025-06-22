@@ -7,6 +7,8 @@ using SkillForge.Services;
 using SkillForge.Models.DTOs.Search;
 using SkillForge.Exceptions;
 using SkillForge.Models.DTOs.User;
+using Microsoft.AspNetCore.Authentication;
+using SkillForge.Models.Database;
 
 namespace SkillForge.Controllers;
 
@@ -15,12 +17,18 @@ public class ArticleController : ApiController
     private readonly IArticleService service;
     private readonly ICategoryService categoryService;
     private readonly IUserFeedService userFeedService;
+    private readonly IUserService userService;
 
-    public ArticleController(IArticleService service, ICategoryService categoryService, IUserFeedService userFeedService)
+    public ArticleController(
+        IArticleService service,
+        ICategoryService categoryService,
+        IUserFeedService userFeedService,
+        IUserService userService)
     {
         this.service = service;
         this.categoryService = categoryService;
         this.userFeedService = userFeedService;
+        this.userService = userService;
     }
 
     [Authorize(AuthenticationSchemes = "FrontendCookie")]
@@ -30,6 +38,11 @@ public class ArticleController : ApiController
         if (!TryGetUserId(out int? userId))
         {
             throw new Exception("Server error.");
+        }
+
+        if (await userService.IsSuspended((int)userId))
+        {
+            return BadRequest("Your account is temporarily suspended");
         }
 
         if (!service.ValidateTagNames(form.Tags, nameof(form.Tags), ModelState))
@@ -89,6 +102,11 @@ public class ArticleController : ApiController
 
         TryGetUserId(out int? userId);
 
+        if (userId != null && await userService.IsSuspended((int)userId))
+        {
+            return BadRequest("Your account is temporarily suspended");
+        }
+
         cards = await userFeedService.GetLatestArticles(userId, batchIndex, batchSize);
 
         return Ok(cards);
@@ -103,6 +121,11 @@ public class ArticleController : ApiController
 
         TryGetUserId(out int? userId);
 
+        if (userId != null && await userService.IsSuspended((int)userId))
+        {
+            return BadRequest("Your account is temporarily suspended");
+        }
+
         cards = await userFeedService.GetLatestArticlesByTag(tag, userId, batchIndex, batchSize);
 
         return Ok(cards);
@@ -116,6 +139,11 @@ public class ArticleController : ApiController
         List<ArticleCard> cards;
 
         TryGetUserId(out int? userId);
+
+        if (userId != null && await userService.IsSuspended((int)userId))
+        {
+            return BadRequest("Your account is temporarily suspended");
+        }
 
         cards = await userFeedService.GetLatestArticlesByAuthor(authorName, userId, batchIndex, batchSize);
 
@@ -150,9 +178,14 @@ public class ArticleController : ApiController
 
         try
         {
-            if (TryGetUserId(out int? _))
+            if (TryGetUserId(out int? userId))
             {
-                model = await service.View(UserId, id);
+                if (await userService.IsSuspended((int)userId))
+                {
+                    return BadRequest("Your account is temporarily suspended");
+                }
+
+                model = await service.View(UserId, (int)userId);
             }
             else
             {
@@ -172,6 +205,11 @@ public class ArticleController : ApiController
     [Route("/Api/Article/Rate/{id}")]
     public async Task<IActionResult> Rate([FromRoute] int id, [FromBody] UserRatingData rate)
     {
+        if (await userService.IsSuspended(UserId))
+        {
+            return BadRequest("Your account is temporarily suspended");
+        }
+
         await service.Rate(UserId, id, rate);
 
         return Ok();
@@ -185,6 +223,11 @@ public class ArticleController : ApiController
     {
         TryGetUserId(out int? userId);
 
+        if (userId != null && await userService.IsSuspended((int)userId))
+        {
+            return BadRequest("Your account is temporarily suspended");
+        }
+
         List<UserListItem> items = await service.GetRating(id, userId, batchIndex, batchSize, positive: true);
 
         return Ok(items);
@@ -197,6 +240,11 @@ public class ArticleController : ApiController
     public async Task<IActionResult> NegativeRates([FromRoute] int id, [FromQuery] int batchIndex, [FromQuery] int batchSize)
     {
         TryGetUserId(out int? userId);
+
+        if (userId != null && await userService.IsSuspended((int)userId))
+        {
+            return BadRequest("Your account is temporarily suspended");
+        }
 
         List<UserListItem> items = await service.GetRating(id, userId, batchIndex, batchSize, positive: false);
 

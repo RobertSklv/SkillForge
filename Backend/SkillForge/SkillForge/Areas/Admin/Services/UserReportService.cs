@@ -5,29 +5,30 @@ using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Models.Database;
 using SkillForge.Models.DTOs.Report;
 using SkillForge.Areas.Admin.Models.Components.Common;
+using SkillForge.Exceptions;
 
 namespace SkillForge.Areas.Admin.Services;
 
-public class CommentReportService : CrudService<CommentReport>, ICommentReportService
+public class UserReportService : CrudService<UserReport>, IUserReportService
 {
-    private readonly ICommentReportRepository repository;
+    private readonly IUserReportRepository repository;
     private readonly IUserService userService;
 
-    public CommentReportService(ICommentReportRepository repository, IUserService userService)
+    public UserReportService(IUserReportRepository repository, IUserService userService)
         : base(repository)
     {
         this.repository = repository;
         this.userService = userService;
     }
 
-    public override Table<CommentReport> CreateEditRowAction(Table<CommentReport> table)
+    public override Table<UserReport> CreateEditRowAction(Table<UserReport> table)
     {
         // Creates a View action instead of Edit.
 
         return table.AddRowAction("View");
     }
 
-    public override Table<CommentReport> CreateDeleteRowAction(Table<CommentReport> table)
+    public override Table<UserReport> CreateDeleteRowAction(Table<UserReport> table)
     {
         // Creates a Close action instead of Delete.
 
@@ -37,22 +38,22 @@ public class CommentReportService : CrudService<CommentReport>, ICommentReportSe
         });
     }
 
-    public override async Task<Table<CommentReport>> CreateListingTable(ListingModel<CommentReport> listingModel, PaginatedList<CommentReport> items)
+    public override async Task<Table<UserReport>> CreateListingTable(ListingModel<UserReport> listingModel, PaginatedList<UserReport> items)
     {
         return (await base.CreateListingTable(listingModel, items))
-            .SetSelectableOptionsSource(nameof(CommentReport.Reporter), await userService.GetAll())
+            .SetSelectableOptionsSource(nameof(UserReport.Reporter), await userService.GetAll())
             .AddMassAction("MassClose", "Close selected");
     }
 
-    public async Task<ListingModel<CommentReport>> CreateClosedReportsListing(ListingModel listingQuery)
+    public async Task<ListingModel<UserReport>> CreateClosedReportsListing(ListingModel listingQuery)
     {
-        ListingModel<CommentReport> model = new();
+        ListingModel<UserReport> model = new();
         model = InitializeListingModel(model, listingQuery);
         model.ActionName = "Closed";
 
-        PaginatedList<CommentReport> items = await repository.ListClosed(model);
+        PaginatedList<UserReport> items = await repository.ListClosed(model);
 
-        model.Table = new Table<CommentReport>(model, items)
+        model.Table = new Table<UserReport>(model, items)
             .AddRowAction("View")
             .SetAdjustablePageSize(true)
             .SetFilterable(true)
@@ -65,11 +66,13 @@ public class CommentReportService : CrudService<CommentReport>, ICommentReportSe
 
     public async Task Create(int userId, ReportCreateFormData form)
     {
-        if (form.Id == null) throw new ArgumentException("The Id field is required");
+        if (form.Name == null) throw new ArgumentException("The Name field is required");
 
-        CommentReport entity = new()
+        User user = await userService.GetByName(form.Name) ?? throw new RecordNotFoundException($"User not found.");
+
+        UserReport entity = new()
         {
-            CommentId = (int)form.Id,
+            ReportedUserId = user.Id,
             Reason = form.Reason,
             Message = form.Message,
             ReporterId = userId,

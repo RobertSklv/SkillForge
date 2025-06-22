@@ -7,11 +7,11 @@ using SkillForge.Models.Database;
 
 namespace SkillForge.Areas.Admin.Repositories;
 
-public class CommentReportRepository : CrudRepository<CommentReport>, ICommentReportRepository
+public class UserReportRepository : CrudRepository<UserReport>, IUserReportRepository
 {
-    public override DbSet<CommentReport> DbSet => db.CommentReports;
+    public override DbSet<UserReport> DbSet => db.UserReports;
 
-    public CommentReportRepository(
+    public UserReportRepository(
         AppDbContext db,
         IEntityFilterService filterService,
         IEntitySortService sortService,
@@ -20,18 +20,18 @@ public class CommentReportRepository : CrudRepository<CommentReport>, ICommentRe
     {
     }
 
-    public override IQueryable<CommentReport> GetIncludes(IQueryable<CommentReport> query)
+    public override IQueryable<UserReport> GetIncludes(IQueryable<UserReport> query)
     {
         return base.GetIncludes(query)
             .Include(e => e.Reporter)
-            .Include(e => e.Comment);
+            .Include(e => e.ReportedUser);
     }
 
-    public override Task<PaginatedList<CommentReport>> List(ListingModel listingModel, Func<IQueryable<CommentReport>, IQueryable<CommentReport>>? queryCallback = null)
+    public override Task<PaginatedList<UserReport>> List(ListingModel listingModel, Func<IQueryable<UserReport>, IQueryable<UserReport>>? queryCallback = null)
     {
         return base.List(listingModel, query =>
         {
-            // List only open comment reports by default.
+            // List only open user reports by default.
             query = query.Where(e => !e.IsClosed);
 
             if (queryCallback != null)
@@ -43,7 +43,7 @@ public class CommentReportRepository : CrudRepository<CommentReport>, ICommentRe
         });
     }
 
-    public Task<PaginatedList<CommentReport>> ListClosed(ListingModel listingModel, Func<IQueryable<CommentReport>, IQueryable<CommentReport>>? queryCallback = null)
+    public Task<PaginatedList<UserReport>> ListClosed(ListingModel listingModel, Func<IQueryable<UserReport>, IQueryable<UserReport>>? queryCallback = null)
     {
         return base.List(listingModel, query =>
         {
@@ -58,7 +58,7 @@ public class CommentReportRepository : CrudRepository<CommentReport>, ICommentRe
         });
     }
 
-    public Task<int> Close(CommentReport report)
+    public Task<int> Close(UserReport report)
     {
         report.IsClosed = true;
 
@@ -67,14 +67,14 @@ public class CommentReportRepository : CrudRepository<CommentReport>, ICommentRe
 
     public async Task<int> Close(int id)
     {
-        CommentReport report = await GetStrict(id);
+        UserReport report = await GetStrict(id);
 
         return await Close(report);
     }
 
     public async Task<int> MassClose(List<int> ids)
     {
-        List<CommentReport> reports = await GetByIds(ids);
+        List<UserReport> reports = await GetByIds(ids);
 
         reports.ForEach(r => r.IsClosed = true);
 

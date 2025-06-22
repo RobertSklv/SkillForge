@@ -35,6 +35,7 @@
 	import FollowButton from '$components/button/FollowButton.svelte';
 	import OutOfArticlesBlock from '$components/article/OutOfArticlesBlock.svelte';
 	import Icon from '$components/icon/Icon.svelte';
+	import ReportModal from '$components/report/ReportModal.svelte';
 
 	const ARTICLE_BATCH_SIZE: number = 4;
 	const FOLLOW_LIST_BATCH_SIZE: number = 15;
@@ -47,6 +48,7 @@
 
 	let backendData = $state<UserPageData>(data);
 	let isAvatarModalOpen = $state<boolean>(false);
+	let showReportModal = $state<boolean>(false);
 
 	$effect(() => {
 		if ($page.params.name !== backendData?.Name) {
@@ -101,17 +103,20 @@
 					{#snippet buttonSnippet()}
 						<Icon type="three-dots-vertical" />
 					{/snippet}
-					{#if $currentUserStore && $currentUserStore.Name == backendData.Name}
-						<DropdownItem href="/account">
-							<Icon type="pencil-square" />
-							Edit
-						</DropdownItem>
-						<DropdownDivider />
+					{#if $currentUserStore}
+						{#if $currentUserStore.Name == backendData.Name}
+							<DropdownItem href="/account">
+								<Icon type="pencil-square" />
+								Edit
+							</DropdownItem>
+							<DropdownDivider />
+						{:else}
+							<DropdownItem type="button" onclick={() => (showReportModal = true)}>
+								<Icon type="exclamation-triangle" />
+								Report
+							</DropdownItem>
+						{/if}
 					{/if}
-					<DropdownItem href="/">
-						<Icon type="exclamation-triangle" />
-						Report
-					</DropdownItem>
 				</Dropdown>
 			</div>
 		</div>
@@ -257,6 +262,8 @@
 		</div>
 	{/snippet}
 </ThreeColumns>
+
+<ReportModal entityName={backendData.Name} action="/UserReport/Create" bind:show={showReportModal} />
 
 {@html `<script type="application/ld+json">
 	${JSON.stringify({

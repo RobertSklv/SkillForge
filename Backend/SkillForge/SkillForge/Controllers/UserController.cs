@@ -181,6 +181,13 @@ public class UserController : ApiController
             }
             else
             {
+                if (await service.IsSuspended(user.Id))
+                {
+                    await HttpContext.SignOutAsync("FrontendCookie");
+
+                    return BadRequest("Your account is temporarily suspended");
+                }
+
                 return Ok(frontendService.GetUserInfo(user));
             }
         }
@@ -253,6 +260,11 @@ public class UserController : ApiController
         if (user == null)
         {
             return ValidationProblem("Invalid credentials.");
+        }
+
+        if (await service.IsSuspended(user.Id))
+        {
+            return ValidationProblem("Your account is temporarily suspended");
         }
 
         await AttemptAuthenticate(user);

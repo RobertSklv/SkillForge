@@ -4,28 +4,30 @@
 	import Modal from '$components/modal/Modal.svelte';
 	import ModalHeader from '$components/modal/ModalHeader.svelte';
 	import { addToast } from '$lib/stores/toastStore';
-	import type ReportFormOptions from '$lib/types/ReportFormOptions';
 	import type ReportFormData from '$lib/types/ReportFormData';
 	import { writable } from 'svelte/store';
 	import RadioGroup from '$components/form/RadioGroup.svelte';
 	import RadioField from '$components/form/RadioField.svelte';
 	import Button from '$components/button/Button.svelte';
-	import { onMount } from 'svelte';
-	import { currentUserStore } from '$lib/stores/currentUserStore';
-	import { getReportFormOptions } from '$lib/api/client';
+	import { reportFormOptionsStore } from '$lib/stores/reportFormOptionsStore';
 
 	interface Props {
-		entityId: number;
+		entityId?: number;
+		entityName?: string;
 		action: string;
 		show: boolean;
 	}
 
-	let { entityId, action, show = $bindable<boolean>() }: Props = $props();
-
-	let formOptions = $state<ReportFormOptions>();
+	let {
+		entityId,
+		entityName,
+		action,
+		show = $bindable<boolean>()
+	}: Props = $props();
 
 	let formData = writable<ReportFormData>({
 		Id: entityId,
+		Name: entityName,
 		Reason: 0
 	});
 
@@ -33,12 +35,6 @@
 		addToast('Report submitted successfully.', 'success');
 		show = false;
 	}
-
-	onMount(async () => {
-		if ($currentUserStore) {
-			formOptions = await getReportFormOptions();
-		}
-	});
 </script>
 
 <Modal bind:show verticallyCentered>
@@ -46,11 +42,11 @@
 		<ModalHeader title="Report article" />
 	{/snippet}
 
-	{#if formOptions}
+	{#if $reportFormOptionsStore}
 		<div class="px-4">
 			<Form {action} formData={$formData} {onSuccess} resetMode="onsuccess">
 				<RadioGroup name="Reason">
-					{#each formOptions.ViolationOptions as o}
+					{#each $reportFormOptionsStore.ViolationOptions as o}
 						<RadioField
 							id="Reason-{o.Value}"
 							name="Reason"

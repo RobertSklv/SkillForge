@@ -36,7 +36,7 @@ public class User : BaseEntity
     [MaxLength(16)]
     public byte[] PasswordHashSalt { get; set; }
 
-    [TableColumn]
+    [TableColumn(Format = "dd.MM.yyyy")]
     [Display(Name = "Date of birth")]
     public DateTime? DateOfBirth { get; set; }
 
@@ -61,4 +61,7 @@ public class User : BaseEntity
     public int ArticlesCount { get; set; }
 
     public bool IsSuspended => (Suspensions ?? throw new Exception("Suspensions not loaded")).Any(s => s.IsActive);
+
+    public AccountSuspension? ActiveSuspension => (Suspensions ?? throw new Exception("Suspensions not loaded"))
+        .FirstOrDefault(s => s.IsActive);
 }

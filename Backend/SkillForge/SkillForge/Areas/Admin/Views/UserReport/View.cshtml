@@ -1,0 +1,42 @@
+﻿@using SkillForge.Models.Database
+
+@model UserReport
+
+@{
+    Layout = "_AdminPageLayout";
+    ViewData["PageHeading"] = "User Report #" + Model.Id;
+    ViewData["Title"] = ViewData["PageHeading"];
+}
+
+<partial name="_View" model="@Model" />
+
+@if (!Model.IsClosed)
+{
+    <form asp-action="Close" asp-route-id="@Model.Id">
+        <button type="submit" class="btn btn-lg btn-primary mt-4 px-4">Close report</button>
+    </form>
+
+    <div class="card mt-5">
+        <div class="card-body">
+            <div class="card-title mb-4">
+                <h2>Suspend</h2>
+            </div>
+            <form asp-controller="User" asp-action="SuspendUser" method="post" class="d-flex gap-5">
+                <input type="hidden" name="UserId" value="@Model.ReportedUserId" />
+                <input type="hidden" name="Violation" value="@Model.Reason" />
+
+                <label for="DurationDays">Duration (days)</label>
+
+                <select id="DurationDays" name="DurationDays" class="form-select w-auto">
+                    <option value="1">1</option>
+                    <option value="3">3</option>
+                    <option value="7">7</option>
+                    <option value="30">30</option>
+                    <option value="180">180</option>
+                </select>
+
+                <button type="submit" class="btn btn-lg btn-danger px-4">Suspend Account</button>
+            </form>
+        </div>
+    </div>
+}

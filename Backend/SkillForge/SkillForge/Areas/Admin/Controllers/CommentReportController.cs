@@ -26,7 +26,7 @@ public class CommentReportController : CrudController<CommentReport>
 
     public override Task<IActionResult> Index([FromQuery] ListingModel listingModel)
     {
-        CreateClosedCommentsLink();
+        CreateClosedCommentReportsLink();
 
         return base.Index(listingModel);
     }
@@ -42,11 +42,11 @@ public class CommentReportController : CrudController<CommentReport>
 
     [Authorize(Roles = "admin, mod")]
     [Route("/Admin/CommentReport/DeleteComment/{id}")]
-    public async Task<IActionResult> DeleteComment([FromRoute] int id, [FromForm] int articleReportId)
+    public async Task<IActionResult> DeleteComment([FromRoute] int id, [FromForm] int commentReportId)
     {
         try
         {
-            await commentService.SoftDelete(id, articleReportId);
+            await commentService.SoftDelete(id, commentReportId);
 
             Alert("Comment deleted", ColorClass.Success);
         }
@@ -99,7 +99,7 @@ public class CommentReportController : CrudController<CommentReport>
         return nameof(Closed);
     }
 
-    public void CreateClosedCommentsLink()
+    public void CreateClosedCommentReportsLink()
     {
         GetOrCreatePageActionButtonsList().Add(new PageActionButton
         {

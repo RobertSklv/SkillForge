@@ -85,6 +85,8 @@ builder.Services.AddScoped<IArticleReportService, ArticleReportService>();
 builder.Services.AddScoped<IArticleReportRepository, ArticleReportRepository>();
 builder.Services.AddScoped<ICommentReportService, CommentReportService>();
 builder.Services.AddScoped<ICommentReportRepository, CommentReportRepository>();
+builder.Services.AddScoped<IUserReportService, UserReportService>();
+builder.Services.AddScoped<IUserReportRepository, UserReportRepository>();
 builder.Services.AddScoped<IArticleTagMtmRepository, ArticleTagMtmRepository>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();

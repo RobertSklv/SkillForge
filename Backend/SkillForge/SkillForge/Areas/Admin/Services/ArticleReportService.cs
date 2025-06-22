@@ -65,9 +65,11 @@ public class ArticleReportService : CrudService<ArticleReport>, IArticleReportSe
 
     public async Task Create(int userId, ReportCreateFormData form)
     {
+        if (form.Id == null) throw new ArgumentException("The Id field is required");
+
         ArticleReport entity = new()
         {
-            ArticleId = form.Id,
+            ArticleId = (int)form.Id,
             Reason = form.Reason,
             Message = form.Message,
             ReporterId = userId,

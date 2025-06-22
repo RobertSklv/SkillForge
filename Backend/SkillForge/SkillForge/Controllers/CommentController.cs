@@ -47,6 +47,11 @@ public class CommentController : ApiController
     {
         TryGetUserId(out int? userId);
 
+        if (userId != null && await userService.IsSuspended((int)userId))
+        {
+            return BadRequest("Your account is temporarily suspended");
+        }
+
         List<UserListItem> items = await service.GetRating(id, userId, batchIndex, batchSize, positive: true);
 
         return Ok(items);
@@ -59,6 +64,11 @@ public class CommentController : ApiController
     public async Task<IActionResult> NegativeRates([FromRoute] int id, [FromQuery] int batchIndex, [FromQuery] int batchSize)
     {
         TryGetUserId(out int? userId);
+
+        if (userId != null && await userService.IsSuspended((int)userId))
+        {
+            return BadRequest("Your account is temporarily suspended");
+        }
 
         List<UserListItem> items = await service.GetRating(id, userId, batchIndex, batchSize, positive: false);
 

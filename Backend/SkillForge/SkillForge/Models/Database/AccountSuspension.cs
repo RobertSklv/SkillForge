@@ -22,5 +22,5 @@ public class AccountSuspension : BaseEntity
     public int ModeratorId { get; set; }
 
     [TableColumn(Name = "Active")]
-    public bool IsActive => DateTime.Compare(DateTime.Now, (DateTime)CreatedAt! + TimeSpan.FromDays(DurationDays)) < 0;
+    public bool IsActive => DateTime.Now < CreatedAt!.Value.AddDays(DurationDays);
 }

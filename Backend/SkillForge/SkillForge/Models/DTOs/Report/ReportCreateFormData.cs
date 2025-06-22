@@ -4,7 +4,9 @@ namespace SkillForge.Models.DTOs.Report;
 
 public class ReportCreateFormData
 {
-    public int Id { get; set; }
+    public int? Id { get; set; }
+
+    public string? Name { get; set; }
 
     public Violation Reason { get; set; }
 

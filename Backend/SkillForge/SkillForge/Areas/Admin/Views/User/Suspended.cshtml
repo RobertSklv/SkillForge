@@ -1,0 +1,12 @@
+﻿@using SkillForge.Areas.Admin.Models.DTOs
+@using SkillForge.Models.Database
+
+@model ListingModel<User>
+
+@{
+    Layout = "_AdminPageLayout";
+    ViewData["Title"] = "Suspended User Accounts";
+    ViewData["PageHeading"] = "Suspended User Accounts";
+}
+
+<partial name="_Table" model="@Model.Table" />

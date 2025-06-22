@@ -1,0 +1,23 @@
+﻿@using SkillForge.Models.Database
+
+@model User
+
+@{
+    Layout = "_AdminPageLayout";
+    ViewData["PageHeading"] = "User " + Model.Name;
+    ViewData["Title"] = ViewData["PageHeading"];
+
+    bool approvalMode = ViewData["ApprovalMode"] as bool? ?? false;
+}
+
+@if (Model.ActiveSuspension != null)
+{
+    <div class="alert alert-danger">
+        <h2 class="h4">This account is suspended.</h2><br />
+        Reason: @Model.ActiveSuspension.Reason<br />
+        Expires: @($"{Model.ActiveSuspension.CreatedAt!.Value.AddDays(Model.ActiveSuspension.DurationDays):yyyy-MM-dd HH:mm:ss}")<br />
+        Suspended by: @Model.ActiveSuspension.Moderator?.Name
+    </div>
+}
+
+<partial name="_View" model="@Model" />

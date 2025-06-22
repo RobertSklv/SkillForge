@@ -11,6 +11,8 @@
 	import ToastContainer from "$components/toast-container/ToastContainer.svelte";
 	import { getFrontendUrl } from "$lib/util";
 	import type UserInfo from "$lib/types/UserInfo";
+	import type ReportFormOptions from "$lib/types/ReportFormOptions";
+	import { reportFormOptionsStore } from "$lib/stores/reportFormOptionsStore";
 
     onNavigate((navigation) => {
         if (!document.startViewTransition) return;
@@ -27,7 +29,10 @@
     });
 
     interface Props {
-        data?: UserInfo,
+        data: {
+            currentUserInfo: UserInfo | undefined,
+            reportFormOptions: ReportFormOptions
+        },
         children: Snippet
     }
 
@@ -36,11 +41,12 @@
         children
     }: Props = $props();
     
-    if (data && Object.keys(data).length === 0) {
-        data = undefined;
+    if (data && data.currentUserInfo && Object.keys(data.currentUserInfo).length === 0) {
+        data.currentUserInfo = undefined;
     }
     
-    currentUserStore.set(data);
+    currentUserStore.set(data.currentUserInfo);
+    reportFormOptionsStore.set(data.reportFormOptions);
 </script>
 
 <Header />

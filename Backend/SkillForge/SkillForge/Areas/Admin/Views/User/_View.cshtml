@@ -1,0 +1,55 @@
+﻿@using SkillForge.Models.Database
+
+@model User
+
+<div class="row mb-4">
+    <div class="col-12 col-lg-4">
+        <span>Avatar:</span>
+    </div>
+    <div class="col-12 col-lg-8">
+        @if (Model.AvatarPath != null)
+        {
+            <img src="@Model.AvatarPath" alt="Avatar" class="w-25" />
+        }
+        else
+        {
+            <span>No avatar.</span>
+        }
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12 col-lg-4">
+        <span>Username:</span>
+    </div>
+    <div class="col-12 col-lg-8">
+        <span>@Model.Name</span>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12 col-lg-4">
+        <span>E-mail:</span>
+    </div>
+    <div class="col-12 col-lg-8">
+        <a href="mailto:@(Model.Email)">@Model.Email</a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12 col-lg-4">
+        <span>Bio:</span>
+    </div>
+    <div class="col-12 col-lg-8">
+        <span>@Model.Bio</span>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12 col-lg-4">
+        <span>Birthday:</span>
+    </div>
+    <div class="col-12 col-lg-8">
+        <span>@($"{Model.DateOfBirth:dd-MM-yyyy}")</span>
+    </div>
+</div>
