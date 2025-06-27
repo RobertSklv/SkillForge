@@ -58,6 +58,8 @@ npm install
 npm run dev -- --open
 ```
 
+You might want to run `$env:NODE_TLS_REJECT_UNAUTHORIZED=0` before opening the project in browser though, since the backend and frontend use different domains with this guide.
+
 ### 3. Install SQL Server
 
 - Download SQL Server from the [official website](https://www.microsoft.com/en/sql-server/sql-server-downloads) (Choose the free Express edition)
