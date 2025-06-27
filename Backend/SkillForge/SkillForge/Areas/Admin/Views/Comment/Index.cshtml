@@ -1,0 +1,12 @@
+﻿@using SkillForge.Areas.Admin.Models.DTOs
+@using SkillForge.Models.Database
+
+@model ListingModel<Comment>
+
+@{
+    Layout = "_AdminPageLayout";
+    ViewData["Title"] = "All Comments";
+    ViewData["PageHeading"] = "All Comments";
+}
+
+<partial name="_Table" model="@Model.Table" />

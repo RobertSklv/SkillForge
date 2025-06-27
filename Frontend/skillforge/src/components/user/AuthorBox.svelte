@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Icon from "$components/icon/Icon.svelte";
 	import { formatRelativeTime, getImagePath } from "$lib/util";
 	import moment from "moment";
 
@@ -6,6 +7,7 @@
         name: string,
         avatarImage: string | null | undefined,
         date: string,
+        editedDate?: string,
         mod?: string,
         size?: 'normal' | 'small',
         indent?: boolean
@@ -15,6 +17,7 @@
         name,
         avatarImage,
         date,
+        editedDate,
         mod,
         size = 'normal',
         indent = true,
@@ -35,6 +38,15 @@
             </time>
             <span class="text-muted ms-2">({formatRelativeTime(date)})</span>
         </div>
+        {#if editedDate}
+            <div class="small text-info-emphasis">
+                <Icon type="pencil-fill" />
+                <time datetime={moment(editedDate).format('YYYY-MM-DD HH:mm')}>
+                    {moment(editedDate).format('ddd, D MMMM, YYYY HH:mm')}
+                </time>
+                <span class="ms-2">({formatRelativeTime(editedDate)})</span>
+            </div>
+        {/if}
 	</div>
 </div>
 

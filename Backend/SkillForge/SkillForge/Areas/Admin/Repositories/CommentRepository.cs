@@ -1,6 +1,8 @@
 ﻿using Ganss.Xss;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using SkillForge.Areas.Admin.Models.DTOs;
+using SkillForge.Areas.Admin.Models;
 using SkillForge.Areas.Admin.Services;
 using SkillForge.Data;
 using SkillForge.Models.Database;
@@ -22,6 +24,28 @@ public class CommentRepository : CrudRepository<Comment>, ICommentRepository
         : base(db, filterService, sortService, searchService)
     {
         this.commentReportRepository = commentReportRepository;
+    }
+
+    public Task<PaginatedList<Comment>> ListDeleted(ListingModel listingModel, Func<IQueryable<Comment>, IQueryable<Comment>>? queryCallback = null)
+    {
+        return base.List(listingModel, query =>
+        {
+            query = query.Where(e => e.DeleteReason != null);
+
+            if (queryCallback != null)
+            {
+                query = queryCallback.Invoke(query);
+            }
+
+            return query;
+        });
+    }
+
+    public override IQueryable<Comment> GetIncludes(IQueryable<Comment> query)
+    {
+        return base.GetIncludes(query)
+            .Include(e => e.User)
+            .Include(e => e.Article);
     }
 
     public override Task<int> Upsert(Comment entity)
@@ -65,16 +89,6 @@ public class CommentRepository : CrudRepository<Comment>, ICommentRepository
             .Skip(batchIndex * batchSize)
             .Take(batchSize)
             .ToListAsync();
-    }
-
-    public override Task<int> Delete(int id)
-    {
-        throw new InvalidOperationException($"Invalid delete method. Use {nameof(SoftDelete)} instead.");
-    }
-
-    public override Task<int> DeleteMultiple(List<int> ids)
-    {
-        throw new InvalidOperationException($"Invalid delete method. Use {nameof(SoftDelete)} instead.");
     }
 
     public Task<int> SoftDelete(Comment comment, Violation reason)

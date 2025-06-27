@@ -257,7 +257,7 @@ public class ArticleService : CrudService<Article>, IArticleService
     public async Task<ArticlePageData> View(int userId, int articleId)
     {
         Article article = await GetWithComments(articleId);
-
+        
         if (article.DeleteReason != null)
         {
             throw new RecordDeletedException("The article is deleted");

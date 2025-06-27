@@ -7,4 +7,5 @@ export default interface CommentModel {
     Content: string,
     RatingData: RatingData,
     DateWritten: string,
+    DateEdited?: string
 }

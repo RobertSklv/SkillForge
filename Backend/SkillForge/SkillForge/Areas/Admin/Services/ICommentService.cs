@@ -1,5 +1,7 @@
-﻿using SkillForge.Models.Database;
+﻿using SkillForge.Areas.Admin.Models.DTOs;
+using SkillForge.Models.Database;
 using SkillForge.Models.DTOs.Article;
+using SkillForge.Models.DTOs.Comment;
 using SkillForge.Models.DTOs.Rating;
 using SkillForge.Models.DTOs.User;
 
@@ -7,7 +9,9 @@ namespace SkillForge.Areas.Admin.Services;
 
 public interface ICommentService : ICrudService<Comment>
 {
-    Task<Comment> Add(int userId, int articleId, string content);
+    Task<ListingModel<Comment>> CreateDeletedCommentsListing(ListingModel listingQuery);
+
+    Task<CommentModel> Upsert(int userId, CommentUpsertFormData formData);
 
     Task Rate(int userId, int commentId, UserRatingData rate);
 

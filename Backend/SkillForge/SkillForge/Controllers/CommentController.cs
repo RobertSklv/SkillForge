@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillForge.Areas.Admin.Services;
+using SkillForge.Exceptions;
 using SkillForge.Models.Database;
+using SkillForge.Models.DTOs.Article;
 using SkillForge.Models.DTOs.Comment;
 using SkillForge.Models.DTOs.Rating;
 using SkillForge.Models.DTOs.User;
@@ -21,13 +23,34 @@ public class CommentController : ApiController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Add(CommentAddDTO form)
+    public async Task<IActionResult> Upsert(CommentUpsertFormData form)
     {
-        await userService.GetStrict(UserId);
+        try
+        {
+            CommentModel comment = await service.Upsert(UserId, form);
 
-        await service.Add(UserId, form.ArticleId, form.Content);
+            return Ok(comment);
+        }
+        catch (NotOwnedByUserException)
+        {
+            return Unauthorized();
+        }
+    }
 
-        return Ok();
+    [HttpDelete]
+    [Route("/Api/Comment/Delete/{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        Comment comment = await service.GetStrict(id);
+
+        if (comment.UserId != UserId)
+        {
+            return Unauthorized();
+        }
+
+        await service.Delete(id);
+
+        return Ok("Comment deleted successfully");
     }
 
     [HttpPost]

@@ -1,0 +1,11 @@
+﻿@using SkillForge.Models.Database
+
+@model Comment
+
+@{
+    Layout = "_AdminPageLayout";
+    ViewData["PageHeading"] = "Delete Comment #" + Model.Id;
+    ViewData["Title"] = ViewData["PageHeading"];
+}
+
+<partial name="_DeleteForm" model="@Model" />

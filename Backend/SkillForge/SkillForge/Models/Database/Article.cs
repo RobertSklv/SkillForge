@@ -5,6 +5,7 @@ using SkillForge.Attributes;
 
 namespace SkillForge.Models.Database;
 
+[SelectOption(LabelProperty = nameof(Title))]
 public class Article : BaseEntity
 {
     [DeleteBehavior(DeleteBehavior.NoAction)]

@@ -66,6 +66,15 @@ export async function uploadImage(file: File, type: ImageUploadType): Promise<st
 	} else throw new Error('Unsupported image type: ' + type);
 }
 
+export function deleteComment(id: number): Promise<any> {
+	return requestApi(`/Comment/Delete/${id}`, {
+		init: {
+			method: 'DELETE',
+			credentials: 'include',
+		}
+	})
+}
+
 export function rate(id: number, rate: -1 | 0 | 1, type: 'article' | 'comment') {
 	const controllers = {
 		article: 'Article',

@@ -1,9 +1,13 @@
-﻿using SkillForge.Models.Database;
+﻿using SkillForge.Areas.Admin.Models.DTOs;
+using SkillForge.Areas.Admin.Models;
+using SkillForge.Models.Database;
 
 namespace SkillForge.Areas.Admin.Repositories;
 
 public interface ICommentRepository : ICrudRepository<Comment>
 {
+    Task<PaginatedList<Comment>> ListDeleted(ListingModel listingModel, Func<IQueryable<Comment>, IQueryable<Comment>>? queryCallback = null);
+
     Task<CommentRating?> GetUserRating(int userId, int commentId);
 
     Task UpsertUserRating(CommentRating rating);

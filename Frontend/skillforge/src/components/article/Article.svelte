@@ -17,26 +17,30 @@
 	import { writable } from 'svelte/store';
 	import Icon from '$components/icon/Icon.svelte';
 	import ReportModal from '$components/report/ReportModal.svelte';
+	import type CommentFormData from '$lib/types/CommentFormData';
+	import { setContext } from 'svelte';
+	import type ArticleContext from '$lib/types/ArticleContext';
+	import { fade } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
 
 	interface Props {
 		data: ArticlePageModel;
-	}
-
-	interface CommentFormData {
-		ArticleId: number;
-		Content: string;
 	}
 
 	let { data }: Props = $props();
 
 	let commentFormData = writable<CommentFormData>({
 		ArticleId: data.ArticleId,
+		CommentId: 0,
 		Content: ''
 	});
 
 	let comments = $state<CommentModel[]>(data.Comments);
-
 	let showReportModal = $state<boolean>(false);
+
+	setContext<ArticleContext>('article', {
+		deleteComment
+	})
 
 	async function addComment() {
 		if (!$currentUserStore) {
@@ -59,6 +63,10 @@
 		};
 
 		comments.push(comment);
+	}
+
+	function deleteComment(id: number) {
+		comments = comments.filter(c => c.CommentId != id);
 	}
 </script>
 
@@ -133,8 +141,10 @@
 	</Block>
 
 	<div class="d-flex flex-column gap-3">
-		{#each comments as comment}
-			<Comment data={comment} />
+		{#each comments as comment (comment.CommentId)}
+			<div transition:fade={{ duration: 200 }} animate:flip={{ duration: 200 }}>
+				<Comment data={comment} />
+			</div>
 		{/each}
 	</div>
 
@@ -142,7 +152,7 @@
 		<Block>
 			<div class="card-body">
 				<Form
-					action="/Comment/Add"
+					action="/Comment/Upsert"
 					formData={$commentFormData}
 					onSuccess={addComment}
 					resetMode="onsuccess"

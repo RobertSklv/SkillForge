@@ -14,4 +14,6 @@ public class CommentModel
     public RatingData RatingData { get; set; }
 
     public DateTime DateWritten { get; set; }
+
+    public DateTime? DateEdited { get; set; }
 }

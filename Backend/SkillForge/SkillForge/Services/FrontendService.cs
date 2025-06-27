@@ -26,6 +26,7 @@ public class FrontendService : IFrontendService
                 UserRating = 0,
             },
             Comments = article.Comments?
+                .Where(c => c.DeleteReason == null)
                 .OrderBy(c => c.CreatedAt)
                 .Take(2)
                 .ToList()
@@ -64,7 +65,10 @@ public class FrontendService : IFrontendService
                 ThumbsDown = article.ThumbsDown,
             },
             Views = article.ViewCount,
-            Comments = article.Comments!.ConvertAll(CreateCommentModel),
+            Comments = article.Comments!
+                .Where(c => c.DeleteReason == null)
+                .ToList()
+                .ConvertAll(CreateCommentModel),
             LatestArticlesByAuthor = latestArticleByAuthor.ConvertAll(CreateTopArticleItem)
         };
     }
@@ -136,6 +140,7 @@ public class FrontendService : IFrontendService
             User = CreateUserLink(comment.User!),
             Content = comment.Content,
             DateWritten = (DateTime)comment.CreatedAt!,
+            DateEdited = comment.ContentEditedAt,
             RatingData = new RatingData
             {
                 ThumbsUp = comment.ThumbsUp,

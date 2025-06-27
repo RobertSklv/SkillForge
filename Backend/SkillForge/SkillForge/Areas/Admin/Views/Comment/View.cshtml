@@ -1,0 +1,20 @@
+﻿@using SkillForge.Models.Database
+
+@model Comment
+
+@{
+    Layout = "_AdminPageLayout";
+    ViewData["PageHeading"] = "Comment #" + Model.Id;
+    ViewData["Title"] = ViewData["PageHeading"];
+
+    bool approvalMode = ViewData["ApprovalMode"] as bool? ?? false;
+}
+
+@if (Model.DeleteReason != null)
+{
+    <div class="alert alert-danger">
+        This comment is deleted.
+    </div>
+}
+
+<partial name="_View" model="@Model" />

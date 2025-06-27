@@ -13,6 +13,7 @@
 	name={data.User.Name}
 	avatarImage={data.User.AvatarImage}
 	date={data.DateWritten}
+	editedDate={data.DateEdited}
 	size="small"
 />
 <div class="mx-5 p-3">

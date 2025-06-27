@@ -1,5 +1,11 @@
-﻿using SkillForge.Areas.Admin.Repositories;
+﻿using SkillForge.Areas.Admin.Models.Components.Grid;
+using SkillForge.Areas.Admin.Models.DTOs;
+using SkillForge.Areas.Admin.Models;
+using SkillForge.Areas.Admin.Repositories;
+using SkillForge.Exceptions;
 using SkillForge.Models.Database;
+using SkillForge.Models.DTOs.Article;
+using SkillForge.Models.DTOs.Comment;
 using SkillForge.Models.DTOs.Rating;
 using SkillForge.Models.DTOs.User;
 using SkillForge.Services;
@@ -9,29 +15,103 @@ namespace SkillForge.Areas.Admin.Services;
 public class CommentService : CrudService<Comment>, ICommentService
 {
     private readonly ICommentRepository repository;
+    private readonly IUserService userService;
     private readonly IUserFeedService userFeedService;
     private readonly ICommentReportService commentReportService;
+    private readonly IFrontendService frontendService;
+    private readonly IArticleService articleService;
 
-    public CommentService(ICommentRepository repository, IUserFeedService userFeedService, ICommentReportService commentReportService)
+    public CommentService(
+        ICommentRepository repository,
+        IUserService userService,
+        IUserFeedService userFeedService,
+        ICommentReportService commentReportService,
+        IFrontendService frontendService,
+        IArticleService articleService)
         : base(repository)
     {
         this.repository = repository;
+        this.userService = userService;
         this.userFeedService = userFeedService;
         this.commentReportService = commentReportService;
+        this.frontendService = frontendService;
+        this.articleService = articleService;
     }
 
-    public async Task<Comment> Add(int userId, int articleId, string content)
+    public override Table<Comment> CreateEditRowAction(Table<Comment> table)
     {
-        Comment comment = new()
+        // Creates a View action instead of Edit.
+
+        return table.AddRowAction("View");
+    }
+
+    public override Table<Comment> CreateDeleteRowAction(Table<Comment> table)
+    {
+        return table;
+    }
+
+    public override async Task<Table<Comment>> CreateListingTable(ListingModel<Comment> listingModel, PaginatedList<Comment> items)
+    {
+        return (await base.CreateListingTable(listingModel, items))
+            .RemoveColumn(nameof(Comment.DeleteReason))
+            .RemoveColumn(nameof(Comment.UpdatedAt))
+            .SetSelectableOptionsSource(nameof(Comment.User), await userService.GetAll())
+            .SetSelectableOptionsSource(nameof(Comment.Article), await articleService.GetAll());
+    }
+
+    public async Task<ListingModel<Comment>> CreateDeletedCommentsListing(ListingModel listingQuery)
+    {
+        ListingModel<Comment> model = new();
+        model = InitializeListingModel(model, listingQuery);
+        model.ActionName = "Deleted";
+
+        PaginatedList<Comment> items = await repository.ListDeleted(model);
+
+        model.Table = new Table<Comment>(model, items)
+            .AddRowAction("View")
+            .SetAdjustablePageSize(true)
+            .SetFilterable(true)
+            .SetOrderable(true)
+            .SetSearchable(true)
+            .AddPagination(true);
+
+        return model;
+    }
+
+    public async Task<CommentModel> Upsert(int userId, CommentUpsertFormData formData)
+    {
+        Comment? existing = await Get(formData.CommentId);
+
+        if (existing != null)
+        {
+            existing.ContentEditedAt = DateTime.Now;
+
+            if (existing.UserId != userId)
+            {
+                throw new NotOwnedByUserException("Unauthorized to edit comment");
+            }
+        }
+
+        Comment comment = existing ?? new()
         {
             UserId = userId,
-            ArticleId = articleId,
-            Content = content,
+            ArticleId = formData.ArticleId ?? throw new Exception("ArticleId parameter is required"),
         };
+
+        comment.Content = formData.Content;
 
         await Upsert(comment);
 
-        return comment;
+        CommentModel model = frontendService.CreateCommentModel(comment);
+
+        CommentRating? rating = await GetUserRating(userId, formData.CommentId);
+
+        if (rating != null)
+        {
+            model.RatingData.UserRating = rating.Rate;
+        }
+
+        return model;
     }
 
     public async Task Rate(int userId, int commentId, UserRatingData rate)
