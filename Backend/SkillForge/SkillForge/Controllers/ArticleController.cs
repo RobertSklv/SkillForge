@@ -185,7 +185,7 @@ public class ArticleController : ApiController
                     return BadRequest("Your account is temporarily suspended");
                 }
 
-                model = await service.View(UserId, (int)userId);
+                model = await service.View((int)userId, id);
             }
             else
             {
