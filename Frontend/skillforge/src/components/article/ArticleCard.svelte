@@ -33,11 +33,6 @@
 			<h2 class="card-title fw-bold">
 				<a href="/article/{data.ArticleId}" class="text-decoration-none">{data.Title}</a>
 			</h2>
-			{#if $currentUserStore}
-				<button class="bg-transparent border-0 text-primary ms-auto" aria-label="Save article">
-					<Icon type="bookmark" mod="fs-5" />
-				</button>
-			{/if}
 		</div>
 		<div class="d-flex justify-content-between">
 			<div>

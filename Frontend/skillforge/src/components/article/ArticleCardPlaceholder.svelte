@@ -16,7 +16,6 @@
 			<div class="h2 card-title fw-bold w-100">
                 <span class="placeholder col-5"></span>
             </div>
-            <span class="ms-auto text-primary placeholder col-1"></span>
 		</div>
 		<div class="d-flex justify-content-between">
 			<div class="col">

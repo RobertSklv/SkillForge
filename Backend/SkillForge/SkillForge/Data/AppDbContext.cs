@@ -20,7 +20,6 @@ public class AppDbContext : DbContext
     public DbSet<CommentRating> CommentRatings { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<User> Users { get; set; }
-    public DbSet<FavoriteArticle> FavoriteArticles { get; set; }
     public DbSet<UserFollow> UserFollows { get; set; }
     public DbSet<TagFollow> TagFollows { get; set; }
     public DbSet<Report> Reports { get; set; }
@@ -78,10 +77,6 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<ArticleTag>()
             .HasIndex(nameof(ArticleTag.ArticleId), nameof(ArticleTag.TagId))
-            .IsUnique();
-
-        modelBuilder.Entity<FavoriteArticle>()
-            .HasIndex(nameof(FavoriteArticle.UserId), nameof(FavoriteArticle.ArticleId))
             .IsUnique();
 
         modelBuilder.Entity<AdminUser>()
