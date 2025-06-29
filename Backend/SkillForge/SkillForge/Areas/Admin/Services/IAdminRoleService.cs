@@ -2,7 +2,7 @@
 
 namespace SkillForge.Areas.Admin.Services;
 
-public interface IAdminRoleService
+public interface IAdminRoleService : ICrudService<AdminRole>
 {
     Task<AdminRole> Get(string code);
 }

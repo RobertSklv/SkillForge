@@ -10,6 +10,7 @@ using SkillForge.Models.Database;
 
 namespace SkillForge.Areas.Admin.Controllers;
 
+[AdminNavMenu("users", "Users")]
 [AdminNavLink("Users", "Index", SortOrder = 1)]
 public class UserController : CrudController<User>
 {

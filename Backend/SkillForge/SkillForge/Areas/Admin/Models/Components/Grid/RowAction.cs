@@ -32,6 +32,8 @@ public class RowAction : RouteElement
 
     public string? BootstrapIconClass { get; set; }
 
+    public List<string>? UserRoles { get; set; }
+
     public RowAction SetId(string id)
     {
         Id = id;
@@ -142,6 +144,13 @@ public class RowAction : RouteElement
     public RowAction SetIcon(string? bootstrapIconClass)
     {
         BootstrapIconClass = bootstrapIconClass;
+
+        return this;
+    }
+
+    public RowAction ExclusiveToRoles(params string[] roles)
+    {
+        UserRoles = new(roles);
 
         return this;
     }

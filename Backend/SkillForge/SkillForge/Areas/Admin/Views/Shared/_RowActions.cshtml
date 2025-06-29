@@ -11,6 +11,22 @@
     <div class="d-flex justify-content-center align-items-center">
         @foreach (RowAction action in Model.Actions)
         {
+            if (action.UserRoles != null && User.Identity?.IsAuthenticated == true)
+            {
+                bool unauthorized = false;
+
+                foreach (string role in action.UserRoles)
+                {
+                    if (!User.IsInRole(role))
+                    {
+                        unauthorized = true;
+                        break;
+                    }
+                }
+
+                if (unauthorized) continue;
+            }
+
             if (!action.IsDisplayedCallback(Model.Item))
             {
                 continue;

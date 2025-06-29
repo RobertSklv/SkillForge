@@ -1,16 +1,30 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SkillForge.Areas.Admin.Models.Components.Grid;
+using SkillForge.Areas.Admin.Models.DTOs;
+using SkillForge.Areas.Admin.Models;
+using SkillForge.Areas.Admin.Services;
 using SkillForge.Data;
 using SkillForge.Models.Database;
 
 namespace SkillForge.Areas.Admin.Repositories;
 
-public class AdminUserRepository : IAdminUserRepository
+public class AdminUserRepository : CrudRepository<AdminUser>, IAdminUserRepository
 {
-    private readonly AppDbContext db;
+    public override DbSet<AdminUser> DbSet => db.AdminUsers;
 
-    public AdminUserRepository(AppDbContext db)
+    public AdminUserRepository(
+        AppDbContext db,
+        IEntityFilterService filterService,
+        IEntitySortService sortService,
+        IEntitySearchService searchService)
+        : base(db, filterService, sortService, searchService)
     {
-        this.db = db;
+    }
+
+    public override IQueryable<AdminUser> GetIncludes(IQueryable<AdminUser> query)
+    {
+        return base.GetIncludes(query)
+            .Include(e => e.Role);
     }
 
     public async Task<int> SaveUser(AdminUser user)

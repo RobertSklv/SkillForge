@@ -129,7 +129,7 @@ public abstract class CrudController<TEntity, TViewModel> : AdminController
 
             TempData.Set(OldModelTempDataKey, model);
 
-            return RedirectToAction("Create");
+            return RedirectBackToCreatePage();
         }
 
         try
@@ -142,7 +142,7 @@ public abstract class CrudController<TEntity, TViewModel> : AdminController
 
             TempData.Set(OldModelTempDataKey, model);
 
-            return RedirectToAction("Create");
+            return RedirectBackToCreatePage();
         }
 
         Alert("Record successfully created.", ColorClass.Success);
@@ -160,7 +160,7 @@ public abstract class CrudController<TEntity, TViewModel> : AdminController
 
             TempData.Set(OldModelTempDataKey, model);
 
-            return RedirectToAction("Edit", new { model.Id });
+            return RedirectBackToEditPage(model.Id);
         }
 
         try
@@ -173,12 +173,22 @@ public abstract class CrudController<TEntity, TViewModel> : AdminController
 
             TempData.Set(OldModelTempDataKey, model);
 
-            return RedirectToAction("Edit", new { model.Id });
+            return RedirectBackToEditPage(model.Id);
         }
 
         Alert("Record successfully saved.", ColorClass.Success);
 
-        return RedirectToAction("Edit", new { model.Id });
+        return RedirectBackToEditPage(model.Id);
+    }
+
+    public virtual IActionResult RedirectBackToCreatePage()
+    {
+        return RedirectToAction(nameof(Create));
+    }
+
+    public virtual IActionResult RedirectBackToEditPage(int id)
+    {
+        return RedirectToAction(nameof(Edit), new { id });
     }
 
     public virtual async Task<IActionResult> Delete(int id)

@@ -2,7 +2,7 @@
 
 namespace SkillForge.Areas.Admin.Repositories;
 
-public interface IAdminUserRepository
+public interface IAdminUserRepository : ICrudRepository<AdminUser>
 {
     Task<int> SaveUser(AdminUser user);
 

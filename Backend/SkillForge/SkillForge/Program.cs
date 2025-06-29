@@ -58,6 +58,7 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddScoped<IInstallService, InstallService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<IAdminUserRepository, AdminUserRepository>();
 builder.Services.AddScoped<IAdminAuthService, AdminAuthService>();
 builder.Services.AddScoped<IAdminRoleService, AdminRoleService>();

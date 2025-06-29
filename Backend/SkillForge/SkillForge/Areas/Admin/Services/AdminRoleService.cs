@@ -3,11 +3,12 @@ using SkillForge.Models.Database;
 
 namespace SkillForge.Areas.Admin.Services;
 
-public class AdminRoleService : IAdminRoleService
+public class AdminRoleService : CrudService<AdminRole>, IAdminRoleService
 {
     private readonly IAdminRoleRepository repository;
 
     public AdminRoleService(IAdminRoleRepository repository)
+        : base(repository)
     {
         this.repository = repository;
     }
