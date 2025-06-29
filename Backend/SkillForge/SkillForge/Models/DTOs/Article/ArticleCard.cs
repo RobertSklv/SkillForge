@@ -14,10 +14,6 @@ public class ArticleCard
 
     public string? CoverImage { get; set; }
 
-    public string CategoryName { get; set; }
-
-    public string CategoryCode { get; set; }
-
     public DateTime DatePublished { get; set; }
 
     public RatingData RatingData { get; set; }

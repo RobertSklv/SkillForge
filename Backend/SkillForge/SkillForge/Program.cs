@@ -77,8 +77,6 @@ builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<IReportService, ReportService>();
@@ -119,7 +117,6 @@ builder.Services.AddHostedService<AggregateUserFollowService>();
 builder.Services.AddHostedService<AggregateTagFollowService>();
 builder.Services.AddHostedService<AggregateTagArticleService>();
 builder.Services.AddHostedService<AggregateUserArticlesService>();
-builder.Services.AddHostedService<AggregateCategoryArticlesService>();
 builder.Services.AddHostedService<GenerateXmlSitemapService>();
 
 var app = builder.Build();

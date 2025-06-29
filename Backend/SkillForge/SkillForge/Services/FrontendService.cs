@@ -16,8 +16,6 @@ public class FrontendService : IFrontendService
             ArticleId = article.Id,
             Title = article.Title,
             CoverImage = article.Image,
-            CategoryCode = article.Category!.Code,
-            CategoryName = article.Category.DisplayedName,
             DatePublished = (DateTime)article.CreatedAt!,
             RatingData = new RatingData
             {
@@ -53,8 +51,6 @@ public class FrontendService : IFrontendService
                 IsFollowedByCurrentUser = isAuthorFollowedByCurrentUser,
             },
             Title = article.Title,
-            CategoryCode = article.Category!.Code,
-            CategoryName = article.Category.DisplayedName,
             Content = article.Content,
             CoverImage = article.Image,
             Tags = article.Tags!.ConvertAll(t => t.Tag!.Name).ToList(),

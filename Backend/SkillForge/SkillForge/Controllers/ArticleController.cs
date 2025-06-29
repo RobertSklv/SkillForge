@@ -7,26 +7,21 @@ using SkillForge.Services;
 using SkillForge.Models.DTOs.Search;
 using SkillForge.Exceptions;
 using SkillForge.Models.DTOs.User;
-using Microsoft.AspNetCore.Authentication;
-using SkillForge.Models.Database;
 
 namespace SkillForge.Controllers;
 
 public class ArticleController : ApiController
 {
     private readonly IArticleService service;
-    private readonly ICategoryService categoryService;
     private readonly IUserFeedService userFeedService;
     private readonly IUserService userService;
 
     public ArticleController(
         IArticleService service,
-        ICategoryService categoryService,
         IUserFeedService userFeedService,
         IUserService userService)
     {
         this.service = service;
-        this.categoryService = categoryService;
         this.userFeedService = userFeedService;
         this.userService = userService;
     }

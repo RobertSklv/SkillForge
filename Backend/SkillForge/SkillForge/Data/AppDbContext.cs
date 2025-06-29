@@ -16,7 +16,6 @@ public class AppDbContext : DbContext
     public DbSet<ArticleView> ArticleViews { get; set; }
     public DbSet<GuestArticleView> GuestArticleViews { get; set; }
     public DbSet<RegisteredArticleView> RegisteredArticleViews { get; set; }
-    public DbSet<Category> Categories { get; set; }
     public DbSet<Comment> Comments { get; set; }
     public DbSet<CommentRating> CommentRatings { get; set; }
     public DbSet<Tag> Tags { get; set; }
@@ -85,11 +84,6 @@ public class AppDbContext : DbContext
             .HasIndex(nameof(FavoriteArticle.UserId), nameof(FavoriteArticle.ArticleId))
             .IsUnique();
 
-        modelBuilder.Entity<Category>()
-            .ToTable(t => t.HasCheckConstraint(
-                "CK_Categories_NoSelfReference",
-                nameof(Category.Id) + " <> " + nameof(Category.ParentId)));
-
         modelBuilder.Entity<AdminUser>()
             .HasIndex(nameof(AdminUser.Name))
             .IsUnique();
@@ -100,10 +94,6 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<AdminRole>()
             .HasIndex(nameof(AdminRole.Code))
-            .IsUnique();
-
-        modelBuilder.Entity<Category>()
-            .HasIndex(nameof(Category.Code))
             .IsUnique();
 
         modelBuilder.Entity<Tag>()

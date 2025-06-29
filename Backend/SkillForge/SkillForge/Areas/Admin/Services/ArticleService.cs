@@ -24,7 +24,6 @@ public class ArticleService : CrudService<Article>, IArticleService
     private readonly IUserFeedService userFeedService;
     private readonly IUserService userService;
     private readonly IArticleReportService articleReportService;
-    private readonly ICategoryService categoryService;
 
     public ArticleService(
         IArticleRepository repository,
@@ -33,8 +32,7 @@ public class ArticleService : CrudService<Article>, IArticleService
         IFrontendService frontendService,
         IUserFeedService userFeedService,
         IUserService userService,
-        IArticleReportService articleReportService,
-        ICategoryService categoryService)
+        IArticleReportService articleReportService)
         : base(repository)
     {
         this.repository = repository;
@@ -44,7 +42,6 @@ public class ArticleService : CrudService<Article>, IArticleService
         this.userFeedService = userFeedService;
         this.userService = userService;
         this.articleReportService = articleReportService;
-        this.categoryService = categoryService;
     }
 
     public override Table<Article> CreateEditRowAction(Table<Article> table)
@@ -237,7 +234,6 @@ public class ArticleService : CrudService<Article>, IArticleService
         }
 
         entity.Id = model.Id;
-        entity.CategoryId = model.CategoryId;
         entity.AuthorId = userId;
         entity.Image = model.Image;
         entity.Title = model.Title;
@@ -337,16 +333,7 @@ public class ArticleService : CrudService<Article>, IArticleService
 
     public async Task<ArticleUpsertPageModel> LoadUpsertPage(int? id, int userId)
     {
-        List<Category> categories = await categoryService.GetAll();
-
-        ArticleUpsertPageModel pageModel = new()
-        {
-            CategoryOptions = categories.ConvertAll(c => new EntityOption()
-            {
-                Value = c.Id,
-                Label = c.DisplayedName
-            })
-        };
+        ArticleUpsertPageModel pageModel = new();
 
         if (id != null)
         {
@@ -370,7 +357,6 @@ public class ArticleService : CrudService<Article>, IArticleService
                     Image = article.Image,
                     Title = article.Title,
                     Content = article.Content,
-                    CategoryId = article.CategoryId,
                     Tags = article.Tags!.ConvertAll(t => t.Tag!.Name).ToList(),
                 },
                 IsApproved = article.ApprovalId != null

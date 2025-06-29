@@ -4,8 +4,6 @@
 	import Form from '../form/Form.svelte';
 	import Button from '../button/Button.svelte';
 	import InputField from '../form/InputField.svelte';
-	import SelectField from '../form/SelectField.svelte';
-	import Option from '../form/Option.svelte';
 	import TextEditor from '../form/TextEditor.svelte';
 	import ImageLoader from '../form/ImageLoader.svelte';
 	import { getContext } from 'svelte';
@@ -29,22 +27,22 @@
 
 	let validationRules: ValidationRules = {
 		CategoryId: [
-            {
-                validate: (v) => v != 0,
-                message: (label) => `The ${label} field is required.`
-            },
+			{
+				validate: (v) => v != 0,
+				message: (label) => `The ${label} field is required.`
+			}
 		],
 		Title: [
-            {
-                validate: required,
-                message: (label) => `The ${label} field is required.`
-            },
+			{
+				validate: required,
+				message: (label) => `The ${label} field is required.`
+			}
 		],
 		Content: [
-            {
-                validate: required,
-                message: (label) => `The ${label} field is required.`
-            },
+			{
+				validate: required,
+				message: (label) => `The ${label} field is required.`
+			}
 		],
 		Tags: [
 			{
@@ -60,7 +58,7 @@
 
 					return isValid;
 				},
-				message: () => `Invalid tag name.`,
+				message: () => `Invalid tag name.`
 			}
 		]
 	};
@@ -83,7 +81,14 @@
 	</div>
 {/if}
 
-<Form action="/Article/Upsert" method="POST" formData={$formData} {validationRules} {onSuccess} resetMode={pageContext.CurrentState?.Model.Id == 0 ? 'onsuccess' : 'never'}>
+<Form
+	action="/Article/Upsert"
+	method="POST"
+	formData={$formData}
+	{validationRules}
+	{onSuccess}
+	resetMode={pageContext.CurrentState?.Model.Id == 0 ? 'onsuccess' : 'never'}
+>
 	<input type="hidden" name="Id" bind:value={$formData.Id} />
 
 	<div class="row">
@@ -97,21 +102,7 @@
 			/>
 		</div>
 		<div class="col-12 col-lg-9">
-			<div class="row">
-				<div class="col-12 col-lg-4">
-					<SelectField
-						id="CategoryId"
-						label="Category"
-						options={pageContext.CategoryOptions}
-						bind:value={$formData.CategoryId}
-					>
-						<Option value="0">Please select</Option>
-					</SelectField>
-				</div>
-				<div class="col-12 col-lg-8">
-					<InputField id="Title" type="text" bind:value={$formData.Title} />
-				</div>
-			</div>
+			<InputField id="Title" type="text" bind:value={$formData.Title} />
 
 			<TagComboBox id="Tags" label="Tags:" bind:tags={$formData.Tags} />
 		</div>

@@ -14,11 +14,6 @@ public class Article : BaseEntity
 
     public int AuthorId { get; set; }
 
-    [TableColumn]
-    public Category? Category { get; set; }
-
-    public int CategoryId { get; set; }
-
     [StringLength(64)]
     [Column(TypeName = "varchar")]
     public string? Image { get; set; }

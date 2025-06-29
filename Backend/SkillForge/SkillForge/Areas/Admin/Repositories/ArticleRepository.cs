@@ -30,7 +30,6 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
     {
         return base.GetIncludes(query)
             .Include(e => e.Author)
-            .Include(e => e.Category)
             .Include(e => e.Tags!)
                 .ThenInclude(e => e.Tag);
     }
@@ -38,8 +37,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
     public override IQueryable<Article> List(DbSet<Article> dbSet)
     {
         return base.List(dbSet)
-            .Include(e => e.Author)
-            .Include(e => e.Category);
+            .Include(e => e.Author);
     }
 
     public override Task<int> Upsert(Article entity)
@@ -248,7 +246,6 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
     {
         return DbSet
             .Include(e => e.Author)
-            .Include(e => e.Category)
             .Include(e => e.Approval)
             .Include(e => e.Comments!)
                 .ThenInclude(e => e.User)
@@ -270,7 +267,6 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
 
         return await db.Articles
             .Include(e => e.Author)
-            .Include(e => e.Category)
             .Include(e => e.Comments!)
                 .ThenInclude(e => e.User)
             .Include(e => e.Tags!)
@@ -292,7 +288,6 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
 
         return await db.Articles
             .Include(e => e.Author)
-            .Include(e => e.Category)
             .Include(e => e.Comments!)
                 .ThenInclude(e => e.User)
             .Include(e => e.Tags!)
@@ -308,7 +303,6 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
     {
         return await db.Articles
             .Include(e => e.Author)
-            .Include(e => e.Category)
             .Include(e => e.Comments!)
                 .ThenInclude(e => e.User)
             .Include(e => e.Tags!)
