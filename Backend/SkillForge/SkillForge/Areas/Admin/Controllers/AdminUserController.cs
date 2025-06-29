@@ -64,32 +64,4 @@ public class AdminUserController : CrudController<AdminUser, AdminUserVM>
 
         return base.RedirectBackToEditPage(id);
     }
-
-    public override async Task<IActionResult> Create(AdminUserVM model)
-    {
-        try
-        {
-            return await base.Create(model);
-        }
-        catch (ModelValidationException e)
-        {
-            ModelState.AddModelError(e.FieldName, e.Message);
-
-            return ValidationProblem(ModelState);
-        }
-    }
-
-    public override async Task<IActionResult> Update(AdminUserVM model)
-    {
-        try
-        {
-            return await base.Update(model);
-        }
-        catch (ModelValidationException e)
-        {
-            ModelState.AddModelError(e.FieldName, e.Message);
-
-            return ValidationProblem(ModelState);
-        }
-    }
 }

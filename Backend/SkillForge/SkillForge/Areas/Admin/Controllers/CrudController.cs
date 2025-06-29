@@ -3,6 +3,7 @@ using SkillForge.Areas.Admin.Models;
 using SkillForge.Areas.Admin.Models.Components.Common;
 using SkillForge.Areas.Admin.Models.DTOs;
 using SkillForge.Areas.Admin.Services;
+using SkillForge.Exceptions;
 using SkillForge.Extensions;
 using SkillForge.Models.Database;
 
@@ -136,6 +137,14 @@ public abstract class CrudController<TEntity, TViewModel> : AdminController
         {
             await UpsertMethod(model);
         }
+        catch (ModelValidationException e)
+        {
+            Alert($"Validation error: {e.Message}", ColorClass.Danger);
+
+            TempData.Set(OldModelTempDataKey, model);
+
+            return BadRequest(ModelState);
+        }
         catch (Exception e)
         {
             Alert($"An error occured: {e.Message}", ColorClass.Danger);
@@ -166,6 +175,14 @@ public abstract class CrudController<TEntity, TViewModel> : AdminController
         try
         {
             await UpsertMethod(model);
+        }
+        catch (ModelValidationException e)
+        {
+            Alert($"Validation error: {e.Message}", ColorClass.Danger);
+
+            TempData.Set(OldModelTempDataKey, model);
+
+            return RedirectBackToCreatePage();
         }
         catch (Exception e)
         {
