@@ -109,7 +109,6 @@
 								<Icon type="pencil-square" />
 								Edit
 							</DropdownItem>
-							<DropdownDivider />
 						{:else}
 							<DropdownItem type="button" onclick={() => (showReportModal = true)}>
 								<Icon type="exclamation-triangle" />

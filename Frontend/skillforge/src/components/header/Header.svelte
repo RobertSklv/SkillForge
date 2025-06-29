@@ -31,7 +31,7 @@
 		{/if}
 
 		{#snippet linksSnippet()}
-			<NavLink href="#" isActive={false}>Contact us</NavLink>
+			<NavLink href="/article/create">Create Article</NavLink>
 			{#if $currentUserStore}
 				<Dropdown isNav={true}>
 					{#snippet buttonSnippet()}
@@ -44,7 +44,7 @@
 					<DropdownItem type="button" onclick={logout}>Logout</DropdownItem>
 				</Dropdown>
 			{:else}
-				<NavLink href="/join" isActive={false}>
+				<NavLink href="/join">
 					<span>Join us</span>
 					<Icon type="person-circle" />
 				</NavLink>

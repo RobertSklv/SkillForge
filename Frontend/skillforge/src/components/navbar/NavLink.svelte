@@ -1,19 +1,21 @@
 <script lang="ts">
-	import type { Snippet } from "svelte";
+	import type { Snippet } from 'svelte';
 
-    const {
+	interface Props {
+		href: string;
+		active?: boolean;
+		children: Snippet;
+	}
+
+	const {
         href,
-        isActive,
+        active,
         children
-    }: {
-        href: string,
-        isActive: boolean,
-        children: Snippet
-    } = $props();
+    }: Props = $props();
 </script>
 
 <li class="nav-item">
-    <a class="nav-link" class:active={isActive} {href}>
-        {@render children()}
-    </a>
+	<a class="nav-link" class:active {href}>
+		{@render children()}
+	</a>
 </li>
