@@ -17,7 +17,7 @@
 >
 	{#each $toastStore.toasts as toast (toast.uid)}
 		<div
-			class="alert alert-{toast.type} alert-dismissible d-flex align-items-center w-auto"
+			class="alert alert-{toast.type} alert-dismissible d-flex align-items-center w-auto pe-auto"
 			role="alert"
 			transition:fade={{ duration: 200 }}
 			animate:flip={{ duration: 200 }}
