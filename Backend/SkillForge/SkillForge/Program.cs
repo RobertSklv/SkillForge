@@ -22,7 +22,13 @@ builder.Services.AddControllersWithViews().AddNewtonsoftJson(o =>
 
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString, p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+{
+#if DEBUG
+    options.UseSqlServer(connectionString, p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+#else
+    options.UseNpgsql(connectionString, p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+#endif
+});
 
 //Admin Cookie Authentication
 builder.Services.AddAuthentication()
