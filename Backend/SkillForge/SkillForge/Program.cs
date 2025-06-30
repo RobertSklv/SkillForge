@@ -131,10 +131,6 @@ if (!app.Environment.IsDevelopment())
 else
 {
     app.UseCors("AllowLocalhost");
-
-    using IServiceScope scope = app.Services.CreateScope();
-    AppDbContext db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
 }
 
 app.UseHttpsRedirection();
