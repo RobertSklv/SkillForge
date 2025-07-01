@@ -13,6 +13,18 @@ using SkillForge.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins(builder.Configuration["Site:FrontendUrl"])
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
+});
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews().AddNewtonsoftJson(o =>
@@ -97,19 +109,6 @@ builder.Services.AddScoped<IUserFeedService, UserFeedService>();
 
 builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site"));
 
-// Frontend config
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy.WithOrigins(builder.Configuration["Site:FrontendUrl"])
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
-        });
-});
-
 builder.Services.AddHostedService<AggregateArticleViewService>();
 builder.Services.AddHostedService<AggregateArticleRatingService>();
 builder.Services.AddHostedService<AggregateCommentRatingService>();
@@ -148,9 +147,9 @@ app.UseStaticFiles(new StaticFileOptions()
     }
 });
 
-app.UseCors("AllowFrontend");
-
 app.UseRouting();
+
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
