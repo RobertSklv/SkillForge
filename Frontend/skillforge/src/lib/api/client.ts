@@ -1,4 +1,4 @@
-import { PUBLIC_BACKEND_DOMAIN } from "$env/static/public";
+import { PUBLIC_BACKEND_DOMAIN, PUBLIC_BASE_URL } from "$env/static/public";
 import type ArticleCardType from "$lib/types/ArticleCardType";
 import type ArticleUpsertPageModel from "$lib/types/ArticleUpsertPageModel";
 import type ArticlePageModel from "$lib/types/ArticlePageModel";
@@ -397,6 +397,8 @@ export async function request(url: string, data?: FetchData): Promise<any> {
 		data.init.headers = {
 			...data.init.headers,
 			'Accept': 'application/json',
+			'Access-Control-Allow-Origin': PUBLIC_BASE_URL,
+			'Access-Control-Allow-Credentials': 'true'
 		};
 	}
 

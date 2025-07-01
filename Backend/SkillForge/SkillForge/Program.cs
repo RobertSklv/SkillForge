@@ -100,7 +100,7 @@ builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site")
 // Frontend config
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost",
+    options.AddPolicy("AllowFrontend",
         policy =>
         {
             policy.WithOrigins(builder.Configuration["Site:FrontendUrl"])
@@ -132,10 +132,6 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-else
-{
-    app.UseCors("AllowLocalhost");
-}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles(new StaticFileOptions()
@@ -151,6 +147,8 @@ app.UseStaticFiles(new StaticFileOptions()
         };
     }
 });
+
+app.UseCors("AllowFrontend");
 
 app.UseRouting();
 
