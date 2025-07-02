@@ -44,9 +44,13 @@
     if (data && data.currentUserInfo && Object.keys(data.currentUserInfo).length === 0) {
         data.currentUserInfo = undefined;
     }
+
+    console.error('current user', data.currentUserInfo);
     
     currentUserStore.set(data.currentUserInfo);
     reportFormOptionsStore.set(data.reportFormOptions);
+
+    console.error('current user store', $currentUserStore);
 </script>
 
 <Header />
