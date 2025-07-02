@@ -1,7 +1,10 @@
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Areas.Admin.Services;
@@ -73,17 +76,18 @@ builder.Services.AddAuthentication()
     });
 
 //Frontend Authentication
-builder.Services.AddAuthentication()
-    .AddCookie("FrontendCookie", options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
-        options.Cookie.Name = "FrontendCookieAuth";
-        options.Cookie.SameSite = SameSiteMode.None;
-        options.Events.OnRedirectToLogin = context =>
+        options.TokenValidationParameters = new()
         {
-            // Prevent redirect to login page
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-
-            return Task.CompletedTask;
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Auth:Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Auth:Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Auth:Jwt:Key"]))
         };
     });
 

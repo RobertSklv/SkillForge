@@ -13,5 +13,12 @@
   "Site": {
     "BackendUrl": "<backend_domain>",
     "FrontendUrl": "<frontend_domain>"
+  },
+  "Auth": {
+    "Jwt": {
+      "Key": "<key>",
+      "Issuer": "<issuer>",
+      "Audience": "<audience>"
+    }
   }
 }

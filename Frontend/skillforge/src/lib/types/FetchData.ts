@@ -5,5 +5,6 @@ export default interface FetchData {
     fetchFunction?: SvelteFetch,
     init?: RequestInit,
     query?: QueryParams,
+    authToken?: string,
     contentTypeApplicationJson?: boolean
 }

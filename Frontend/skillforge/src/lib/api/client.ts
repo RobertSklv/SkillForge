@@ -17,11 +17,15 @@ import type ArticleSearchItemType from "$lib/types/ArticleSearchItemType";
 import type GridState from "$lib/types/GridState";
 import type PaginationResponse from "$lib/types/PaginationResponse";
 import type ReportFormOptions from "$lib/types/ReportFormOptions";
+import { browser } from "$app/environment";
 
-export async function getCurrentUser(fetch?: SvelteFetch): Promise<UserInfo | undefined> {
+export const JWT_TOKEN_COOKIE_NAME = 'auth_jwt';
+
+export async function getCurrentUser(fetch?: SvelteFetch, authToken?: string): Promise<UserInfo | undefined> {
 	try {
 		return await requestApi('/User/Me', {
 			fetchFunction: fetch,
+			authToken,
 			init: {
 				credentials: 'include'
 			}
@@ -187,9 +191,10 @@ export function loadArticleUpsertPage(fetch: SvelteFetch, id?: number): Promise<
 	});
 }
 
-export function getReportFormOptions(fetch?: SvelteFetch): Promise<ReportFormOptions> {
+export function getReportFormOptions(fetch?: SvelteFetch, authToken?: string): Promise<ReportFormOptions> {
 	return requestApi('/Report/FormOptions', {
 		fetchFunction: fetch,
+		authToken,
 		init: {
 			credentials: 'include'
 		}
@@ -380,23 +385,28 @@ export async function requestApi(url: string, data?: FetchData): Promise<any> {
 }
 
 export async function request(url: string, data?: FetchData): Promise<any> {
-
 	data ??= {};
 	data.init ??= {};
 	data.init.headers ??= {};
 
+	let headersToAdd: HeadersInit = {};
+
 	if (typeof data.contentTypeApplicationJson === 'undefined' || data.contentTypeApplicationJson) {
 		if (!Object.keys(data.init.headers).includes('Content-Type')) {
-			data.init.headers = {
-				...data.init.headers,
-				'Content-Type': 'application/json',
-			};
+			headersToAdd['Content-Type'] = 'application/json';
 		}
+	}
+
+	headersToAdd['Accept'] = 'application/json';
+
+	let authToken = data.authToken ?? getAuthTokenFromBrowserCookie();
+	if (authToken) {
+		headersToAdd['Authorization'] = `Bearer ${authToken}`;
 	}
 
 	data.init.headers = {
 		...data.init.headers,
-		'Accept': 'application/json',
+		...headersToAdd,
 	};
 
 	let _url = new URL(url);
@@ -419,4 +429,18 @@ export async function request(url: string, data?: FetchData): Promise<any> {
 	}
 
 	return responseData;
+}
+
+export function getAuthTokenFromBrowserCookie(): string | undefined {
+	if (!browser) {
+		return undefined;
+	}
+
+	const cookies = document.cookie;
+    const parsedCookies = Object.fromEntries(
+        cookies.split('; ').map(c => c.split('='))
+    );
+    const token = parsedCookies[JWT_TOKEN_COOKIE_NAME];
+
+	return token;
 }

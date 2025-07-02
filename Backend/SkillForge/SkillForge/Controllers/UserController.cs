@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillForge.Models.Database;
@@ -8,10 +7,11 @@ using SkillForge.Services;
 using SkillForge.Areas.Admin.Services;
 using SkillForge.Exceptions;
 using SkillForge.Models.DTOs.Tag;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace SkillForge.Controllers;
 
-[Authorize(AuthenticationSchemes = "FrontendCookie")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class UserController : ApiController
 {
     private readonly IUserService service;
@@ -177,13 +177,13 @@ public class UserController : ApiController
             if (user == null)
             {
                 //If user is not found, something is wrong with the cookie, so sign the user out.
-                await HttpContext.SignOutAsync("FrontendCookie");
+                SetExpiredAuthTokenCookie();
             }
             else
             {
                 if (await service.IsSuspended(user.Id))
                 {
-                    await HttpContext.SignOutAsync("FrontendCookie");
+                    SetExpiredAuthTokenCookie();
 
                     return BadRequest("Your account is temporarily suspended");
                 }
@@ -267,7 +267,9 @@ public class UserController : ApiController
             return ValidationProblem("Your account is temporarily suspended");
         }
 
-        await AttemptAuthenticate(user);
+        string token = userAuthService.GenerateToken(user);
+
+        SetAuthTokenCookie(token);
 
         return Ok(frontendService.GetUserInfo(user));
     }
@@ -288,7 +290,9 @@ public class UserController : ApiController
             return BadRequest("Registration unsuccessful.");
         }
 
-        await AttemptAuthenticate(user);
+        string token = userAuthService.GenerateToken(user);
+
+        SetAuthTokenCookie(token);
 
         return Ok("Registration successful.");
     }
@@ -296,15 +300,9 @@ public class UserController : ApiController
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
-        await HttpContext.SignOutAsync("FrontendCookie");
+        SetExpiredAuthTokenCookie();
 
         return Ok("Logged out successfully.");
-    }
-
-    private async Task AttemptAuthenticate(User user)
-    {
-        ClaimsPrincipal principal = userAuthService.CreateClaimsPrincipal(user);
-        await HttpContext.SignInAsync("FrontendCookie", principal);
     }
 
     [AllowAnonymous]
@@ -317,5 +315,26 @@ public class UserController : ApiController
     public async Task<IActionResult> VerifyUniqueEmail(string email)
     {
         return Json(!await service.IsEmailTaken(email));
+    }
+
+    public void SetAuthTokenCookie(string token)
+    {
+        Response.Cookies.Append("auth_jwt", token, new CookieOptions
+        {
+            SameSite = SameSiteMode.None,
+            Secure = true,
+            HttpOnly = false
+        });
+    }
+
+    public void SetExpiredAuthTokenCookie()
+    {
+        Response.Cookies.Append("auth_jwt", "", new CookieOptions
+        {
+            Expires = DateTimeOffset.UtcNow.AddDays(-1),
+            SameSite = SameSiteMode.None,
+            Secure = true,
+            HttpOnly = false
+        });
     }
 }

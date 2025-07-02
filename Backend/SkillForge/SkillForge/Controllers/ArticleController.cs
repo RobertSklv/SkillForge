@@ -7,6 +7,7 @@ using SkillForge.Services;
 using SkillForge.Models.DTOs.Search;
 using SkillForge.Exceptions;
 using SkillForge.Models.DTOs.User;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace SkillForge.Controllers;
 
@@ -26,7 +27,7 @@ public class ArticleController : ApiController
         this.userService = userService;
     }
 
-    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost]
     public async Task<IActionResult> Upsert(ArticleUpsertDTO form)
     {
@@ -68,7 +69,7 @@ public class ArticleController : ApiController
         }
     }
 
-    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet]
     public async Task<IActionResult> LoadUpsertPage(int? id)
     {
@@ -88,7 +89,7 @@ public class ArticleController : ApiController
         }
     }
 
-    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> Latest(int batchIndex, int batchSize = 10)
@@ -107,7 +108,7 @@ public class ArticleController : ApiController
         return Ok(cards);
     }
 
-    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> LatestByTag(string tag, int batchIndex, int batchSize = 10)
@@ -126,7 +127,7 @@ public class ArticleController : ApiController
         return Ok(cards);
     }
 
-    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> LatestByAuthor(string authorName, int batchIndex, int batchSize = 10)
@@ -163,7 +164,7 @@ public class ArticleController : ApiController
         return Ok(res);
     }
 
-    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [AllowAnonymous]
     [HttpGet]
     [Route("/Api/Article/View/{id}")]
@@ -195,7 +196,7 @@ public class ArticleController : ApiController
         return Ok(model);
     }
 
-    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost]
     [Route("/Api/Article/Rate/{id}")]
     public async Task<IActionResult> Rate([FromRoute] int id, [FromBody] UserRatingData rate)
@@ -210,7 +211,7 @@ public class ArticleController : ApiController
         return Ok();
     }
 
-    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [AllowAnonymous]
     [HttpGet]
     [Route("/Api/Article/PositiveRates/{id}")]
@@ -228,7 +229,7 @@ public class ArticleController : ApiController
         return Ok(items);
     }
 
-    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [AllowAnonymous]
     [HttpGet]
     [Route("/Api/Article/NegativeRates/{id}")]

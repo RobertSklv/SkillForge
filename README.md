@@ -86,6 +86,8 @@ copy appsettings.json.sample appsettings.json
 - Replace `<connection_string>` with the connection string you copied in step 3. Replace `master` with the database name you have set in step 4. Also add `TrustServerCertificate=True;` at the end of the connection string.
 - Replace `<secret_key>` with a secure string which will be used in creating an admin account later.
 - Fill in `<backend_domain>` and `<frontend_domain>` with the corresponding values.
+- Fill in `<issuer>` and `<audience>` with the backend URL.
+- Fill in `<key>` with a secret key at least 32 characters long.
 - Save the file
 
 ### 6. Install the DB schema

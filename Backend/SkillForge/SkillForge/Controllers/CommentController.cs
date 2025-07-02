@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillForge.Areas.Admin.Services;
 using SkillForge.Exceptions;
@@ -10,7 +11,7 @@ using SkillForge.Models.DTOs.User;
 
 namespace SkillForge.Controllers;
 
-[Authorize(AuthenticationSchemes = "FrontendCookie")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class CommentController : ApiController
 {
     private readonly ICommentService service;
@@ -62,7 +63,7 @@ public class CommentController : ApiController
         return Ok();
     }
 
-    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [AllowAnonymous]
     [HttpGet]
     [Route("/Api/Comment/PositiveRates/{id}")]
@@ -80,7 +81,7 @@ public class CommentController : ApiController
         return Ok(items);
     }
 
-    [Authorize(AuthenticationSchemes = "FrontendCookie")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [AllowAnonymous]
     [HttpGet]
     [Route("/Api/Comment/NegativeRates/{id}")]

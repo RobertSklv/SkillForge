@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillForge.Areas.Admin.Services;
 using SkillForge.Models.DTOs.Report;
 
 namespace SkillForge.Controllers;
 
-[Authorize(AuthenticationSchemes = "FrontendCookie")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class CommentReportController : ApiController
 {
     private readonly ICommentReportService service;

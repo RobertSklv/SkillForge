@@ -6,10 +6,11 @@ using SkillForge.Exceptions;
 using SkillForge.Models.DTOs.User;
 using SkillForge.Services;
 using SkillForge.Models.Database;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace SkillForge.Controllers;
 
-[Authorize(AuthenticationSchemes = "FrontendCookie")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class TagController : ApiController
 {
     private readonly ITagService service;
