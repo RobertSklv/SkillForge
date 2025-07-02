@@ -381,26 +381,23 @@ export async function requestApi(url: string, data?: FetchData): Promise<any> {
 
 export async function request(url: string, data?: FetchData): Promise<any> {
 
-	if (data) {
-		data.init ??= {};
-		data.init.headers ??= {};
+	data ??= {};
+	data.init ??= {};
+	data.init.headers ??= {};
 
-		if (typeof data.contentTypeApplicationJson === 'undefined' || data.contentTypeApplicationJson) {
-			if (!Object.keys(data.init.headers).includes('Content-Type')) {
-				data.init.headers = {
-					...data.init.headers,
-					'Content-Type': 'application/json',
-				};
-			}
+	if (typeof data.contentTypeApplicationJson === 'undefined' || data.contentTypeApplicationJson) {
+		if (!Object.keys(data.init.headers).includes('Content-Type')) {
+			data.init.headers = {
+				...data.init.headers,
+				'Content-Type': 'application/json',
+			};
 		}
-
-		data.init.headers = {
-			...data.init.headers,
-			'Accept': 'application/json',
-			'Access-Control-Allow-Origin': PUBLIC_BASE_URL,
-			'Access-Control-Allow-Credentials': 'true'
-		};
 	}
+
+	data.init.headers = {
+		...data.init.headers,
+		'Accept': 'application/json',
+	};
 
 	let _url = new URL(url);
 	if (data?.query) {
