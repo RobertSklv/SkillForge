@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -18,10 +19,28 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins(builder.Configuration["Site:FrontendUrl"])
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
+            policy
+                .SetIsOriginAllowed(origin =>
+                {
+                    //Vercel-specific logic
+
+                    if (origin == builder.Configuration["Site:FrontendUrl"])
+                    {
+                        return true;
+                    }
+
+                    Regex regex = new(@"skill-forge-[a-z0-9]{9,9}-roberts-projects-a59055d1\.vercel\.app");
+
+                    if (regex.IsMatch(origin))
+                    {
+                        return true;
+                    }
+
+                    return false;
+                })
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
         });
 });
 
