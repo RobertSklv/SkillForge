@@ -123,6 +123,7 @@ public class ArticleController : CrudController<Article>
             return Redirect($"/Admin/Article/View/{id}");
         }
 
+        AddBackAction();
         GenerateSidebarLinks(article, DELETE_LINK);
 
         return View(article);
