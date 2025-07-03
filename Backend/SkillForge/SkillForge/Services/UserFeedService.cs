@@ -207,14 +207,14 @@ public class UserFeedService : IUserFeedService
     {
         List<UserFollow> followers = await userRepository.GetLatestFollowers(userId, batchIndex, batchSize);
 
-        return await CreateUserListItems(followers, currentUserId);
+        return await CreateUserListItems(followers.ConvertAll(f => f as IFollower), currentUserId);
     }
 
     public async Task<List<UserListItem>> GetUserFollowings(int userId, int? currentUserId, int batchIndex, int batchSize)
     {
         List<UserFollow> followings = await userRepository.GetLatestFollowings(userId, batchIndex, batchSize);
 
-        return await CreateUserListItems(followings, currentUserId);
+        return await CreateUserListItems(followings.ConvertAll(f => f as IFollowedUser), currentUserId);
     }
 
     public async Task<List<TagListItem>> GetUserTagFollowings(int userId, int? currentUserId, int batchIndex, int batchSize)
