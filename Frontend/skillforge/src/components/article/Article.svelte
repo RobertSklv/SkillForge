@@ -117,7 +117,7 @@
 				<a href="/tag/{tag}" class="me-2">#{tag}</a>
 			{/each}
 			<h1 class="card-title mb-4">{data.Title}</h1>
-			<div class="card-text text-break">
+			<div class="card-text text-break rich-text-content">
 				{@html data.Content}
 			</div>
 		</article>

@@ -18,7 +18,7 @@
 />
 <div class="mx-5 p-3">
 	<div class="content-wrapper rounded-3 p-3">
-		<div class="content text-break">
+		<div class="content text-break rich-text-content">
 			{@html data.Content}
 		</div>
 	</div>

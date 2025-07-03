@@ -57,8 +57,23 @@
         <span>Content:</span>
     </div>
     <div class="col-12 col-lg-8">
-        <div class="card p-3">
+        <div class="card p-3 rich-text-content">
             @Html.Raw(@Model.Content)
         </div>
     </div>
 </div>
+
+<style>
+    .rich-text-content pre {
+        background-color: #23241f;
+        color: #f8f8f2;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        padding: 5px 10px;
+        border-radius: 3px;
+    }
+
+    .rich-text-content img {
+        max-width: 100%;
+    }
+</style>

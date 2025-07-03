@@ -21,6 +21,22 @@ body {
     border: 2px solid var(--bs-primary-border-subtle);
 }
 
+.rich-text-content {
+    pre {
+        background-color: #23241f;
+        color: #f8f8f2;
+        overflow: visible;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        padding: 5px 10px;
+        border-radius: 3px;
+    }
+
+    img {
+        max-width: ;
+    }
+}
+
 @media (max-width: 992px) {
     .follow-button {
         display: none;

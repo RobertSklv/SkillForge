@@ -119,7 +119,7 @@
 		</div>
 	{:else}
 		<div class="card-body">
-			<div class="text-break">
+			<div class="text-break rich-text-content">
 				{@html data.Content}
 			</div>
 		</div>
