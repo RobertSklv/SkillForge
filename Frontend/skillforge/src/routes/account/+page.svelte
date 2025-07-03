@@ -54,10 +54,6 @@
         ],
         Bio: [
             {
-                validate: required,
-                message: () => `Please enter a valid e-mail.`
-            },
-            {
                 validate: (val) => maxLength(val, 128),
                 message: () => 'The biography can be maximum 128 characters long.'
             },
