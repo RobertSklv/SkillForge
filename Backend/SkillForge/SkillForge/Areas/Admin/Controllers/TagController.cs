@@ -7,7 +7,8 @@ using SkillForge.Models.Database;
 
 namespace SkillForge.Areas.Admin.Controllers;
 
-[AdminNavLink("All Tags", "Index", Menu = "Tags", SortOrder = 1)]
+[AdminNavMenu("tags", "Tags", SortOrder = 40)]
+[AdminNavLink("All Tags", "Index", Menu = "tags")]
 public class TagController : CrudController<Tag>
 {
     public const string GENERAL_LINK = "general";

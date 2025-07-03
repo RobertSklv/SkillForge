@@ -9,7 +9,7 @@ using SkillForge.Models.Database;
 
 namespace SkillForge.Areas.Admin.Controllers;
 
-[AdminNavMenu("comments", "Comments")]
+[AdminNavMenu("comments", "Comments", SortOrder = 20)]
 [AdminNavLink("All Comments", "Index")]
 public class CommentController : CrudController<Comment>
 {

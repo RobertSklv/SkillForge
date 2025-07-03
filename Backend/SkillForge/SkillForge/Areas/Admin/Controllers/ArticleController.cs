@@ -9,7 +9,7 @@ using SkillForge.Models.Database;
 
 namespace SkillForge.Areas.Admin.Controllers;
 
-[AdminNavMenu("articles", "Articles")]
+[AdminNavMenu("articles", "Articles", SortOrder = 10)]
 [AdminNavLink("All Articles", "Index")]
 public class ArticleController : CrudController<Article>
 {
