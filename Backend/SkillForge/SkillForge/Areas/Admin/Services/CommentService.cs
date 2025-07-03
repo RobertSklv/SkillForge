@@ -98,6 +98,11 @@ public class CommentService : CrudService<Comment>, ICommentService
             ArticleId = formData.ArticleId ?? throw new Exception("ArticleId parameter is required"),
         };
 
+        if (existing == null)
+        {
+            comment.User = await userService.GetStrict(userId);
+        }
+
         comment.Content = formData.Content;
 
         await Upsert(comment);
