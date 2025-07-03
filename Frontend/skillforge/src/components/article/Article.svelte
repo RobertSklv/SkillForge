@@ -22,6 +22,7 @@
 	import type ArticleContext from '$lib/types/ArticleContext';
 	import { fade } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
+	import moment from 'moment';
 
 	interface Props {
 		data: ArticlePageModel;
@@ -54,7 +55,7 @@
 				Name: $currentUserStore.Name,
 				AvatarImage: $currentUserStore.AvatarPath
 			},
-			DateWritten: new Date().toDateString(),
+			DateWritten: moment(new Date()).format('yyyy-MM-DD HH:mm:ss'),
 			RatingData: {
 				ThumbsUp: 0,
 				ThumbsDown: 0,
