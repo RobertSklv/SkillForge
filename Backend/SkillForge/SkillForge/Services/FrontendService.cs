@@ -103,7 +103,6 @@ public class FrontendService : IFrontendService
     {
         return new UserInfo
         {
-            Id = user.Id,
             Name = user.Name,
             Email = user.Email,
             AvatarPath = user.AvatarPath

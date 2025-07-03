@@ -1,4 +1,4 @@
-import { PUBLIC_BACKEND_DOMAIN, PUBLIC_BASE_URL } from "$env/static/public";
+import { PUBLIC_BACKEND_DOMAIN } from "$env/static/public";
 import type ArticleCardType from "$lib/types/ArticleCardType";
 import type ArticleUpsertPageModel from "$lib/types/ArticleUpsertPageModel";
 import type ArticlePageModel from "$lib/types/ArticlePageModel";
@@ -17,9 +17,9 @@ import type ArticleSearchItemType from "$lib/types/ArticleSearchItemType";
 import type GridState from "$lib/types/GridState";
 import type PaginationResponse from "$lib/types/PaginationResponse";
 import type ReportFormOptions from "$lib/types/ReportFormOptions";
-import { browser } from "$app/environment";
-
-export const JWT_TOKEN_COOKIE_NAME = 'auth_jwt';
+import { deleteAuthToken, getAuthTokenFromBrowserCookie } from "$lib/auth";
+import { currentUserStore } from "$lib/stores/currentUserStore";
+import { goto } from "$app/navigation";
 
 export async function getCurrentUser(fetch?: SvelteFetch, authToken?: string): Promise<UserInfo | undefined> {
 	try {
@@ -33,17 +33,6 @@ export async function getCurrentUser(fetch?: SvelteFetch, authToken?: string): P
 	} catch {
 		return undefined;
 	}
-}
-
-export async function logout(): Promise<string> {
-	const data = await requestApi('/User/Logout', {
-		init: {
-			method: 'POST',
-			credentials: 'include'
-		}
-	});
-
-	return data;
 }
 
 export async function uploadImage(file: File, type: ImageUploadType): Promise<string> {
@@ -428,19 +417,11 @@ export async function request(url: string, data?: FetchData): Promise<any> {
 		throw responseData;
 	}
 
-	return responseData;
-}
-
-export function getAuthTokenFromBrowserCookie(): string | undefined {
-	if (!browser) {
-		return undefined;
+	if (response.status === 401) {
+		currentUserStore.set(undefined);
+		deleteAuthToken();
+		goto('/join');
 	}
 
-	const cookies = document.cookie;
-    const parsedCookies = Object.fromEntries(
-        cookies.split('; ').map(c => c.split('='))
-    );
-    const token = parsedCookies[JWT_TOKEN_COOKIE_NAME];
-
-	return token;
+	return responseData;
 }

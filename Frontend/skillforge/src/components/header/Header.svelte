@@ -9,10 +9,11 @@
 	import HeaderSearchBar from './HeaderSearchBar.svelte';
 	import { page } from '$app/state';
 	import { getImagePath } from '$lib/util';
+	import { deleteAuthToken } from '$lib/auth';
 
 	async function logout() {
 		await logoutUser();
-
+		deleteAuthToken();
 		await invalidate('app:auth');
 
 		goto('/join');

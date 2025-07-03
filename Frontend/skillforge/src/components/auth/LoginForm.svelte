@@ -10,6 +10,8 @@
 	import { currentUserStore } from '$lib/stores/currentUserStore';
 	import { goto, invalidate } from '$app/navigation';
 	import { addToast } from '$lib/stores/toastStore';
+	import type LoginResponse from '$lib/types/LoginResponse';
+	import { storeAuthToken } from '$lib/auth';
 
 	let formData = writable<UserLoginCredentials>({
 		UsernameOrEmail: '',
@@ -31,14 +33,14 @@
 		]
 	};
 
-	async function onLoginSuccess(userInfo: UserInfo) {
-		currentUserStore.set(userInfo);
-
+	async function onLoginSuccess(response: LoginResponse) {
+		currentUserStore.set(response.CurrentUserInfo);
+		storeAuthToken(response.AuthToken);
 		await invalidate('app:auth');
 
 		addToast('Successfully logged in');
 
-		goto('/user/' + userInfo.Name);
+		goto('/user/' + response.CurrentUserInfo.Name);
 	}
 </script>
 

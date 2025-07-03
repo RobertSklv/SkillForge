@@ -1,4 +1,5 @@
-import { getCurrentUser, getReportFormOptions, JWT_TOKEN_COOKIE_NAME } from "$lib/api/client";
+import { getCurrentUser, getReportFormOptions } from "$lib/api/client";
+import { JWT_TOKEN_COOKIE_NAME } from "$lib/auth";
 import type ReportFormOptions from "$lib/types/ReportFormOptions.js";
 import type UserInfo from "$lib/types/UserInfo.js";
 import { parse } from 'cookie';

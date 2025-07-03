@@ -10,6 +10,8 @@
 	import { currentUserStore } from '$lib/stores/currentUserStore';
 	import { goto, invalidate } from '$app/navigation';
 	import { addToast } from '$lib/stores/toastStore';
+	import { storeAuthToken } from '$lib/auth';
+	import type RegisterResponse from '$lib/types/RegisterResponse';
 
 	let formData = writable<UserRegisterCredentials>({
 		Username: '',
@@ -66,16 +68,15 @@
 		]
 	};
 
-	async function onRegisterSuccess() {
+	async function onRegisterSuccess(response: RegisterResponse) {
 		let userInfo: UserInfo = {
-			Id: 0,
 			Name: $formData.Username,
 			Email: $formData.Email,
 			AvatarPath: ''
 		};
 
 		currentUserStore.set(userInfo);
-
+		storeAuthToken(response.AuthToken);
 		await invalidate('app:auth');
 
 		addToast('Registration successful');

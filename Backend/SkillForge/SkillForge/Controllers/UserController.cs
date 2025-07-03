@@ -174,17 +174,10 @@ public class UserController : ApiController
                 user = await service.FindUser(username);
             }
 
-            if (user == null)
-            {
-                //If user is not found, something is wrong with the cookie, so sign the user out.
-                SetExpiredAuthTokenCookie();
-            }
-            else
+            if (user != null)
             {
                 if (await service.IsSuspended(user.Id))
                 {
-                    SetExpiredAuthTokenCookie();
-
                     return BadRequest("Your account is temporarily suspended");
                 }
 
@@ -269,9 +262,11 @@ public class UserController : ApiController
 
         string token = userAuthService.GenerateToken(user);
 
-        SetAuthTokenCookie(token);
-
-        return Ok(frontendService.GetUserInfo(user));
+        return Ok(new LoginResponse
+        {
+            CurrentUserInfo = frontendService.GetUserInfo(user),
+            AuthToken = token
+        });
     }
 
     [AllowAnonymous]
@@ -292,17 +287,10 @@ public class UserController : ApiController
 
         string token = userAuthService.GenerateToken(user);
 
-        SetAuthTokenCookie(token);
-
-        return Ok("Registration successful.");
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Logout()
-    {
-        SetExpiredAuthTokenCookie();
-
-        return Ok("Logged out successfully.");
+        return Ok(new RegisterResponse
+        {
+            AuthToken = token
+        });
     }
 
     [AllowAnonymous]
@@ -315,26 +303,5 @@ public class UserController : ApiController
     public async Task<IActionResult> VerifyUniqueEmail(string email)
     {
         return Json(!await service.IsEmailTaken(email));
-    }
-
-    public void SetAuthTokenCookie(string token)
-    {
-        Response.Cookies.Append("auth_jwt", token, new CookieOptions
-        {
-            SameSite = SameSiteMode.None,
-            Secure = true,
-            HttpOnly = false
-        });
-    }
-
-    public void SetExpiredAuthTokenCookie()
-    {
-        Response.Cookies.Append("auth_jwt", "", new CookieOptions
-        {
-            Expires = DateTimeOffset.UtcNow.AddDays(-1),
-            SameSite = SameSiteMode.None,
-            Secure = true,
-            HttpOnly = false
-        });
     }
 }
