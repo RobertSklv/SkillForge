@@ -122,6 +122,13 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         return await Restore(article);
     }
 
+    public async Task ResetApproval(int approvalId)
+    {
+        ArticleApproval? approval = await db.ArticleApprovals.FirstAsync(e => e.Id == approvalId);
+
+        db.ArticleApprovals.Remove(approval);
+    }
+
     public async Task<Article> GetWithComments(int id)
     {
         return await GetIncludes(DbSet)

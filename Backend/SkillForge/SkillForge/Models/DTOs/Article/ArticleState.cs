@@ -2,7 +2,7 @@
 
 public class ArticleState
 {
-    public ArticleUpsertDTO? Model { get; set; }
+    public ArticleUpsertFormData? Model { get; set; }
 
     public bool IsApproved { get; set; }
 }

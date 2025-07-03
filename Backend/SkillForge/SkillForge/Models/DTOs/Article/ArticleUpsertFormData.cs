@@ -2,12 +2,9 @@
 
 namespace SkillForge.Models.DTOs.Article;
 
-public class ArticleUpsertDTO
+public class ArticleUpsertFormData
 {
     public int Id { get; set; }
-
-    [Range(1, int.MaxValue, ErrorMessage = "The Category field is required.")]
-    public int CategoryId { get; set; }
 
     [StringLength(64)]
     public string? Image { get; set; }

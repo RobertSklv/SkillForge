@@ -29,7 +29,7 @@ public class ArticleController : ApiController
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost]
-    public async Task<IActionResult> Upsert(ArticleUpsertDTO form)
+    public async Task<IActionResult> Upsert(ArticleUpsertFormData form)
     {
         if (!TryGetUserId(out int? userId))
         {

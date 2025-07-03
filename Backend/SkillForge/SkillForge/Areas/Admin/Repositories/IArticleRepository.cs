@@ -20,6 +20,8 @@ public interface IArticleRepository : ICrudRepository<Article>
 
     Task<int> Restore(int id);
 
+    Task ResetApproval(int approvalId);
+
     Task<Article> GetWithComments(int id);
 
     Task<ArticleRating?> GetUserRating(int userId, int articleId);

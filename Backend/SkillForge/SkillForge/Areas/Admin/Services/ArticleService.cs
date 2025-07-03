@@ -219,7 +219,7 @@ public class ArticleService : CrudService<Article>, IArticleService
         return true;
     }
 
-    public async Task UserUpsert(ArticleUpsertDTO model, int userId)
+    public async Task UserUpsert(ArticleUpsertFormData model, int userId)
     {
         Article entity = await Get(model.Id) ?? new();
 
@@ -238,6 +238,11 @@ public class ArticleService : CrudService<Article>, IArticleService
         entity.Image = model.Image;
         entity.Title = model.Title;
         entity.Content = model.Content;
+
+        if (entity.ApprovalId != null)
+        {
+            await repository.ResetApproval((int)entity.ApprovalId);
+        }
 
         await repository.Upsert(entity);
 
@@ -351,7 +356,7 @@ public class ArticleService : CrudService<Article>, IArticleService
 
             pageModel.CurrentState = new ArticleState
             {
-                Model = new ArticleUpsertDTO
+                Model = new ArticleUpsertFormData
                 {
                     Id = article.Id,
                     Image = article.Image,
