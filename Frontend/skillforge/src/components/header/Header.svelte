@@ -5,13 +5,15 @@
 	import { currentUserStore, logoutUser } from '$lib/stores/currentUserStore';
 	import Dropdown from '$components/dropdown/Dropdown.svelte';
 	import DropdownItem from '$components/dropdown/DropdownItem.svelte';
-	import { goto } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import HeaderSearchBar from './HeaderSearchBar.svelte';
 	import { page } from '$app/state';
 	import { getImagePath } from '$lib/util';
 
 	async function logout() {
 		await logoutUser();
+
+		await invalidate('app:auth');
 
 		goto('/join');
 	}

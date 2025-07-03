@@ -8,7 +8,7 @@
 	import Button from '../../components/button/Button.svelte';
 	import type UserInfo from '$lib/types/UserInfo';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
-	import { goto } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { addToast } from '$lib/stores/toastStore';
 
 	let formData = writable<UserLoginCredentials>({
@@ -31,8 +31,10 @@
 		]
 	};
 
-	function onLoginSuccess(userInfo: UserInfo) {
+	async function onLoginSuccess(userInfo: UserInfo) {
 		currentUserStore.set(userInfo);
+
+		await invalidate('app:auth');
 
 		addToast('Successfully logged in');
 

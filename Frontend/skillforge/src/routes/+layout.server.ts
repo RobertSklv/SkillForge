@@ -3,7 +3,9 @@ import type ReportFormOptions from "$lib/types/ReportFormOptions.js";
 import type UserInfo from "$lib/types/UserInfo.js";
 import { parse } from 'cookie';
 
-export async function load({ fetch, request }): Promise<any> {
+export async function load({ fetch, depends, request }): Promise<any> {
+    depends('app:auth');
+
 	const cookieHeader = request.headers.get('cookie');
 	let token: string | undefined;
 

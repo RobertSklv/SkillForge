@@ -8,7 +8,7 @@
 	import Button from '../button/Button.svelte';
 	import type UserInfo from '$lib/types/UserInfo';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
-	import { goto } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { addToast } from '$lib/stores/toastStore';
 
 	let formData = writable<UserRegisterCredentials>({
@@ -66,7 +66,7 @@
 		]
 	};
 
-	function onRegisterSuccess() {
+	async function onRegisterSuccess() {
 		let userInfo: UserInfo = {
 			Id: 0,
 			Name: $formData.Username,
@@ -75,6 +75,8 @@
 		};
 
 		currentUserStore.set(userInfo);
+
+		await invalidate('app:auth');
 
 		addToast('Registration successful');
 
