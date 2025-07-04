@@ -2,34 +2,25 @@ import { getCurrentUser, getReportFormOptions } from "$lib/api/client";
 import { JWT_TOKEN_COOKIE_NAME } from "$lib/auth";
 import type ReportFormOptions from "$lib/types/ReportFormOptions.js";
 import type UserInfo from "$lib/types/UserInfo.js";
-import { parse } from 'cookie';
 
-export async function load({ fetch, depends, request }): Promise<any> {
-    depends('app:auth');
-
-	const cookieHeader = request.headers.get('cookie');
-	let token: string | undefined;
-
-	if (cookieHeader) {
-		const cookies = parse(cookieHeader);
-		token = cookies[JWT_TOKEN_COOKIE_NAME];
-	}
-
+export async function load({ fetch, cookies }): Promise<any> {
+    let authToken = cookies.get(JWT_TOKEN_COOKIE_NAME);
     let currentUserInfo: UserInfo | undefined;
     let reportFormOptions: ReportFormOptions | undefined;
 
-    if (token) {
+    if (authToken) {
         [
             currentUserInfo,
             reportFormOptions
         ] = await Promise.all([
-            getCurrentUser(fetch, token),
-            getReportFormOptions(fetch, token),
+            getCurrentUser(fetch, authToken),
+            getReportFormOptions(fetch, authToken),
         ]);
     }
 
     return {
         currentUserInfo,
-        reportFormOptions
+        reportFormOptions,
+        authToken
     };
 }

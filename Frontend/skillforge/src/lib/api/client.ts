@@ -25,10 +25,7 @@ export async function getCurrentUser(fetch?: SvelteFetch, authToken?: string): P
 	try {
 		return await requestApi('/User/Me', {
 			fetchFunction: fetch,
-			authToken,
-			init: {
-				credentials: 'include'
-			}
+			authToken
 		});
 	} catch {
 		return undefined;
@@ -63,7 +60,6 @@ export function deleteComment(id: number): Promise<any> {
 	return requestApi(`/Comment/Delete/${id}`, {
 		init: {
 			method: 'DELETE',
-			credentials: 'include',
 		}
 	})
 }
@@ -77,7 +73,6 @@ export function rate(id: number, rate: -1 | 0 | 1, type: 'article' | 'comment') 
 	return requestApi(`/${controllers[type]}/Rate/${id}`, {
 		init: {
 			method: 'POST',
-			credentials: 'include',
 			body: JSON.stringify({
 				rate
 			})
@@ -96,9 +91,6 @@ export function getRating(id: number, rateType: 'positive' | 'negative', type: '
 	};
 
 	return requestApi(`/${controllers[type]}/${actions[rateType]}/${id}`, {
-		init: {
-			credentials: 'include',
-		},
 		query: {
 			batchIndex,
 			batchSize
@@ -108,9 +100,6 @@ export function getRating(id: number, rateType: 'positive' | 'negative', type: '
 
 export function getLatestArticles(batchIndex: number, batchSize: number): Promise<ArticleCardType[]> {
 	return requestApi('/Article/Latest', {
-		init: {
-			credentials: 'include'
-		},
 		query: {
 			batchIndex,
 			batchSize,
@@ -120,9 +109,6 @@ export function getLatestArticles(batchIndex: number, batchSize: number): Promis
 
 export function getLatestArticlesByTag(tag: string, batchIndex: number, batchSize: number): Promise<ArticleCardType[]> {
 	return requestApi('/Article/LatestByTag', {
-		init: {
-			credentials: 'include'
-		},
 		query: {
 			tag,
 			batchIndex,
@@ -133,9 +119,6 @@ export function getLatestArticlesByTag(tag: string, batchIndex: number, batchSiz
 
 export function getLatestArticlesByAuthor(authorName: string, batchIndex: number, batchSize: number): Promise<ArticleCardType[]> {
 	return requestApi('/Article/LatestByAuthor', {
-		init: {
-			credentials: 'include'
-		},
 		query: {
 			authorName,
 			batchIndex,
@@ -161,19 +144,14 @@ export function searchArticlesAdvanced(gridState: GridState, fetch?: SvelteFetch
 
 export function viewArticle(fetch: SvelteFetch, id: number): Promise<ArticlePageModel> {
 	return requestApi(`/Article/View/${id}`, {
-		fetchFunction: fetch,
-		init: {
-			credentials: 'include'
-		}
+		fetchFunction: fetch
 	});
 }
 
-export function loadArticleUpsertPage(fetch: SvelteFetch, id?: number): Promise<ArticleUpsertPageModel> {
+export function loadArticleUpsertPage(fetch: SvelteFetch, id?: number, authToken?: string): Promise<ArticleUpsertPageModel> {
 	return requestApi('/Article/LoadUpsertPage', {
 		fetchFunction: fetch,
-		init: {
-			credentials: 'include'
-		},
+		authToken,
 		query: {
 			id: id?.toString()
 		}
@@ -183,10 +161,7 @@ export function loadArticleUpsertPage(fetch: SvelteFetch, id?: number): Promise<
 export function getReportFormOptions(fetch?: SvelteFetch, authToken?: string): Promise<ReportFormOptions> {
 	return requestApi('/Report/FormOptions', {
 		fetchFunction: fetch,
-		authToken,
-		init: {
-			credentials: 'include'
-		}
+		authToken
 	});
 }
 
@@ -196,20 +171,15 @@ export function loadHomePage(fetch: SvelteFetch): Promise<HomePageData> {
 	});
 }
 
-export function loadUserPage(name: string, fetch?: SvelteFetch): Promise<UserPageData> {
+export function loadUserPage(name: string, fetch?: SvelteFetch, authToken?: string): Promise<UserPageData> {
 	return requestApi(`/User/Load/${name}`, {
 		fetchFunction: fetch,
-		init: {
-			credentials: 'include'
-		}
+		authToken
 	});
 }
 
 export function getUserFollowers(name: string, batchIndex: number, batchSize: number): Promise<UserListItemType[]> {
 	return requestApi(`/User/Followers/${name}`, {
-		init: {
-			credentials: 'include'
-		},
 		query: {
 			batchIndex,
 			batchSize
@@ -219,9 +189,6 @@ export function getUserFollowers(name: string, batchIndex: number, batchSize: nu
 
 export function getUserFollowings(name: string, batchIndex: number, batchSize: number): Promise<UserListItemType[]> {
 	return requestApi(`/User/Followings/${name}`, {
-		init: {
-			credentials: 'include'
-		},
 		query: {
 			batchIndex,
 			batchSize
@@ -231,9 +198,6 @@ export function getUserFollowings(name: string, batchIndex: number, batchSize: n
 
 export function getUserTagFollowings(name: string, batchIndex: number, batchSize: number): Promise<TagListItemType[]> {
 	return requestApi(`/User/TagFollowings/${name}`, {
-		init: {
-			credentials: 'include'
-		},
 		query: {
 			batchIndex,
 			batchSize
@@ -245,7 +209,6 @@ export function followUser(user: string): Promise<boolean> {
 	return requestApi('/User/Follow', {
 		init: {
 			method: 'POST',
-			credentials: 'include',
 			body: JSON.stringify({
 				user
 			})
@@ -257,7 +220,6 @@ export function unfollowUser(user: string): Promise<boolean> {
 	return requestApi('/User/Unfollow', {
 		init: {
 			method: 'DELETE',
-			credentials: 'include',
 			body: JSON.stringify({
 				user
 			})
@@ -265,28 +227,21 @@ export function unfollowUser(user: string): Promise<boolean> {
 	});
 }
 
-export function loadAccountInfoForm() {
+export function loadAccountInfoForm(authToken?: string) {
 	return requestApi('/User/AccountInfoForm', {
-		init: {
-			credentials: 'include'
-		}
+		authToken
 	});
 }
 
-export function loadTagPage(name: string, fetch?: SvelteFetch): Promise<TagPageData> {
+export function loadTagPage(name: string, fetch?: SvelteFetch, authToken?: string): Promise<TagPageData> {
 	return requestApi(`/Tag/Load/${name}`, {
 		fetchFunction: fetch,
-		init: {
-			credentials: 'include'
-		}
+		authToken
 	});
 }
 
 export function searchTags(phrase?: string, exclude?: string[]): Promise<TagLinkType[]> {
 	return requestApi(`/Tag/Search`, {
-		init: {
-			credentials: 'include'
-		},
 		query: {
 			phrase,
 			exclude
@@ -298,7 +253,6 @@ export function followTag(tag: string): Promise<boolean> {
 	return requestApi('/Tag/Follow', {
 		init: {
 			method: 'POST',
-			credentials: 'include',
 			body: JSON.stringify({
 				tag
 			})
@@ -310,7 +264,6 @@ export function unfollowTag(tag: string): Promise<boolean> {
 	return requestApi('/Tag/Unfollow', {
 		init: {
 			method: 'DELETE',
-			credentials: 'include',
 			body: JSON.stringify({
 				tag
 			})
@@ -320,9 +273,6 @@ export function unfollowTag(tag: string): Promise<boolean> {
 
 export function getTagFollowers(name: string, batchIndex: number, batchSize: number): Promise<UserListItemType[]> {
 	return requestApi(`/Tag/Followers/${name}`, {
-		init: {
-			credentials: 'include'
-		},
 		query: {
 			batchIndex,
 			batchSize

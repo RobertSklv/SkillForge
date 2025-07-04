@@ -3,13 +3,13 @@ import type ArticleUpsertPageModel from '$lib/types/ArticleUpsertPageModel';
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ fetch, parent }): Promise<ArticleUpsertPageModel> {
-    let { currentUserInfo } = await parent();
+    let { currentUserInfo, authToken } = await parent();
 
     if (!currentUserInfo) {
         throw redirect(302, '/join');
     }
 
-    let pageModel = await loadArticleUpsertPage(fetch);
+    let pageModel = await loadArticleUpsertPage(fetch, authToken);
 
     return pageModel;
 }
