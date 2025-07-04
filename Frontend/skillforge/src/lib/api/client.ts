@@ -148,7 +148,7 @@ export function viewArticle(fetch: SvelteFetch, id: number): Promise<ArticlePage
 	});
 }
 
-export function loadArticleUpsertPage(fetch: SvelteFetch, id?: number, authToken?: string): Promise<ArticleUpsertPageModel> {
+export function loadArticleUpsertPage(fetch: SvelteFetch, authToken?: string, id?: number): Promise<ArticleUpsertPageModel> {
 	return requestApi('/Article/LoadUpsertPage', {
 		fetchFunction: fetch,
 		authToken,

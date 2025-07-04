@@ -9,7 +9,7 @@ export async function load({ fetch, params, parent }): Promise<ArticleUpsertPage
         throw redirect(302, '/join');
     }
 
-    let pageModel = await loadArticleUpsertPage(fetch, parseInt(params.id), authToken);
+    let pageModel = await loadArticleUpsertPage(fetch, authToken, parseInt(params.id));
 
     return pageModel;
 }
