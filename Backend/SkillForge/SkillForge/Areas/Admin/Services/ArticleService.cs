@@ -306,7 +306,7 @@ public class ArticleService : CrudService<Article>, IArticleService
         return model;
     }
 
-    public async Task<ArticlePageData> View(string guestId, int articleId)
+    public async Task<ArticlePageData> View(string? guestId, int articleId)
     {
         Article article = await GetWithComments(articleId);
 
@@ -315,19 +315,22 @@ public class ArticleService : CrudService<Article>, IArticleService
             throw new RecordDeletedException("The article is deleted");
         }
 
-        GuestArticleView? viewRecord = await GetView(guestId, articleId);
-
-        if (viewRecord == null)
+        if (guestId != null)
         {
-            viewRecord = new GuestArticleView
+            GuestArticleView? viewRecord = await GetView(guestId, articleId);
+
+            if (viewRecord == null)
             {
-                GuestId = guestId,
-                ArticleId = articleId,
-            };
+                viewRecord = new GuestArticleView
+                {
+                    GuestId = guestId,
+                    ArticleId = articleId,
+                };
 
-            article.ViewCount++;
+                article.ViewCount++;
 
-            await RecordView(viewRecord);
+                await RecordView(viewRecord);
+            }
         }
 
         List<Article> latestByAuthor = await repository.GetLatestByAuthorExcluding(article.AuthorId, articleId, 3);

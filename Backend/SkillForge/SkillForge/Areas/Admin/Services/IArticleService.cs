@@ -63,7 +63,7 @@ public interface IArticleService : ICrudService<Article>
 
     Task<ArticlePageData> View(int userId, int articleId);
 
-    Task<ArticlePageData> View(string guestId, int articleId);
+    Task<ArticlePageData> View(string? guestId, int articleId);
 
     Task<ArticleUpsertPageModel> LoadUpsertPage(int? id, int userId);
 
