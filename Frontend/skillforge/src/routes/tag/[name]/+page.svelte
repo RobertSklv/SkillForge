@@ -98,7 +98,7 @@
 <ThreeColumns hideRightColumnOnMobile>
 	{#snippet leftColumn()}
 		<div class="row flex-row flex-lg-column text-center text-lg-start">
-			<div class="offset-4 col-4 offset-lg-0 col-lg-12">
+			<div class="offset-xs-0 col-xs-12 offset-4 col-4 offset-lg-0 col-lg-12">
 				<FollowList
 					title="Followers"
 					totalCount={backendData.FollowersCount}

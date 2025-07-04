@@ -4,7 +4,7 @@
 	import RadioField from "./RadioField.svelte";
 	import FieldValidation from "./FieldValidation.svelte";
 	import type ValidatedField from "$lib/types/ValidatedField";
-    import './radio-group.scss';
+    import './_radio-group.scss';
 
     interface Props {
         name: string,

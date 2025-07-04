@@ -2,7 +2,7 @@
 	import Scrollable from '$components/scrollable/Scrollable.svelte';
 	import { setContext, type Snippet } from 'svelte';
 	import { fade } from 'svelte/transition';
-    import './modal.scss';
+    import './_modal.scss';
 	import { clickOutside } from '$lib/util';
 	import type ModalContext from '$lib/types/ModalContext';
 

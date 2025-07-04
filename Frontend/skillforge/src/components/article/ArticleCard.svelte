@@ -25,7 +25,7 @@
 
 <Block {mod}>
 	{#if data.CoverImage}
-		<img src={PUBLIC_BACKEND_DOMAIN + data.CoverImage} class="card-img-top rounded-top-3 object-fit-cover" alt="Article cover" style="height: 250px" />
+		<img src={PUBLIC_BACKEND_DOMAIN + data.CoverImage} class="card-img-top rounded-top-3 object-fit-cover" alt="Article cover" style:height="250px" style:max-width="100%" />
 	{/if}
 	<AuthorBox name={data.Author.Name} avatarImage={data.Author.AvatarImage} date={data.DatePublished} mod="mt-3" />
 	<div class="card-body mx-5">
@@ -34,16 +34,16 @@
 				<a href="/article/{data.ArticleId}" class="text-decoration-none">{data.Title}</a>
 			</h2>
 		</div>
-		<div class="d-flex justify-content-between">
-			<div>
-				<div class="tags d-flex gap-1">
+		<div class="row justify-content-between">
+			<div class="col-12 col-md-4">
+				<div class="tags d-flex flex-wrap flex-md-nowrap gap-1 justify-content-center justify-content-md-start">
 					{#each data.Tags as tag}
 						<TagLink size="small" background="fill" muted={true} data={tag} />
 					{/each}
 				</div>
 			</div>
-			<div>
-				<div class="d-flex align-items-center">
+			<div class="col-12 col-md-4">
+				<div class="d-flex justify-content-center justify-content-md-end align-items-center">
 					<RateButtons data={data.RatingData} subjectId={data.ArticleId} size="small" type="article" readonly={true} />
 					{#if data.Comments.length}
 						<div class="text-primary ms-3">

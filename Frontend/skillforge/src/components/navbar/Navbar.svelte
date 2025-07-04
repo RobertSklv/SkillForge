@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { onNavigate } from '$app/navigation';
+	import { clickOutside } from '$lib/util';
 	import type { Snippet } from 'svelte';
-	import { fade } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 
 	interface Props {
 		logoLink: string;
@@ -12,13 +14,25 @@
 	const { logoLink, logoSnippet, children, linksSnippet }: Props = $props();
 
 	let isOpen = $state(false);
+	let windowWidth = $state<number>(1400);
+	let isHamburgerMenu = $derived<boolean>(windowWidth <= 991);
 
 	function onTogglerClick() {
 		isOpen = !isOpen;
 	}
+
+	function closeMenu() {
+		isOpen = false;
+	}
+	
+    onNavigate(() => {
+        closeMenu();
+    });
 </script>
 
-<nav class="navbar navbar-expand-lg fixed-top bg-primary">
+<svelte:window bind:innerWidth={windowWidth} />
+
+<nav class="navbar navbar-expand-lg fixed-top bg-primary navbar-main" use:clickOutside={closeMenu}>
 	<div class="container">
 		<a class="navbar-brand" href={logoLink} title="To homepage">
 			{@render logoSnippet()}
@@ -40,20 +54,32 @@
 			<span class="navbar-toggler-icon"></span>
 		</button>
 
-		<div
-			class="collapse navbar-collapse justify-content-end flex-shrink-0 flex-grow-0"
-			class:show={isOpen}
-			id="navbarNavDropdown"
-		>
-			<ul class="navbar-nav">
-				{@render linksSnippet?.()}
-			</ul>
-		</div>
+		{#if !isHamburgerMenu || isOpen}
+			<div
+				class="collapse navbar-collapse justify-content-end flex-shrink-0 flex-grow-0 {isHamburgerMenu
+					? 'position-absolute start-0 end-0 navbar bg-primary'
+					: ''}"
+				class:show={isOpen}
+				style:top={isHamburgerMenu ? '54px' : 'auto'}
+				id="navbarNavDropdown"
+				in:fly={{ y: -15, duration: 100 }}
+				out:fly={{ y: -15, duration: 100 }}
+			>
+				<ul
+					class="navbar-nav {isHamburgerMenu
+						? 'container text-start justify-content-start align-items-start'
+						: ''}"
+					style:padding-left={isHamburgerMenu ? '0.75rem' : 'inherit'}
+				>
+					{@render linksSnippet?.()}
+				</ul>
+			</div>
+		{/if}
 	</div>
 </nav>
 
 <style>
-	.navbar {
+	.navbar-main {
 		view-transition-name: header;
 	}
 </style>

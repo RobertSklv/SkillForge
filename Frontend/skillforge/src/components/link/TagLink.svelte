@@ -3,6 +3,7 @@
 	import type TagLink from '$lib/types/TagLinkType';
 	import Icon from '$components/icon/Icon.svelte';
 	import Link from './Link.svelte';
+	import './_tag-link.scss';
 
 	interface Props {
 		data: TagLink;
@@ -21,6 +22,9 @@
 	}: Props = $props();
 </script>
 
-<Link href="/tag/{data.Name}" {size} {background} {color} borderRadius={3} {muted}>
-	<Icon type="hash" />{data.Name}
+<Link href="/tag/{data.Name}" {size} {background} {color} borderRadius={3} mod="tag-link" {muted}>
+	<div class="d-flex tag-link">
+		<Icon type="hash" />
+		<span>{data.Name}</span>
+	</div>
 </Link>

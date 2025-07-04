@@ -41,7 +41,7 @@
 
 	setContext<ArticleContext>('article', {
 		deleteComment
-	})
+	});
 
 	async function addComment() {
 		if (!$currentUserStore) {
@@ -67,7 +67,7 @@
 	}
 
 	function deleteComment(id: number) {
-		comments = comments.filter(c => c.CommentId != id);
+		comments = comments.filter((c) => c.CommentId != id);
 	}
 </script>
 
@@ -75,7 +75,7 @@
 	<Block>
 		{#snippet header()}
 			<div class="row mb-3 pt-2">
-				<div class="col-10">
+				<div class="col">
 					<AuthorBox
 						name={data.Author.Link.Name}
 						avatarImage={data.Author.Link.AvatarImage}
@@ -83,12 +83,12 @@
 						indent={false}
 					/>
 				</div>
-				<div class="col-2 text-end">
-					<Dropdown>
-						{#snippet buttonSnippet()}
-							<Icon type="three-dots-vertical" />
-						{/snippet}
-						{#if $currentUserStore}
+				{#if $currentUserStore}
+					<div class="col-3 text-end">
+						<Dropdown menuClass="dropdown-menu-end dropdown-menu-xl-start">
+							{#snippet buttonSnippet()}
+								<Icon type="three-dots-vertical" />
+							{/snippet}
 							{#if $currentUserStore.Name == data.Author.Link.Name}
 								<DropdownItem href="/article/{data.ArticleId}/edit">
 									<Icon type="pencil-square" />
@@ -100,9 +100,9 @@
 								<Icon type="exclamation-triangle" />
 								Report
 							</DropdownItem>
-						{/if}
-					</Dropdown>
-				</div>
+						</Dropdown>
+					</div>
+				{/if}
 			</div>
 		{/snippet}
 
@@ -125,11 +125,11 @@
 
 		{#snippet footer()}
 			<div class="row">
-				<div class="col fs-5 d-flex align-items-center">
+				<div class="col-3 fs-5 d-flex align-items-center">
 					<Icon type="eye" mod="me-1" />
 					<small class="text-muted">{data.Views}</small>
 				</div>
-				<div class="col">
+				<div class="col-9">
 					<RateButtons
 						data={data.RatingData}
 						subjectId={data.ArticleId}

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import Icon from '$components/icon/Icon.svelte';
 	import { searchArticles } from '$lib/api/client';
 	import type ArticleSearchItemType from '$lib/types/ArticleSearchItemType';
 	import type GridContext from '$lib/types/GridContext';
@@ -63,8 +64,8 @@
 	}
 </script>
 
-<div class="position-relative {mod}">
-	<div class="input-group">
+<div class="position-relative d-flex justify-content-center {mod}">
+	<div class="input-group search-bar">
 		<input
 			id="search"
 			type="search"
@@ -79,7 +80,10 @@
 			{onkeydown}
 			bind:value={inputValue}
 		/>
-		<button class="btn btn-light rounded-end-3" type="button" id="search_button" onclick={search}>Search</button>
+		<button class="btn btn-light rounded-end-3" type="button" id="search_button" onclick={search}>
+			<Icon type="search" mod="d-block d-sm-none" />
+			<span class="d-none d-sm-block">Search</span>
+		</button>
 	</div>
 	{#if showSuggestions && suggestions.length}
 		<div
@@ -110,8 +114,8 @@
 
 <style>
 	@media (max-width: 425px) {
-		input[type=search] {
-			max-width: 110px;
+		.search-bar {
+			max-width: 180px;
 		}
 	}
 </style>

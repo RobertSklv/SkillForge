@@ -34,7 +34,9 @@
 		{/if}
 
 		{#snippet linksSnippet()}
-			<NavLink href="/article/create">Create Article</NavLink>
+			{#if $currentUserStore}
+				<NavLink href="/article/create">Create Article</NavLink>
+			{/if}
 			{#if $currentUserStore}
 				<Dropdown isNav={true}>
 					{#snippet buttonSnippet()}

@@ -98,12 +98,12 @@
 			<div class="col offset-0 offset-lg-2">
 				<h1 class="h2">{backendData.Name}</h1>
 			</div>
-			<div class="col-2 text-end">
-				<Dropdown>
-					{#snippet buttonSnippet()}
-						<Icon type="three-dots-vertical" />
-					{/snippet}
-					{#if $currentUserStore}
+			{#if $currentUserStore}
+				<div class="col-3 text-end">
+					<Dropdown menuClass="dropdown-menu-end dropdown-menu-xl-start">
+						{#snippet buttonSnippet()}
+							<Icon type="three-dots-vertical" />
+						{/snippet}
 						{#if $currentUserStore.Name == backendData.Name}
 							<DropdownItem href="/account">
 								<Icon type="pencil-square" />
@@ -115,9 +115,9 @@
 								Report
 							</DropdownItem>
 						{/if}
-					{/if}
-				</Dropdown>
-			</div>
+					</Dropdown>
+				</div>
+			{/if}
 		</div>
 	{/snippet}
 
@@ -179,7 +179,7 @@
 <ThreeColumns hideRightColumnOnMobile>
 	{#snippet leftColumn()}
 		<div class="row flex-row flex-xl-column text-center text-xl-start">
-			<div class="col-4 col-xl-12">
+			<div class="col-xs-12 col-4 col-xl-12">
 				<FollowList
 					title="Followers"
 					totalCount={backendData.FollowersCount}
@@ -191,7 +191,7 @@
 					{/snippet}
 				</FollowList>
 			</div>
-			<div class="col-4 col-xl-12">
+			<div class="col-xs-12 col-4 col-xl-12">
 				<FollowList
 					title="Users followed"
 					totalCount={backendData.FollowingsCount}
@@ -203,7 +203,7 @@
 					{/snippet}
 				</FollowList>
 			</div>
-			<div class="col-4 col-xl-12">
+			<div class="col-xs-12 col-4 col-xl-12">
 				<FollowList
 					title="Tags Followed"
 					totalCount={backendData.TagFollowingsCount}
@@ -262,7 +262,11 @@
 	{/snippet}
 </ThreeColumns>
 
-<ReportModal entityName={backendData.Name} action="/UserReport/Create" bind:show={showReportModal} />
+<ReportModal
+	entityName={backendData.Name}
+	action="/UserReport/Create"
+	bind:show={showReportModal}
+/>
 
 {@html `<script type="application/ld+json">
 	${JSON.stringify({

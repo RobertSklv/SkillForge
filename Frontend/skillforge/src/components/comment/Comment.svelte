@@ -62,7 +62,7 @@
 <Block>
 	{#snippet header()}
 		<div class="row mb-3 pt-2">
-			<div class="col-10">
+			<div class="col">
 				<AuthorBox
 					name={data.User.Name}
 					avatarImage={data.User.AvatarImage}
@@ -72,12 +72,12 @@
 					indent={false}
 				/>
 			</div>
-			<div class="col-2 text-end">
-				<Dropdown>
-					{#snippet buttonSnippet()}
-						<Icon type="three-dots-vertical" />
-					{/snippet}
-					{#if $currentUserStore}
+			{#if $currentUserStore}
+				<div class="col-3 text-end">
+					<Dropdown menuClass="dropdown-menu-end dropdown-menu-xl-start">
+						{#snippet buttonSnippet()}
+							<Icon type="three-dots-vertical" />
+						{/snippet}
 						{#if $currentUserStore.Name == data.User.Name}
 							<DropdownItem type="button" onclick={() => (editMode = true)}>
 								<Icon type="pencil-square" />
@@ -93,9 +93,9 @@
 							<Icon type="exclamation-triangle" />
 							Report
 						</DropdownItem>
-					{/if}
-				</Dropdown>
-			</div>
+					</Dropdown>
+				</div>
+			{/if}
 		</div>
 	{/snippet}
 

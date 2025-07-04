@@ -25,7 +25,7 @@ body {
     pre {
         background-color: #23241f;
         color: #f8f8f2;
-        overflow: visible;
+        overflow: auto;
         margin-bottom: 5px;
         margin-top: 5px;
         padding: 5px 10px;
@@ -34,6 +34,23 @@ body {
 
     img {
         max-width: 100%;
+    }
+}
+
+.navbar-nav.container > .nav-item {
+    width: 100%;
+}
+
+@media (max-width: 425px) {
+    @for $i from 0 through 12 {
+        .col-xs-#{$i} {
+            flex: 0 0 auto;
+            width: ($i / 12) * 100%;
+        }
+
+        .offset-xs-#{$i} {
+            margin-left: ($i / 12) * 100%;
+        }
     }
 }
 

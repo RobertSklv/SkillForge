@@ -4,12 +4,14 @@
 	import { fade } from 'svelte/transition';
 
 	interface Props {
+		menuClass?: string,
 		isNav?: boolean;
 		buttonSnippet: Snippet;
 		children: Snippet;
 	}
 
 	const {
+		menuClass,
         isNav,
         buttonSnippet,
         children
@@ -39,7 +41,7 @@
 			{@render buttonSnippet()}
 		</button>
 		{#if isOpen}
-			<ul class="dropdown-menu show" transition:fade={{ duration: 100 }}>
+			<ul class="dropdown-menu show {menuClass}" data-bs-popper="static" transition:fade={{ duration: 100 }}>
 				{@render children()}
 			</ul>
 		{/if}
@@ -57,7 +59,7 @@
 			{@render buttonSnippet()}
 		</button>
 		{#if isOpen}
-			<ul class="dropdown-menu show" transition:fade={{ duration: 100 }}>
+			<ul class="dropdown-menu show {menuClass}" data-bs-popper="static" transition:fade={{ duration: 100 }}>
 				{@render children()}
 			</ul>
 		{/if}
