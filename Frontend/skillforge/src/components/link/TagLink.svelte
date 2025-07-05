@@ -25,6 +25,6 @@
 <Link href="/tag/{data.Name}" {size} {background} {color} borderRadius={3} mod="tag-link" {muted}>
 	<div class="d-flex tag-link">
 		<Icon type="hash" />
-		<span>{data.Name}</span>
+		<span class="text-truncate">{data.Name}</span>
 	</div>
 </Link>
