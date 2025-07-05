@@ -4,6 +4,7 @@
 	import Modal from '$components/modal/Modal.svelte';
 	import ModalHeader from '$components/modal/ModalHeader.svelte';
 	import type { Snippet } from 'svelte';
+	import './_follow-list.scss';
 
 	interface Props {
 		title: string;
@@ -27,7 +28,7 @@
 </script>
 
 {#if totalCount > 0}
-	<div class="mb-5">
+	<div class="mb-5 follow-list">
 		<div class="mb-4">
 			<h2 class="h4">{title}</h2>
 		</div>

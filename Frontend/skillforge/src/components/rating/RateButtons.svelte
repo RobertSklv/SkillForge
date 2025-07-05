@@ -6,7 +6,7 @@
 	import UserListItem from '$components/user/UserListItem.svelte';
 	import { getRating, rate } from '$lib/api/client';
 	import type RatingData from '$lib/types/RatingData';
-	import './rate-buttons.scss';
+	import './_rate-buttons.scss';
 
 	const RATE_ITEMS_BATCH_SIZE = 15;
 
