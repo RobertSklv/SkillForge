@@ -64,8 +64,8 @@
 	}
 </script>
 
-<div class="position-relative d-flex justify-content-center {mod}">
-	<div class="input-group search-bar">
+<div class="position-relative {mod}">
+	<div class="input-group search-bar mx-auto my-0">
 		<input
 			id="search"
 			type="search"
