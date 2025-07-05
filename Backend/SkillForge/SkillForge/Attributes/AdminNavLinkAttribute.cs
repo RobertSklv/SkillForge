@@ -7,6 +7,8 @@ public class AdminNavLinkAttribute : AdminNavAttribute
 
     public string? ActionName { get; set; }
 
+    public string? Route { get; set; }
+
     public AdminNavLinkAttribute(string displayedName, string? actionName = null)
         : base(displayedName)
     {

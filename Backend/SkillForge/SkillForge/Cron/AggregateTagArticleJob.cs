@@ -2,18 +2,18 @@
 using SkillForge.Data;
 using SkillForge.Models.Database;
 
-namespace SkillForge.BackgroundTasks;
+namespace SkillForge.Cron;
 
-public class AggregateTagArticleService : AggregateService
+public class AggregateTagArticleJob : IAggregateTagArticleJob
 {
-    protected override int FrequencySeconds => 300;
+    private readonly AppDbContext db;
 
-    public AggregateTagArticleService(IServiceScopeFactory scopeFactory)
-        : base(scopeFactory)
+    public AggregateTagArticleJob(AppDbContext db)
     {
+        this.db = db;
     }
 
-    public override async Task Aggregate(AppDbContext db)
+    public async Task RunAsync()
     {
         List<ArticleTag> allTags = await db.ArticleTags.ToListAsync();
         List<Tag> tags = await db.Tags.ToListAsync();

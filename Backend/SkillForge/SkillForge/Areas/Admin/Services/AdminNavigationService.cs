@@ -59,15 +59,24 @@ public class AdminNavigationService : IAdminNavigationService
                         link.Menu = firstMenu.code;
                     }
 
-                    MethodInfo methodInfo = type.GetMethod(link.ActionName ?? throw new Exception($"AdminNavLink attributes defined on a controller must specify the {nameof(AdminNavLinkAttribute.ActionName)} property."))
-                        ?? throw new Exception($"Action {link.ActionName} was not found inside the {type.Name} controller.");
-
-                    navLinkDefs.Add(new()
+                    NavLinkDefinition def = new()
                     {
                         ControllerType = type,
-                        Method = methodInfo,
                         Attribute = link,
-                    });
+                    };
+
+                    if (link.ActionName != null)
+                    {
+                        def.Method = type.GetMethod(link.ActionName)
+                            ?? throw new Exception($"Action {link.ActionName} was not found inside the {type.Name} controller.");
+                    }
+                    else if (link.Route != null)
+                    {
+                        def.Route = link.Route;
+                    }
+                    else throw new Exception($"Either {nameof(AdminNavLinkAttribute.ActionName)} or {nameof(AdminNavLinkAttribute.Route)} must be defined for a nav link.");
+
+                    navLinkDefs.Add(def);
                 }
 
                 foreach (MethodInfo methodInfo in methods)
@@ -201,6 +210,11 @@ public class AdminNavigationService : IAdminNavigationService
 
     public string? GetActionRoute(NavLinkDefinition def)
     {
+        if (def.Method == null)
+        {
+            return def.Route;
+        }
+
         RouteAttribute? routeAttr = def.Method.GetCustomAttribute<RouteAttribute>();
 
         if (routeAttr != null)

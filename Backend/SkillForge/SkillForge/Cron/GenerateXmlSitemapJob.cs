@@ -5,34 +5,22 @@ using SkillForge.Configuration;
 using SkillForge.Data;
 using SkillForge.Models.Database;
 
-namespace SkillForge.BackgroundTasks;
+namespace SkillForge.Cron;
 
-public class GenerateXmlSitemapService : BackgroundService
+public class GenerateXmlSitemapJob : IGenerateXmlSitemapJob
 {
-    private readonly IServiceScopeFactory scopeFactory;
+    private readonly AppDbContext db;
     private readonly IOptions<SiteOptions> siteOptions;
     private readonly IWebHostEnvironment webHostEnvironment;
 
-    public GenerateXmlSitemapService(IServiceScopeFactory scopeFactory, IOptions<SiteOptions> siteOptions, IWebHostEnvironment webHostEnvironment)
+    public GenerateXmlSitemapJob(AppDbContext db, IOptions<SiteOptions> siteOptions, IWebHostEnvironment webHostEnvironment)
     {
-        this.scopeFactory = scopeFactory;
+        this.db = db;
         this.siteOptions = siteOptions;
         this.webHostEnvironment = webHostEnvironment;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        using IServiceScope scope = scopeFactory.CreateScope();
-        AppDbContext db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        using PeriodicTimer timer = new(TimeSpan.FromDays(1));
-
-        while (await timer.WaitForNextTickAsync(stoppingToken))
-        {
-            await Generate(db);
-        }
-    }
-
-    public async Task Generate(AppDbContext db)
+    public async Task RunAsync()
     {
         List<User> users = await db.Users.ToListAsync();
         List<Article> articles = await db.Articles.ToListAsync();

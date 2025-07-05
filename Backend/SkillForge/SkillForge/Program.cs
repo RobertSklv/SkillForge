@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.RegularExpressions;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -8,8 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using SkillForge.Areas.Admin.Repositories;
 using SkillForge.Areas.Admin.Services;
-using SkillForge.BackgroundTasks;
 using SkillForge.Configuration;
+using SkillForge.Cron;
 using SkillForge.Data;
 using SkillForge.Data.Seeders;
 using SkillForge.Middleware;
@@ -132,14 +133,17 @@ builder.Services.AddScoped<IUserFeedService, UserFeedService>();
 
 builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site"));
 
-builder.Services.AddHostedService<AggregateArticleViewService>();
-builder.Services.AddHostedService<AggregateArticleRatingService>();
-builder.Services.AddHostedService<AggregateCommentRatingService>();
-builder.Services.AddHostedService<AggregateUserFollowService>();
-builder.Services.AddHostedService<AggregateTagFollowService>();
-builder.Services.AddHostedService<AggregateTagArticleService>();
-builder.Services.AddHostedService<AggregateUserArticlesService>();
-builder.Services.AddHostedService<GenerateXmlSitemapService>();
+builder.Services.AddScoped<IAggregateArticleViewJob, AggregateArticleViewJob>();
+builder.Services.AddScoped<IAggregateArticleRatingJob, AggregateArticleRatingJob>();
+builder.Services.AddScoped<IAggregateCommentRatingJob, AggregateCommentRatingJob>();
+builder.Services.AddScoped<IAggregateUserFollowJob, AggregateUserFollowJob>();
+builder.Services.AddScoped<IAggregateTagFollowJob, AggregateTagFollowJob>();
+builder.Services.AddScoped<IAggregateTagArticleJob, AggregateTagArticleJob>();
+builder.Services.AddScoped<IAggregateUserArticlesJob, AggregateUserArticlesJob>();
+builder.Services.AddScoped<IGenerateXmlSitemapJob, GenerateXmlSitemapJob>();
+
+builder.Services.AddHangfire(config => config.UseSqlServerStorage(connectionString));
+builder.Services.AddHangfireServer();
 
 var app = builder.Build();
 
@@ -182,5 +186,15 @@ app.UseMiddleware<GuestIdMiddleware>();
 app.MapControllerRoute(
     name: "Admin",
     pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
+
+app.UseHangfireDashboard("/Admin/Hangfire", new DashboardOptions
+{
+    Authorization = new[]
+    {
+        new HangfireAuthorizationFilter()
+    }
+});
+
+CronConfiguration.Setup();
 
 app.Run();

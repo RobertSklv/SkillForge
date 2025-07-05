@@ -2,17 +2,18 @@
 using SkillForge.Data;
 using SkillForge.Models.Database;
 
-namespace SkillForge.BackgroundTasks;
+namespace SkillForge.Cron;
 
-public class AggregateUserArticlesService : AggregateService
+public class AggregateUserArticlesJob : IAggregateUserArticlesJob
 {
-    protected override int FrequencySeconds => 300;
+    private readonly AppDbContext db;
 
-    public AggregateUserArticlesService(IServiceScopeFactory scopeFactory) : base(scopeFactory)
+    public AggregateUserArticlesJob(AppDbContext db)
     {
+        this.db = db;
     }
 
-    public override async Task Aggregate(AppDbContext db)
+    public async Task RunAsync()
     {
         List<Article> allArticles = await db.Articles
             .Where(e => e.ApprovalId != null && e.DeleteReason == null)

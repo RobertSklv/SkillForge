@@ -2,18 +2,18 @@
 using SkillForge.Data;
 using SkillForge.Models.Database;
 
-namespace SkillForge.BackgroundTasks;
+namespace SkillForge.Cron;
 
-public class AggregateCommentRatingService : AggregateService
+public class AggregateCommentRatingJob : IAggregateCommentRatingJob
 {
-    protected override int FrequencySeconds => 120;
+    private readonly AppDbContext db;
 
-    public AggregateCommentRatingService(IServiceScopeFactory scopeFactory)
-        : base(scopeFactory)
+    public AggregateCommentRatingJob(AppDbContext db)
     {
+        this.db = db;
     }
 
-    public override async Task Aggregate(AppDbContext db)
+    public async Task RunAsync()
     {
         List<Comment> comments = await db.Comments.ToListAsync();
 

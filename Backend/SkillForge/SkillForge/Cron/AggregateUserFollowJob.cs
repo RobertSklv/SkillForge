@@ -2,17 +2,18 @@
 using SkillForge.Data;
 using SkillForge.Models.Database;
 
-namespace SkillForge.BackgroundTasks;
+namespace SkillForge.Cron;
 
-public class AggregateUserFollowService : AggregateService
+public class AggregateUserFollowJob : IAggregateUserFollowJob
 {
-    protected override int FrequencySeconds => 300;
+    private readonly AppDbContext db;
 
-    public AggregateUserFollowService(IServiceScopeFactory scopeFactory) : base(scopeFactory)
+    public AggregateUserFollowJob(AppDbContext db)
     {
+        this.db = db;
     }
 
-    public override async Task Aggregate(AppDbContext db)
+    public async Task RunAsync()
     {
         List<UserFollow> allFollows = await db.UserFollows.ToListAsync();
         List<User> users = await db.Users.ToListAsync();
