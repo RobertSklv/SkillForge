@@ -19,16 +19,18 @@ SkillForge aims to foster a community-driven environment where developers can bo
 **Tech stack**:
 - ASP.NET Core MVC
 - Entity Framework Core
+- Hangfire
 - SvelteKit
 - TypeScript
 - Bootstrap
+- SASS
 
 Features:
 - Headless SPA
 - Authentication & Authorization
 - Testable Service and Repository layers
 - CRUD functionality
-- Background Tasks for periodic aggregation and XML sitemap generation
+- CRON jobs using Hangfire, for periodic aggregation and XML sitemap generation
 - SEO
 
 ---
