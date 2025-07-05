@@ -1,6 +1,6 @@
 <script lang="ts">
-	import LoginForm from '$components/auth/LoginForm.svelte';
-	import RegisterForm from '$components/auth/RegisterForm.svelte';
+	import LoginForm from '$components/login-form/LoginForm.svelte';
+	import RegisterForm from '$components/register-form/RegisterForm.svelte';
 </script>
 
 <div class="row">

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type ArticleUpsertPageModel from "$lib/types/ArticleUpsertPageModel";
 	import { setContext } from "svelte";
-	import ArticleCreateForm from "$components/article/ArticleUpsertForm.svelte";
+	import ArticleCreateForm from "$components/article-upsert-form/ArticleUpsertForm.svelte";
 	import { PUBLIC_BASE_URL } from "$env/static/public";
 
 	interface Props {

@@ -1,14 +1,14 @@
 <script lang="ts">
 	import AnchorList from '$components/anchor-list/AnchorList.svelte';
-	import ArticleCard from '$components/article/ArticleCard.svelte';
-	import ArticleCardPlaceholder from '$components/article/ArticleCardPlaceholder.svelte';
-	import OutOfArticlesBlock from '$components/article/OutOfArticlesBlock.svelte';
-	import TopArticleLink from '$components/article/TopArticleLink.svelte';
+	import ArticleCard from '$components/article-card/ArticleCard.svelte';
+	import ArticleCardPlaceholder from '$components/article-card-placeholder/ArticleCardPlaceholder.svelte';
+	import OutOfArticlesBlock from '$components/out-of-articles-block/OutOfArticlesBlock.svelte';
+	import TopArticleLink from '$components/top-article-link/TopArticleLink.svelte';
 	import InfiniteScroll from '$components/infinite-scroll/InfiniteScroll.svelte';
-	import Block from '$components/layout/Block.svelte';
+	import Block from '$components/block/Block.svelte';
 	import ThreeColumns from '$components/layout/ThreeColumns.svelte';
-	import TagLink from '$components/link/TagLink.svelte';
-	import UserLink from '$components/link/UserLink.svelte';
+	import TagLink from '$components/tag-link/TagLink.svelte';
+	import UserLink from '$components/user-link/UserLink.svelte';
 	import LoginCta from '$components/login-cta/LoginCta.svelte';
 	import { PUBLIC_BASE_URL } from '$env/static/public';
 	import { getLatestArticles } from '$lib/api/client';

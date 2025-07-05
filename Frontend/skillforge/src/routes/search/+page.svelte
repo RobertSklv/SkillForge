@@ -1,9 +1,9 @@
 <script lang="ts">
-	import ArticleCard from '$components/article/ArticleCard.svelte';
-	import SortBySelect from '$components/grid-filters/SortBySelect.svelte';
-	import SortOrderSelect from '$components/grid-filters/SortOrderSelect.svelte';
+	import ArticleCard from '$components/article-card/ArticleCard.svelte';
+	import SortBySelect from '$components/grid/filters/sort-by-select/SortBySelect.svelte';
+	import SortOrderSelect from '$components/grid/filters/sort-order-select/SortOrderSelect.svelte';
 	import Grid from '$components/grid/Grid.svelte';
-	import SearchBar from '$components/grid-filters/SearchBar.svelte';
+	import SearchBar from '$components/grid/filters/search-bar/SearchBar.svelte';
 	import Pagination from '$components/pagination/Pagination.svelte';
 	import { PUBLIC_BASE_URL } from '$env/static/public';
 	import type ArticleCardType from '$lib/types/ArticleCardType';

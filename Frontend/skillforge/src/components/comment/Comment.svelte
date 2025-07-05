@@ -1,15 +1,15 @@
 <script lang="ts">
 	import Button from '$components/button/Button.svelte';
 	import Dropdown from '$components/dropdown/Dropdown.svelte';
-	import DropdownDivider from '$components/dropdown/DropdownDivider.svelte';
-	import DropdownItem from '$components/dropdown/DropdownItem.svelte';
+	import DropdownDivider from '$components/dropdown-divider/DropdownDivider.svelte';
+	import DropdownItem from '$components/dropdown-item/DropdownItem.svelte';
 	import Form from '$components/form/Form.svelte';
-	import TextEditor from '$components/form/TextEditor.svelte';
+	import TextEditor from '$components/form/text-editor/TextEditor.svelte';
 	import Icon from '$components/icon/Icon.svelte';
-	import Block from '$components/layout/Block.svelte';
-	import RateButtons from '$components/rating/RateButtons.svelte';
+	import Block from '$components/block/Block.svelte';
+	import RateButtons from '$components/rate-buttons/RateButtons.svelte';
 	import ReportModal from '$components/report/ReportModal.svelte';
-	import AuthorBox from '$components/user/AuthorBox.svelte';
+	import AuthorBox from '$components/author-box/AuthorBox.svelte';
 	import { deleteComment } from '$lib/api/client';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
 	import { addToast } from '$lib/stores/toastStore';

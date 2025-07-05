@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Block from "$components/layout/Block.svelte";
+	import Block from "$components/block/Block.svelte";
 	import { currentUserStore } from "$lib/stores/currentUserStore";
 
     interface Props {

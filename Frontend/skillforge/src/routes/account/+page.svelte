@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Button from '$components/button/Button.svelte';
 	import Form from '$components/form/Form.svelte';
-	import ImageLoader from '$components/form/ImageLoader.svelte';
-	import InputField from '$components/form/InputField.svelte';
-	import TextAreaField from '$components/form/TextAreaField.svelte';
-	import Block from '$components/layout/Block.svelte';
+	import ImageLoader from '$components/form/image-loader/ImageLoader.svelte';
+	import InputField from '$components/form/input-field/InputField.svelte';
+	import TextAreaField from '$components/form/text-area-field/TextAreaField.svelte';
+	import Block from '$components/block/Block.svelte';
 	import ThreeColumns from '$components/layout/ThreeColumns.svelte';
 	import { PUBLIC_BASE_URL } from '$env/static/public';
 	import { currentUserStore } from '$lib/stores/currentUserStore';

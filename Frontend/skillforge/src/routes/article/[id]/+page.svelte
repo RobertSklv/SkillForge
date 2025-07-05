@@ -1,9 +1,9 @@
 <script lang="ts">
 	import AnchorList from '$components/anchor-list/AnchorList.svelte';
 	import Article from '$components/article/Article.svelte';
-	import TopArticleLink from '$components/article/TopArticleLink.svelte';
+	import TopArticleLink from '$components/top-article-link/TopArticleLink.svelte';
 	import TwoColumns from '$components/layout/TwoColumns.svelte';
-	import AuthorBlock from '$components/user/AuthorBlock.svelte';
+	import AuthorBlock from '$components/author-block/AuthorBlock.svelte';
 	import { PUBLIC_BASE_URL } from '$env/static/public';
 	import { generateUserLinkSchema } from '$lib/structuredDataUtil';
 	import type ArticlePageModel from '$lib/types/ArticlePageModel';

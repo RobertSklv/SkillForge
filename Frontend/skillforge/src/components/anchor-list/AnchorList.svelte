@@ -1,5 +1,5 @@
 <script lang="ts" generics="T">
-	import Block from '$components/layout/Block.svelte';
+	import Block from '$components/block/Block.svelte';
 	import type { Snippet } from 'svelte';
 
 	interface Props {

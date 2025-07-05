@@ -1,13 +1,13 @@
 <script lang="ts">
 	import AnchorList from '$components/anchor-list/AnchorList.svelte';
-	import ArticleCard from '$components/article/ArticleCard.svelte';
-	import ArticleCardPlaceholder from '$components/article/ArticleCardPlaceholder.svelte';
-	import TopArticleLink from '$components/article/TopArticleLink.svelte';
+	import ArticleCard from '$components/article-card/ArticleCard.svelte';
+	import ArticleCardPlaceholder from '$components/article-card-placeholder/ArticleCardPlaceholder.svelte';
+	import TopArticleLink from '$components/top-article-link/TopArticleLink.svelte';
 	import InfiniteScroll from '$components/infinite-scroll/InfiniteScroll.svelte';
-	import Block from '$components/layout/Block.svelte';
+	import Block from '$components/block/Block.svelte';
 	import ThreeColumns from '$components/layout/ThreeColumns.svelte';
 	import LoginCta from '$components/login-cta/LoginCta.svelte';
-	import UserListItem from '$components/user/UserListItem.svelte';
+	import UserListItem from '$components/user-list-item/UserListItem.svelte';
 	import {
 		getLatestArticlesByAuthor,
 		getUserFollowers,
@@ -20,20 +20,20 @@
 	import { page } from '$app/stores';
 	import type UserListItemType from '$lib/types/UserListItemType';
 	import type TagListItemType from '$lib/types/TagListItemType';
-	import FollowList from '$components/user/FollowList.svelte';
-	import TagListItem from '$components/tag/TagListItem.svelte';
+	import FollowList from '$components/follow-list/FollowList.svelte';
+	import TagListItem from '$components/tag-list-item/TagListItem.svelte';
 	import { getFrontendUrl, getImagePath } from '$lib/util';
 	import Modal from '$components/modal/Modal.svelte';
 	import Dropdown from '$components/dropdown/Dropdown.svelte';
-	import DropdownItem from '$components/dropdown/DropdownItem.svelte';
-	import DropdownDivider from '$components/dropdown/DropdownDivider.svelte';
+	import DropdownItem from '$components/dropdown-item/DropdownItem.svelte';
+	import DropdownDivider from '$components/dropdown-divider/DropdownDivider.svelte';
 	import { PUBLIC_BASE_URL } from '$env/static/public';
 	import {
 		generateArticleCardItemsSchema,
 		generateTopArticleItemsSchema
 	} from '$lib/structuredDataUtil';
-	import FollowButton from '$components/button/FollowButton.svelte';
-	import OutOfArticlesBlock from '$components/article/OutOfArticlesBlock.svelte';
+	import FollowButton from '$components/follow-button/FollowButton.svelte';
+	import OutOfArticlesBlock from '$components/out-of-articles-block/OutOfArticlesBlock.svelte';
 	import Icon from '$components/icon/Icon.svelte';
 	import ReportModal from '$components/report/ReportModal.svelte';
 

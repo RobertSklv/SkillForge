@@ -1,27 +1,27 @@
 <script lang="ts">
 	import AnchorList from '$components/anchor-list/AnchorList.svelte';
-	import ArticleCard from '$components/article/ArticleCard.svelte';
-	import ArticleCardPlaceholder from '$components/article/ArticleCardPlaceholder.svelte';
-	import TopArticleLink from '$components/article/TopArticleLink.svelte';
+	import ArticleCard from '$components/article-card/ArticleCard.svelte';
+	import ArticleCardPlaceholder from '$components/article-card-placeholder/ArticleCardPlaceholder.svelte';
+	import TopArticleLink from '$components/top-article-link/TopArticleLink.svelte';
 	import InfiniteScroll from '$components/infinite-scroll/InfiniteScroll.svelte';
-	import Block from '$components/layout/Block.svelte';
+	import Block from '$components/block/Block.svelte';
 	import ThreeColumns from '$components/layout/ThreeColumns.svelte';
 	import LoginCta from '$components/login-cta/LoginCta.svelte';
-	import UserListItem from '$components/user/UserListItem.svelte';
+	import UserListItem from '$components/user-list-item/UserListItem.svelte';
 	import { getLatestArticlesByTag, getTagFollowers } from '$lib/api/client';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
 	import type ArticleCardType from '$lib/types/ArticleCardType';
 	import type TagPageData from '$lib/types/TagPageData';
 	import { page } from '$app/stores';
 	import type UserListItemType from '$lib/types/UserListItemType';
-	import FollowList from '$components/user/FollowList.svelte';
+	import FollowList from '$components/follow-list/FollowList.svelte';
 	import { PUBLIC_BASE_URL } from '$env/static/public';
 	import {
 		generateArticleCardItemsSchema,
 		generateTopArticleItemsSchema
 	} from '$lib/structuredDataUtil';
-	import FollowButton from '$components/button/FollowButton.svelte';
-	import OutOfArticlesBlock from '$components/article/OutOfArticlesBlock.svelte';
+	import FollowButton from '$components/follow-button/FollowButton.svelte';
+	import OutOfArticlesBlock from '$components/out-of-articles-block/OutOfArticlesBlock.svelte';
 
 	const ARTICLE_BATCH_SIZE: number = 4;
 	const TAG_FOLLOWER_BATCH_SIZE: number = 15;

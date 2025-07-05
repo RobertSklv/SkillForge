@@ -1,13 +1,13 @@
 <script lang="ts">
 	import Form from '$components/form/Form.svelte';
-	import TextAreaField from '$components/form/TextAreaField.svelte';
+	import TextAreaField from '$components/form/text-area-field/TextAreaField.svelte';
 	import Modal from '$components/modal/Modal.svelte';
-	import ModalHeader from '$components/modal/ModalHeader.svelte';
+	import ModalHeader from '$components/modal-header/ModalHeader.svelte';
 	import { addToast } from '$lib/stores/toastStore';
 	import type ReportFormData from '$lib/types/ReportFormData';
 	import { writable } from 'svelte/store';
-	import RadioGroup from '$components/form/RadioGroup.svelte';
-	import RadioField from '$components/form/RadioField.svelte';
+	import RadioGroup from '$components/form/radio-group/RadioGroup.svelte';
+	import RadioField from '$components/form/radio-field/RadioField.svelte';
 	import Button from '$components/button/Button.svelte';
 	import { reportFormOptionsStore } from '$lib/stores/reportFormOptionsStore';
 
