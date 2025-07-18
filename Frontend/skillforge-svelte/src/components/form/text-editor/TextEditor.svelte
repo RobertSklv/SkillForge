@@ -3,10 +3,10 @@
     import 'quill/dist/quill.snow.css';
 	import { browser } from '$app/environment';
 	import FieldValidation from '../field-validation/FieldValidation.svelte';
-	import { uploadImage } from '$lib/api/client';
+	import { uploadImage } from 'skillforge-common/api/client';
 	import { PUBLIC_BACKEND_DOMAIN } from '$env/static/public';
-	import type { ImageUploadType } from '$lib/types/ImageUploadType';
-	import type FormContext from '$lib/types/FormContext';
+	import type { ImageUploadType } from 'skillforge-common/types/ImageUploadType';
+	import type FormContext from 'skillforge-common/types/FormContext';
 
     interface Props {
         id: string,

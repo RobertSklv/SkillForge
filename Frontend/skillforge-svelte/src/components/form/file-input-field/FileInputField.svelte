@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type FormContext from "$lib/types/FormContext";
+	import type FormContext from "skillforge-common/types/FormContext";
 	import { getContext, onMount } from "svelte";
 	import type { ChangeEventHandler } from "svelte/elements";
 

@@ -2,7 +2,7 @@
 	import FollowButton from '$components/follow-button/FollowButton.svelte';
 	import Block from '$components/block/Block.svelte';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
-	import type Author from '$lib/types/Author';
+	import type Author from 'skillforge-common/types/Author';
 	import { getImagePath } from '$lib/util';
 	import moment from 'moment';
 

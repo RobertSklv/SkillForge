@@ -1,5 +1,5 @@
-import { loadTagPage } from '$lib/api/client.js';
-import type TagPageData from '$lib/types/TagPageData';
+import { loadTagPage } from 'skillforge-common/api/client.js';
+import type TagPageData from 'skillforge-common/types/TagPageData';
 
 export async function load({ fetch, params, parent }) {
     let { authToken } = await parent();

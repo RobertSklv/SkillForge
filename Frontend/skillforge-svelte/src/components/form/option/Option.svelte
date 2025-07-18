@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type SelectFieldContext from "$lib/types/SelectFieldContext";
+	import type SelectFieldContext from "skillforge-common/types/SelectFieldContext";
 	import { getContext, onMount, type Snippet } from "svelte";
 
     interface Props {

@@ -45,11 +45,11 @@ body {
     @for $i from 0 through 12 {
         .col-xs-#{$i} {
             flex: 0 0 auto;
-            width: ($i / 12) * 100%;
+            width: calc($i / 12) * 100%;
         }
 
         .offset-xs-#{$i} {
-            margin-left: ($i / 12) * 100%;
+            margin-left: calc($i / 12) * 100%;
         }
     }
 }

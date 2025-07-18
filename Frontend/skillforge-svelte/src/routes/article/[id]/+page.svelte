@@ -6,7 +6,7 @@
 	import AuthorBlock from '$components/author-block/AuthorBlock.svelte';
 	import { PUBLIC_BASE_URL } from '$env/static/public';
 	import { generateUserLinkSchema } from '$lib/structuredDataUtil';
-	import type ArticlePageModel from '$lib/types/ArticlePageModel';
+	import type ArticlePageModel from 'skillforge-common/types/ArticlePageModel';
 	import { getFrontendUrl, getImagePath, htmlToText, truncateText } from '$lib/util';
 
 	interface Props {

@@ -1,4 +1,4 @@
-import { requestApi } from "$lib/api/client";
+import { requestApi } from "skillforge-common/api/client";
 
 
 export function required(value: any): boolean {

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { searchTags } from '$lib/api/client';
-	import type TagLinkType from '$lib/types/TagLinkType';
-	import type ValidatedField from '$lib/types/ValidatedField';
+	import { searchTags } from 'skillforge-common/api/client';
+	import type TagLinkType from 'skillforge-common/types/TagLinkType';
+	import type ValidatedField from 'skillforge-common/types/ValidatedField';
 	import { getContext, onMount } from 'svelte';
 	import FieldValidation from '../field-validation/FieldValidation.svelte';
-	import type FormContext from '$lib/types/FormContext';
+	import type FormContext from 'skillforge-common/types/FormContext';
 	import { fade } from 'svelte/transition';
 	import Icon from '$components/icon/Icon.svelte';
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { BootstrapColor } from '$lib/types/BootstrapColor';
-	import type TagLink from '$lib/types/TagLinkType';
+	import type { BootstrapColor } from 'skillforge-common/types/BootstrapColor';
+	import type TagLink from 'skillforge-common/types/TagLinkType';
 	import Icon from '$components/icon/Icon.svelte';
 	import Link from '../link/Link.svelte';
 	import './_tag-link.scss';

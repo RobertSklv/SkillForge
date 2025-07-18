@@ -7,7 +7,7 @@
 	import AuthorBox from '$components/author-box/AuthorBox.svelte';
 	import { PUBLIC_BACKEND_DOMAIN } from '$env/static/public';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
-	import type ArticleCardType from '$lib/types/ArticleCardType';
+	import type ArticleCardType from 'skillforge-common/types/ArticleCardType';
 	import Icon from '$components/icon/Icon.svelte';
 
 	interface Props {

@@ -9,9 +9,9 @@
 	import { PUBLIC_BASE_URL } from '$env/static/public';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
 	import { addToast } from '$lib/stores/toastStore';
-	import type AccountInfoFormData from '$lib/types/AccountInfoFormData';
-	import type PasswordChangeFormData from '$lib/types/PasswordChangeFormData';
-	import type ValidationRules from '$lib/types/ValidationRules';
+	import type AccountInfoFormData from 'skillforge-common/types/AccountInfoFormData';
+	import type PasswordChangeFormData from 'skillforge-common/types/PasswordChangeFormData';
+	import type ValidationRules from 'skillforge-common/types/ValidationRules';
 	import { compare, email, maxLength, password, remote, required } from '$lib/validation/rules';
 	import { writable } from 'svelte/store';
 

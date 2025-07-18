@@ -1,58 +1,55 @@
 <script lang="ts">
-	import { type Snippet } from "svelte";
-	import Footer from "$components/footer/Footer.svelte";
-	import Header from "$components/header/Header.svelte";
-    import { currentUserStore } from "$lib/stores/currentUserStore";
-    import 'bootswatch/dist/vapor/bootstrap.min.css';
-    import 'bootstrap-icons/font/bootstrap-icons.min.css';
-	import CookieConsentBanner from "$components/cookie-consent-banner/CookieConsentBanner.svelte";
-    import '$styles/global.scss';
-    import { onNavigate } from '$app/navigation';
-	import ToastContainer from "$components/toast-container/ToastContainer.svelte";
-	import { getFrontendUrl } from "$lib/util";
-	import type UserInfo from "$lib/types/UserInfo";
-	import type ReportFormOptions from "$lib/types/ReportFormOptions";
-	import { reportFormOptionsStore } from "$lib/stores/reportFormOptionsStore";
+	import { type Snippet } from 'svelte';
+	import Footer from '$components/footer/Footer.svelte';
+	import Header from '$components/header/Header.svelte';
+	import { currentUserStore } from '$lib/stores/currentUserStore';
+	import 'bootswatch/dist/vapor/bootstrap.min.css';
+	import 'bootstrap-icons/font/bootstrap-icons.min.css';
+	import CookieConsentBanner from '$components/cookie-consent-banner/CookieConsentBanner.svelte';
+	import '$styles/global.scss';
+	import { onNavigate } from '$app/navigation';
+	import ToastContainer from '$components/toast-container/ToastContainer.svelte';
+	import { getFrontendUrl } from '$lib/util';
+	import type UserInfo from 'skillforge-common/types/UserInfo';
+	import type ReportFormOptions from 'skillforge-common/types/ReportFormOptions';
+	import { reportFormOptionsStore } from '$lib/stores/reportFormOptionsStore';
 
-    onNavigate((navigation) => {
-        if (!document.startViewTransition) return;
+	onNavigate((navigation) => {
+		if (!document.startViewTransition) return;
 
-        // Disabled view transitions when only query param changes are present.
-        if (navigation.from?.url.pathname === navigation.to?.url.pathname) return;
+		// Disabled view transitions when only query param changes are present.
+		if (navigation.from?.url.pathname === navigation.to?.url.pathname) return;
 
-        return new Promise((resolve) => {
-            document.startViewTransition(async () => {
-                resolve();
-                await navigation.complete;
-            });
-        });
-    });
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
+	});
 
-    interface Props {
-        data: {
-            currentUserInfo: UserInfo | undefined,
-            reportFormOptions: ReportFormOptions
-        },
-        children: Snippet
-    }
+	interface Props {
+		data: {
+			currentUserInfo: UserInfo | undefined;
+			reportFormOptions: ReportFormOptions;
+		};
+		children: Snippet;
+	}
 
-    let {
-        data,
-        children
-    }: Props = $props();
-    
-    if (data && data.currentUserInfo && Object.keys(data.currentUserInfo).length === 0) {
-        data.currentUserInfo = undefined;
-    }
-    
-    currentUserStore.set(data.currentUserInfo);
-    reportFormOptionsStore.set(data.reportFormOptions);
+	let { data, children }: Props = $props();
+
+	if (data && data.currentUserInfo && Object.keys(data.currentUserInfo).length === 0) {
+		data.currentUserInfo = undefined;
+	}
+
+	currentUserStore.set(data.currentUserInfo);
+	reportFormOptionsStore.set(data.reportFormOptions);
 </script>
 
 <Header />
 
 <main id="main-content" class="container pb-5">
-    {@render children()}
+	{@render children()}
 </main>
 
 <Footer />
@@ -63,48 +60,49 @@
 
 {@html `<script type="application/ld+json">
     ${JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'WebSite',
-        name: 'SkillForge',
-        description: "Discover and share high-quality articles on technology, development, and more. Follow tags and authors, engage with the community, and explore trending content.",
-        url: getFrontendUrl()
-    })}
+			'@context': 'https://schema.org',
+			'@type': 'WebSite',
+			name: 'SkillForge',
+			description:
+				'Discover and share high-quality articles on technology, development, and more. Follow tags and authors, engage with the community, and explore trending content.',
+			url: getFrontendUrl()
+		})}
 </script>`}
 
 <style>
-    @keyframes fade-in {
-        from {
-            opacity: 0;
-        }
-    }
+	@keyframes fade-in {
+		from {
+			opacity: 0;
+		}
+	}
 
-    @keyframes fade-out {
-        to {
-            opacity: 0;
-        }
-    }
+	@keyframes fade-out {
+		to {
+			opacity: 0;
+		}
+	}
 
-    @keyframes slide-from-right {
-        from {
-            transform: translateY(-30px);
-        }
-    }
+	@keyframes slide-from-right {
+		from {
+			transform: translateY(-30px);
+		}
+	}
 
-    @keyframes slide-to-left {
-        to {
-            transform: translateY(30px);
-        }
-    }
+	@keyframes slide-to-left {
+		to {
+			transform: translateY(30px);
+		}
+	}
 
-    :root::view-transition-old(root) {
-        animation:
-            90ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
-            300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
-    }
+	:root::view-transition-old(root) {
+		animation:
+			90ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+			300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+	}
 
-    :root::view-transition-new(root) {
-        animation:
-            210ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
-            300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
-    }
+	:root::view-transition-new(root) {
+		animation:
+			210ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+			300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+	}
 </style>

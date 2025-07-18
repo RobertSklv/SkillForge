@@ -1,25 +1,23 @@
-import { PUBLIC_BACKEND_DOMAIN } from "$env/static/public";
-import type ArticleCardType from "$lib/types/ArticleCardType";
-import type ArticleUpsertPageModel from "$lib/types/ArticleUpsertPageModel";
-import type ArticlePageModel from "$lib/types/ArticlePageModel";
-import type HomePageData from "$lib/types/HomePageData";
-import type { ImageUploadType } from "$lib/types/ImageUploadType";
-import type SvelteFetch from "$lib/types/SvelteFetch";
-import type UserInfo from "$lib/types/UserInfo";
-import type TagLinkType from "$lib/types/TagLinkType";
-import type QueryParams from "$lib/types/QueryParams";
-import type FetchData from "$lib/types/FetchData";
-import type TagPageData from "$lib/types/TagPageData";
-import type UserListItemType from "$lib/types/UserListItemType";
-import type UserPageData from "$lib/types/UserPageData";
-import type TagListItemType from "$lib/types/TagListItemType";
-import type ArticleSearchItemType from "$lib/types/ArticleSearchItemType";
-import type GridState from "$lib/types/GridState";
-import type PaginationResponse from "$lib/types/PaginationResponse";
-import type ReportFormOptions from "$lib/types/ReportFormOptions";
-import { deleteAuthToken, getAuthTokenFromBrowserCookie } from "$lib/auth";
-import { currentUserStore } from "$lib/stores/currentUserStore";
-import { goto } from "$app/navigation";
+import type ArticleCardType from "../types/ArticleCardType";
+import type ArticleUpsertPageModel from "../types/ArticleUpsertPageModel";
+import type ArticlePageModel from "../types/ArticlePageModel";
+import type HomePageData from "../types/HomePageData";
+import type { ImageUploadType } from "../types/ImageUploadType";
+import type SvelteFetch from "../types/SvelteFetch";
+import type UserInfo from "../types/UserInfo";
+import type TagLinkType from "../types/TagLinkType";
+import type QueryParams from "../types/QueryParams";
+import type FetchData from "../types/FetchData";
+import type TagPageData from "../types/TagPageData";
+import type UserListItemType from "../types/UserListItemType";
+import type UserPageData from "../types/UserPageData";
+import type TagListItemType from "../types/TagListItemType";
+import type ArticleSearchItemType from "../types/ArticleSearchItemType";
+import type GridState from "../types/GridState";
+import type PaginationResponse from "../types/PaginationResponse";
+import type ReportFormOptions from "../types/ReportFormOptions";
+import { deleteAuthToken, getAuthTokenFromBrowserCookie } from "../auth";
+import { getEnv } from "../env";
 
 export async function getCurrentUser(fetch?: SvelteFetch, authToken?: string): Promise<UserInfo | undefined> {
 	try {
@@ -320,7 +318,7 @@ export function createURLSearchParams(params: QueryParams): URLSearchParams {
 }
 
 export async function requestApi(url: string, data?: FetchData): Promise<any> {
-	return request(PUBLIC_BACKEND_DOMAIN + '/Api' + url, data);
+	return request(getEnv().backendUrl + '/Api' + url, data);
 }
 
 export async function request(url: string, data?: FetchData): Promise<any> {
@@ -368,9 +366,8 @@ export async function request(url: string, data?: FetchData): Promise<any> {
 	}
 
 	if (response.status === 401) {
-		currentUserStore.set(undefined);
 		deleteAuthToken();
-		goto('/join');
+        getEnv().onAuthError?.();
 	}
 
 	return responseData;

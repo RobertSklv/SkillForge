@@ -1,5 +1,5 @@
-import { searchArticlesAdvanced } from '$lib/api/client.js';
-import type GridState from '$lib/types/GridState.js';
+import { searchArticlesAdvanced } from 'skillforge-common/api/client.js';
+import type GridState from 'skillforge-common/types/GridState.js';
 
 export async function load({ fetch, url }) {
     let pageParam = url.searchParams.get('p');

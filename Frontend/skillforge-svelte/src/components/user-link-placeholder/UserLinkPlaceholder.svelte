@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { BootstrapColor } from "$lib/types/BootstrapColor";
+	import type { BootstrapColor } from "skillforge-common/types/BootstrapColor";
 	import LinkPlaceholder from "../link-placeholder/LinkPlaceholder.svelte";
 
 	interface Props {

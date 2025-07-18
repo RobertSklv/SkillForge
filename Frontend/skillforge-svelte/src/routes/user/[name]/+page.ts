@@ -1,5 +1,5 @@
-import { loadUserPage } from '$lib/api/client.js';
-import type UserPageData from '$lib/types/UserPageData';
+import { loadUserPage } from 'skillforge-common/api/client.js';
+import type UserPageData from 'skillforge-common/types/UserPageData';
 
 export async function load({ fetch, params, parent }) {
     let { authToken } = await parent();

@@ -1,6 +1,6 @@
 <script lang="ts" generics="T">
-	import type { GutterLevel } from '$lib/types/GutterLevel';
-	import type ScrollableStore from '$lib/types/ScrollableStore';
+	import type { GutterLevel } from 'skillforge-common/types/GutterLevel';
+	import type ScrollableStore from 'skillforge-common/types/ScrollableStore';
 	import { getContext, onDestroy, onMount, type Snippet } from 'svelte';
 
 	interface Props {

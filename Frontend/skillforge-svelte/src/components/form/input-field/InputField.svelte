@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type ValidatedField from '$lib/types/ValidatedField';
-	import type { InputType } from '$lib/types/InputType';
+	import type ValidatedField from 'skillforge-common/types/ValidatedField';
+	import type { InputType } from 'skillforge-common/types/InputType';
 	import FieldValidation from '../field-validation/FieldValidation.svelte';
 	import { getContext, onMount } from 'svelte';
-	import type FormContext from '$lib/types/FormContext';
+	import type FormContext from 'skillforge-common/types/FormContext';
 
     interface Props {
         id: string,

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import AuthorBox from '$components/author-box/AuthorBox.svelte';
-	import type CommentModel from '$lib/types/CommentModel';
+	import type CommentModel from 'skillforge-common/types/CommentModel';
 
 	interface Props {
 		data: CommentModel;

@@ -10,12 +10,12 @@
 	import RateButtons from '$components/rate-buttons/RateButtons.svelte';
 	import ReportModal from '$components/report/ReportModal.svelte';
 	import AuthorBox from '$components/author-box/AuthorBox.svelte';
-	import { deleteComment } from '$lib/api/client';
+	import { deleteComment } from 'skillforge-common/api/client';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
 	import { addToast } from '$lib/stores/toastStore';
-	import type ArticleContext from '$lib/types/ArticleContext';
-	import type CommentFormData from '$lib/types/CommentFormData';
-	import type CommentModel from '$lib/types/CommentModel';
+	import type ArticleContext from 'skillforge-common/types/ArticleContext';
+	import type CommentFormData from 'skillforge-common/types/CommentFormData';
+	import type CommentModel from 'skillforge-common/types/CommentModel';
 	import { getContext } from 'svelte';
 	import { writable } from 'svelte/store';
 

@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { writable } from 'svelte/store';
-	import type ArticleUpsertFormData from '$lib/types/ArticleUpsertFormData';
+	import type ArticleUpsertFormData from 'skillforge-common/types/ArticleUpsertFormData';
 	import Form from '../form/Form.svelte';
 	import Button from '../button/Button.svelte';
 	import InputField from '../form/input-field/InputField.svelte';
 	import TextEditor from '../form/text-editor/TextEditor.svelte';
 	import ImageLoader from '../form/image-loader/ImageLoader.svelte';
 	import { getContext } from 'svelte';
-	import type ArticleUpsertPageModel from '$lib/types/ArticleUpsertPageModel';
+	import type ArticleUpsertPageModel from 'skillforge-common/types/ArticleUpsertPageModel';
 	import TagComboBox from '$components/form/tag-combo-box/TagComboBox.svelte';
-	import type ValidationRules from '$lib/types/ValidationRules';
+	import type ValidationRules from 'skillforge-common/types/ValidationRules';
 	import { regex, required } from '$lib/validation/rules';
 	import { addToast } from '$lib/stores/toastStore';
 	import Icon from '$components/icon/Icon.svelte';

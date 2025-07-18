@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type Option from "$lib/types/OptionType";
+	import type Option from "skillforge-common/types/OptionType";
 	import type { Snippet } from "svelte";
 	import RadioField from "../radio-field/RadioField.svelte";
 	import FieldValidation from "../field-validation/FieldValidation.svelte";
-	import type ValidatedField from "$lib/types/ValidatedField";
+	import type ValidatedField from "skillforge-common/types/ValidatedField";
     import './_radio-group.scss';
 
     interface Props {

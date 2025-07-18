@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Icon from '$components/icon/Icon.svelte';
-	import { searchArticles } from '$lib/api/client';
-	import type ArticleSearchItemType from '$lib/types/ArticleSearchItemType';
-	import type GridContext from '$lib/types/GridContext';
+	import { searchArticles } from 'skillforge-common/api/client';
+	import type ArticleSearchItemType from 'skillforge-common/types/ArticleSearchItemType';
+	import type GridContext from 'skillforge-common/types/GridContext';
 	import moment from 'moment';
 	import { getContext } from 'svelte';
 	import { fade } from 'svelte/transition';
