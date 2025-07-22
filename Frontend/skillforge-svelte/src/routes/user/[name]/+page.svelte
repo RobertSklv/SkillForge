@@ -22,7 +22,7 @@
 	import type TagListItemType from 'skillforge-common/types/TagListItemType';
 	import FollowList from '$components/follow-list/FollowList.svelte';
 	import TagListItem from '$components/tag-list-item/TagListItem.svelte';
-	import { getFrontendUrl, getImagePath } from '$lib/util';
+	import { getFrontendUrl, getImagePath } from 'skillforge-common/util';
 	import Modal from '$components/modal/Modal.svelte';
 	import Dropdown from '$components/dropdown/Dropdown.svelte';
 	import DropdownItem from '$components/dropdown-item/DropdownItem.svelte';

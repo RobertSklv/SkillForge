@@ -10,7 +10,7 @@
 	import type ArticleUpsertPageModel from 'skillforge-common/types/ArticleUpsertPageModel';
 	import TagComboBox from '$components/form/tag-combo-box/TagComboBox.svelte';
 	import type ValidationRules from 'skillforge-common/types/ValidationRules';
-	import { regex, required } from '$lib/validation/rules';
+	import { regex, required } from 'skillforge-common/validation/rules';
 	import { addToast } from '$lib/stores/toastStore';
 	import Icon from '$components/icon/Icon.svelte';
 

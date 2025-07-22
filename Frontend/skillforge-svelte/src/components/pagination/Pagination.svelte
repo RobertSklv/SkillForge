@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type GridContext from "skillforge-common/types/GridContext";
 	import type GridState from 'skillforge-common/types/GridState';
-	import { clamp } from '$lib/util';
+	import { clamp } from '$lib/svelte-util';
 	import { getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
 

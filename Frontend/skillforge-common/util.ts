@@ -1,24 +1,4 @@
-import { PUBLIC_BACKEND_DOMAIN, PUBLIC_BASE_URL } from "$env/static/public";
-
-
-export function clickOutside(
-	node: HTMLElement,
-	callback: () => void
-): { destroy(): void } {
-	const handleClick = (event: MouseEvent) => {
-		if (!node.contains(event.target as Node)) {
-			callback();
-		}
-	};
-
-	document.addEventListener("click", handleClick, true);
-
-	return {
-		destroy() {
-			document.removeEventListener("click", handleClick, true);
-		},
-	};
-}
+import { getEnv } from "./env";
 
 export function formatRelativeTime(date: string): string {
 	const now = new Date();
@@ -54,18 +34,18 @@ export function formatRelativeTime(date: string): string {
 
 export function getFrontendUrl(relativePath: string | null = null): string {
 	if (!relativePath) {
-		return PUBLIC_BASE_URL;
+		return getEnv().baseUrl;
 	}
 
-	return PUBLIC_BASE_URL + relativePath;
+	return getEnv().baseUrl + relativePath;
 }
 
 export function getBackendUrl(relativePath: string | null = null): string {
 	if (!relativePath) {
-		return PUBLIC_BACKEND_DOMAIN;
+		return getEnv().backendUrl;
 	}
 
-	return PUBLIC_BACKEND_DOMAIN + relativePath;
+	return getEnv().backendUrl + relativePath;
 }
 
 export function getImagePath(relativePath?: string | null) {
@@ -73,7 +53,7 @@ export function getImagePath(relativePath?: string | null) {
 		return '/user.png';
 	}
 
-	return PUBLIC_BACKEND_DOMAIN + relativePath;
+	return getEnv().backendUrl + relativePath;
 }
 
 export function clamp(value: number, lowerBound: number, upperBound: number) {

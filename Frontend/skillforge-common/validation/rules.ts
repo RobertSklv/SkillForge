@@ -1,5 +1,4 @@
-import { requestApi } from "skillforge-common/api/client";
-
+import { requestApi } from "../api/client";
 
 export function required(value: any): boolean {
     return !!value;

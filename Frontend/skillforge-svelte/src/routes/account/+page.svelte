@@ -12,7 +12,7 @@
 	import type AccountInfoFormData from 'skillforge-common/types/AccountInfoFormData';
 	import type PasswordChangeFormData from 'skillforge-common/types/PasswordChangeFormData';
 	import type ValidationRules from 'skillforge-common/types/ValidationRules';
-	import { compare, email, maxLength, password, remote, required } from '$lib/validation/rules';
+	import { compare, email, maxLength, password, remote, required } from 'skillforge-common/validation/rules';
 	import { writable } from 'svelte/store';
 
 	interface Props {

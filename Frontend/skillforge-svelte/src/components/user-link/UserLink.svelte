@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { BootstrapColor } from "skillforge-common/types/BootstrapColor";
 	import type UserLink from "skillforge-common/types/UserLinkType";
-	import { getImagePath } from "$lib/util";
+	import { getImagePath } from "skillforge-common/util";
 	import Link from "../link/Link.svelte";
 	import './_user-link.scss';
 

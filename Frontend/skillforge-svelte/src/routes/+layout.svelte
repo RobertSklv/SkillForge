@@ -9,7 +9,7 @@
 	import '$styles/global.scss';
 	import { onNavigate } from '$app/navigation';
 	import ToastContainer from '$components/toast-container/ToastContainer.svelte';
-	import { getFrontendUrl } from '$lib/util';
+	import { getFrontendUrl } from 'skillforge-common/util';
 	import type UserInfo from 'skillforge-common/types/UserInfo';
 	import type ReportFormOptions from 'skillforge-common/types/ReportFormOptions';
 	import { reportFormOptionsStore } from '$lib/stores/reportFormOptionsStore';

@@ -19,7 +19,7 @@
 	} from '$lib/structuredDataUtil';
 	import type ArticleCardType from 'skillforge-common/types/ArticleCardType';
 	import type HomePageData from 'skillforge-common/types/HomePageData';
-	import { getFrontendUrl, getImagePath } from '$lib/util';
+	import { getFrontendUrl, getImagePath } from 'skillforge-common/util';
 
 	const BATCH_SIZE: number = 6;
 

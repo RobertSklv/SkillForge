@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onNavigate } from '$app/navigation';
-	import { clickOutside } from '$lib/util';
+	import { clickOutside } from '$lib/svelte-util';
 	import type { Snippet } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
 

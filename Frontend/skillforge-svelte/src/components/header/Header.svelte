@@ -8,7 +8,7 @@
 	import { goto, invalidate } from '$app/navigation';
 	import HeaderSearchBar from '../header-search-bar/HeaderSearchBar.svelte';
 	import { page } from '$app/state';
-	import { getImagePath } from '$lib/util';
+	import { getImagePath } from 'skillforge-common/util';
 	import { deleteAuthToken } from '$lib/auth';
 
 	async function logout() {

@@ -2,7 +2,7 @@
 	import Form from '../form/Form.svelte';
 	import InputField from '../form/input-field/InputField.svelte';
 	import type ValidationRules from 'skillforge-common/types/ValidationRules';
-	import { required } from '$lib/validation/rules';
+	import { required } from 'skillforge-common/validation/rules';
 	import type UserLoginCredentials from 'skillforge-common/types/UserLoginCredentials';
 	import { writable } from 'svelte/store';
 	import Button from '../button/Button.svelte';

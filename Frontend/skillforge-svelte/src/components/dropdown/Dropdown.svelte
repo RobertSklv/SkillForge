@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { clickOutside } from '$lib/util';
+	import { clickOutside } from '$lib/svelte-util';
 	import { type Snippet } from 'svelte';
 	import { fade } from 'svelte/transition';
 
