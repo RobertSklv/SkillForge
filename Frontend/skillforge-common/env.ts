@@ -7,7 +7,11 @@ export function initEnv(config: AppEnvironment) {
 }
 
 export function getEnv(): AppEnvironment {
-    if (!env) throw new Error("Environment not initialized");
+    if (!isEnvInitialized()) throw new Error("Environment not initialized");
     
     return env;
+}
+
+export function isEnvInitialized(): boolean {
+    return !!env;
 }

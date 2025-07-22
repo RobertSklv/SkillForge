@@ -6,7 +6,7 @@
 	import 'bootswatch/dist/vapor/bootstrap.min.css';
 	import 'bootstrap-icons/font/bootstrap-icons.min.css';
 	import CookieConsentBanner from '$components/cookie-consent-banner/CookieConsentBanner.svelte';
-	import '$styles/global.scss';
+	import 'skillforge-common/styles/global.scss';
 	import { onNavigate } from '$app/navigation';
 	import ToastContainer from '$components/toast-container/ToastContainer.svelte';
 	import { getFrontendUrl } from 'skillforge-common/util';

@@ -12,7 +12,7 @@
 	import { deleteAuthToken } from 'skillforge-common/auth';
 
 	async function logout() {
-		await logoutUser();
+		logoutUser();
 		deleteAuthToken();
 		await invalidate('app:auth');
 

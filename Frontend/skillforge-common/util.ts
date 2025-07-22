@@ -50,7 +50,7 @@ export function getBackendUrl(relativePath: string | null = null): string {
 
 export function getImagePath(relativePath?: string | null) {
 	if (!relativePath) {
-		return '/user.png';
+		return getEnv().assetsRelativePath + '/user.png';
 	}
 
 	return getEnv().backendUrl + relativePath;

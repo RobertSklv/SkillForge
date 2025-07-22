@@ -1,7 +1,7 @@
 import type UserInfo from "skillforge-common/types/UserInfo";
 import { writable } from "svelte/store"
 
-export async function logoutUser() {
+export function logoutUser() {
     currentUserStore.set(undefined);
 }
 
