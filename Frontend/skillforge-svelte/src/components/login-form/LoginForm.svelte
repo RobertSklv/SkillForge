@@ -11,7 +11,7 @@
 	import { goto, invalidate } from '$app/navigation';
 	import { addToast } from '$lib/stores/toastStore';
 	import type LoginResponse from 'skillforge-common/types/LoginResponse';
-	import { storeAuthToken } from '$lib/auth';
+	import { storeAuthToken } from 'skillforge-common/auth';
 
 	let formData = writable<UserLoginCredentials>({
 		UsernameOrEmail: '',

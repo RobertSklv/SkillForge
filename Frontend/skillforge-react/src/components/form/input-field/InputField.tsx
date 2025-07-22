@@ -8,8 +8,8 @@ export interface IInputFieldProps {
     name?: string;
     label?: string;
     type?: InputType;
-    value: any;
-    onChange: (value: any) => void;
+    value?: any;
+    onChange?: (value: any) => void;
     options?: RegisterOptions<FieldValues, string> | undefined,
     placeholder?: string;
     min?: any;
@@ -33,7 +33,7 @@ export function InputField(props: IInputFieldProps) {
             <input
                     {...formContext?.form.register(formName, {
                         ...props.options,
-                        onChange: e => props.onChange(e.target.value)
+                        onChange: e => props.onChange?.(e.target.value)
                     })}
                     id={props.id}
                     type={props.type}

@@ -9,7 +9,7 @@
 	import HeaderSearchBar from '../header-search-bar/HeaderSearchBar.svelte';
 	import { page } from '$app/state';
 	import { getImagePath } from 'skillforge-common/util';
-	import { deleteAuthToken } from '$lib/auth';
+	import { deleteAuthToken } from 'skillforge-common/auth';
 
 	async function logout() {
 		await logoutUser();

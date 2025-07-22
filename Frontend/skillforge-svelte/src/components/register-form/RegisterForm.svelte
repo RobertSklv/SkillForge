@@ -10,7 +10,7 @@
 	import { currentUserStore } from '$lib/stores/currentUserStore';
 	import { goto, invalidate } from '$app/navigation';
 	import { addToast } from '$lib/stores/toastStore';
-	import { storeAuthToken } from '$lib/auth';
+	import { storeAuthToken } from 'skillforge-common/auth';
 	import type RegisterResponse from 'skillforge-common/types/RegisterResponse';
 
 	let formData = writable<UserRegisterCredentials>({
