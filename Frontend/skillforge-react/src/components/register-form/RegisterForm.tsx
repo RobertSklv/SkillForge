@@ -8,6 +8,7 @@ import { useCurrentUser } from 'hooks/useCurrentUser';
 import type UserInfo from 'skillforge-common/types/UserInfo';
 import { storeAuthToken } from 'skillforge-common/auth';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from 'hooks/useToast';
 
 export function RegisterForm() {
     const [username, setUsername] = useState<string>('');
@@ -17,6 +18,7 @@ export function RegisterForm() {
 
     const { setCurrentUser } = useCurrentUser();
     const navigate = useNavigate();
+    const { addToast } = useToast();
 
     function onSuccess(response: RegisterResponse) {
         let userInfo: UserInfo = {
@@ -27,6 +29,8 @@ export function RegisterForm() {
 
         setCurrentUser(userInfo);
         storeAuthToken(response.AuthToken);
+
+		addToast('Registration successful');
 
         navigate('/user/' + userInfo.Name);
     }

@@ -6,10 +6,12 @@ import { useCurrentUser } from 'hooks/useCurrentUser';
 import { Form } from '@components/form/Form';
 import { InputField } from '@components/form/input-field/InputField';
 import { Button } from '@components/button/Button';
+import { useToast } from 'hooks/useToast';
 
 export function LoginForm() {
     const { setCurrentUser } = useCurrentUser();
     const navigate = useNavigate();
+    const { addToast } = useToast();
 
     const [usernameOrEmail, setUsernameOrEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -18,7 +20,7 @@ export function LoginForm() {
         setCurrentUser(response.CurrentUserInfo);
         storeAuthToken(response.AuthToken);
 
-        // addToast('Successfully logged in');
+        addToast('Successfully logged in');
 
         navigate('/user/' + response.CurrentUserInfo.Name);
     }
