@@ -5,10 +5,9 @@
 		mod?: string;
 		leftColumn?: Snippet;
 		children: Snippet;
-		rightColumn?: Snippet;
 	}
 
-	const { mod, leftColumn, children, rightColumn }: Props = $props();
+	const { mod, leftColumn, children }: Props = $props();
 </script>
 
 <div class="row {mod}">

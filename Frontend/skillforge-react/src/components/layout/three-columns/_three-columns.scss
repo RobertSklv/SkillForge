@@ -1,0 +1,13 @@
+@media (min-width: 1200px) {
+    .left-column {
+        flex-basis: 20%;
+    }
+
+    .middle-column {
+        flex-basis: 52%;
+    }
+
+    .right-column {
+        flex-basis: 28%;
+    }
+}

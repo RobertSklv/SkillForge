@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { initEnv, isEnvInitialized } from 'skillforge-common/env';
 import { ToastContainer } from '@components/toast-container/ToastContainer';
 import { Header } from '@components/header/Header';
+import { ArticleView } from '@pages/article/ArticleView';
 
 function App() {
 	const navigate = useNavigate();
@@ -29,6 +30,7 @@ function App() {
 			<main id="main-content" className="container pb-5">
 				<Routes>
 					<Route path='/join' element={<Join />} />
+					<Route path='/article/:id' element={<ArticleView />} />
 				</Routes>
 			</main>
 			<ToastContainer />
