@@ -1,4 +1,6 @@
-import { FormContext } from 'context/FormContext';
+'use client'
+
+import { FormContext } from '../../context/FormContext';
 import React, { useContext, useState, type MouseEvent, type MouseEventHandler } from 'react';
 import type { BootstrapColor } from "skillforge-common/types/BootstrapColor";
 import type { BootstrapSize } from "skillforge-common/types/BootstrapSize";

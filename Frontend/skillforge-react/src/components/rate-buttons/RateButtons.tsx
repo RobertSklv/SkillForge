@@ -1,4 +1,4 @@
-import { Icon } from '@components/icon/Icon';
+import { Icon } from '@/components/icon/Icon';
 import { useState } from 'react';
 import { getRating, rate } from 'skillforge-common/api/client';
 import type RatingData from 'skillforge-common/types/RatingData';
@@ -79,7 +79,7 @@ export function RateButtons({ data, subjectId, type, size = 'normal', readonly }
                 disabled={readonly}
             >
                 <Icon
-                    type="hand-thumbs-up{currentUserRate == 1 ? '-fill' : ''}"
+                    type={`hand-thumbs-up${currentUserRate == 1 ? '-fill' : ''}`}
                     classes={size === 'normal' ? 'fs-3' : 'fs-6'}
                 />
             </button>
@@ -88,7 +88,7 @@ export function RateButtons({ data, subjectId, type, size = 'normal', readonly }
                 aria-label="View positive raters"
                 title="View positive raters"
                 onClick={() => (setIsThumbsUpModalOpen(true))}
-                className="bg-transparent border-0 text-primary {size === 'normal' ? 'fs-5' : 'fs-6 p-0'}"
+                className={`bg-transparent border-0 text-primary ${size === 'normal' ? 'fs-5' : 'fs-6 p-0'}`}
                 disabled={data.ThumbsUp === 0 || readonly}
             >
                 {thumbsUp}
@@ -126,7 +126,7 @@ export function RateButtons({ data, subjectId, type, size = 'normal', readonly }
                 disabled={readonly}
             >
                 <Icon
-                    type="hand-thumbs-down{currentUserRate == -1 ? '-fill' : ''}"
+                    type={`hand-thumbs-down${currentUserRate == -1 ? '-fill' : ''}`}
                     classes={size === 'normal' ? 'fs-3' : 'fs-6'}
                 />
             </button>
@@ -135,7 +135,7 @@ export function RateButtons({ data, subjectId, type, size = 'normal', readonly }
                 aria-label="View negative raters"
                 title="View negative raters"
                 onClick={() => (setIsThumbsDownModalOpen(true))}
-                className="bg-transparent border-0 text-primary {size === 'normal' ? 'fs-5' : 'fs-6 p-0'}"
+                className={`bg-transparent border-0 text-primary ${size === 'normal' ? 'fs-5' : 'fs-6 p-0'}`}
                 disabled={data.ThumbsDown === 0 || readonly}
             >
                 {thumbsDown}

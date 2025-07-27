@@ -1,28 +1,30 @@
-import { DropdownItem } from '@components/dropdown-item/DropdownItem';
-import { Dropdown } from '@components/dropdown/Dropdown';
-import { Icon } from '@components/icon/Icon';
-import { NavLink } from '@components/nav-link/NavLink';
-import { Navbar } from '@components/navbar/Navbar';
-import { useCurrentUser } from 'hooks/useCurrentUser';
-import { useNavigate } from 'react-router-dom';
+'use client'
+
+import { DropdownItem } from '@/components/dropdown-item/DropdownItem';
+import { Dropdown } from '@/components/dropdown/Dropdown';
+import { Icon } from '@/components/icon/Icon';
+import { NavLink } from '@/components/nav-link/NavLink';
+import { Navbar } from '@/components/navbar/Navbar';
+import { useCurrentUser } from '../../hooks/useCurrentUser';
 import { deleteAuthToken } from 'skillforge-common/auth';
 import { getImagePath } from 'skillforge-common/util';
+import { useRouter } from 'next/navigation';
 
 export function Header() {
     const { currentUser, logoutUser } = useCurrentUser();
-    const navigate = useNavigate();
+    const router = useRouter();
 
     async function logout() {
         logoutUser();
         deleteAuthToken();
 
-        navigate('/join');
+        router.push('/join');
     }
 
     function renderLogo() {
         return (
             <div className="d-flex justify-content-center align-items-center">
-                <img src="src/assets/logo.png" className="me-1" style={{ height: '22px' }} alt="Logo" />
+                <img src="/logo.png" className="me-1" style={{ height: '22px' }} alt="Logo" />
                 <span className="d-none d-md-block">SkillForge</span>
             </div>
         );

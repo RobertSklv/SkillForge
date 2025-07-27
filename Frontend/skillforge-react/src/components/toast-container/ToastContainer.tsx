@@ -1,6 +1,8 @@
-import { Icon } from '@components/icon/Icon';
+'use client'
+
+import { Icon } from '@/components/icon/Icon';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useToast } from 'hooks/useToast';
+import { useToast } from '../../hooks/useToast';
 
 const iconMap = {
     success: 'check-circle-fill',

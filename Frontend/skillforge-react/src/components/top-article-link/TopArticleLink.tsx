@@ -1,4 +1,4 @@
-import { Icon } from '@components/icon/Icon';
+import { Icon } from '@/components/icon/Icon';
 import moment from 'moment';
 import type TopArticleItemType from 'skillforge-common/types/TopArticleItemType';
 import { formatRelativeTime } from 'skillforge-common/util';

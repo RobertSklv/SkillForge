@@ -1,17 +1,22 @@
+'use client'
+
 import React, { useState, type ReactNode } from 'react';
 import type ArticlePageModel from 'skillforge-common/types/ArticlePageModel';
-import { Block } from '@components/block/Block';
-import { AuthorBox } from '@components/author-box/AuthorBox';
-import { Icon } from '@components/icon/Icon';
+import { Block } from '@/components/block/Block';
+import { AuthorBox } from '@/components/author-box/AuthorBox';
+import { Icon } from '@/components/icon/Icon';
 import { getBackendUrl } from 'skillforge-common/util';
-import { useCurrentUser } from 'hooks/useCurrentUser';
-import { Dropdown } from '@components/dropdown/Dropdown';
-import { DropdownItem } from '@components/dropdown-item/DropdownItem';
-import { DropdownDivider } from '@components/dropdown-divider/DropdownDivider';
+import { useCurrentUser } from '../../hooks/useCurrentUser';
+import { Dropdown } from '@/components/dropdown/Dropdown';
+import { DropdownItem } from '@/components/dropdown-item/DropdownItem';
+import { DropdownDivider } from '@/components/dropdown-divider/DropdownDivider';
 import type CommentModel from 'skillforge-common/types/CommentModel';
 import { AnimatePresence, motion } from 'framer-motion';
-import { RateButtons } from '@components/rate-buttons/RateButtons';
-import { Comment } from '@components/comment/Comment';
+import { RateButtons } from '@/components/rate-buttons/RateButtons';
+import { Comment } from '@/components/comment/Comment';
+import { ArticleContext } from '@/context/ArticleContext';
+import moment from 'moment';
+import './_article.scss';
 
 export interface IArticleProps {
     data: ArticlePageModel;
@@ -22,6 +27,35 @@ export function Article(props: IArticleProps) {
 
     const [comments, setComments] = useState<CommentModel[]>(props.data.Comments);
     const [showReportModal, setShowReportModal] = useState<boolean>(false);
+
+    const [commentFormContent, setCommentFormContent] = useState<string>('');
+
+	async function addComment() {
+		if (!currentUser) {
+			throw Error('User not logged in');
+		}
+
+		let comment: CommentModel = {
+			CommentId: 0,
+			Content: commentFormContent,
+			User: {
+				Name: currentUser.Name,
+				AvatarImage: currentUser.AvatarPath
+			},
+			DateWritten: moment(new Date()).format('yyyy-MM-DD HH:mm:ss'),
+			RatingData: {
+				ThumbsUp: 0,
+				ThumbsDown: 0,
+				UserRating: 0
+			}
+		};
+
+		comments.push(comment);
+	}
+
+	function deleteComment(id: number) {
+		setComments(comments.filter((c) => c.CommentId != id));
+	}
 
     function header(): React.ReactNode {
         return (
@@ -91,7 +125,7 @@ export function Article(props: IArticleProps) {
 
                     <article className="card-body">
                         {props.data.Tags.map(tag => {
-                            return <a href={`/tag/${tag}`} className="me-2">#{tag}</a>;
+                            return <a href={`/tag/${tag}`} className="me-2" key={tag}>#{tag}</a>;
                         })}
                         <h1 className="card-title mb-4">{props.data.Title}</h1>
                         <div className="card-text text-break rich-text-content" dangerouslySetInnerHTML={{ __html: props.data.Content }}></div>
@@ -100,20 +134,24 @@ export function Article(props: IArticleProps) {
 
                 <div className="d-flex flex-column gap-3">
                     <AnimatePresence>
-                        {comments.map((comment) => {
-                            return (
-                                <motion.div
-                                    key={`comment-${comment.CommentId}`}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.2 }}
-                                    layout
-                                >
-                                    <Comment data={comment} />
-                                </motion.div>
-                            );
-                        })}
+                        <ArticleContext.Provider value={{
+                            deleteComment
+                        }}>
+                            {comments.map((comment) => {
+                                return (
+                                    <motion.div
+                                        key={`comment-${comment.CommentId}`}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.2 }}
+                                        layout
+                                    >
+                                        <Comment data={comment} />
+                                    </motion.div>
+                                );
+                            })}
+                        </ArticleContext.Provider>
                     </AnimatePresence>
                 </div>
 

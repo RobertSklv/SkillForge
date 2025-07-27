@@ -1,14 +1,16 @@
-import { Form } from '@components/form/Form';
-import { InputField } from '@components/form/input-field/InputField';
+'use client'
+
+import { Form } from '@/components/form/Form';
+import { InputField } from '@/components/form/input-field/InputField';
 import { useState } from 'react';
 import type RegisterResponse from 'skillforge-common/types/RegisterResponse';
 import { remote, email as validateEmail, password as validatePassword } from 'skillforge-common/validation/rules';
-import { Button } from '@components/button/Button';
-import { useCurrentUser } from 'hooks/useCurrentUser';
+import { Button } from '@/components/button/Button';
+import { useCurrentUser } from '../../hooks/useCurrentUser';
 import type UserInfo from 'skillforge-common/types/UserInfo';
 import { storeAuthToken } from 'skillforge-common/auth';
-import { useNavigate } from 'react-router-dom';
-import { useToast } from 'hooks/useToast';
+import { useToast } from '../../hooks/useToast';
+import { useRouter } from 'next/navigation';
 
 export function RegisterForm() {
     const [username, setUsername] = useState<string>('');
@@ -17,7 +19,7 @@ export function RegisterForm() {
     const [confirmPassword, setConfirmPassword] = useState<string>('');
 
     const { setCurrentUser } = useCurrentUser();
-    const navigate = useNavigate();
+    const router = useRouter();
     const { addToast } = useToast();
 
     function onSuccess(response: RegisterResponse) {
@@ -32,7 +34,7 @@ export function RegisterForm() {
 
 		addToast('Registration successful');
 
-        navigate('/user/' + userInfo.Name);
+        router.push('/user/' + userInfo.Name);
     }
 
     return (

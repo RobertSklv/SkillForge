@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { FormContext } from 'context/FormContext';
+import { FormContext } from '../../context/FormContext';
 import { requestApi } from "skillforge-common/api/client";
 import type ErrorResponse from "skillforge-common/types/ErrorResponse";
 

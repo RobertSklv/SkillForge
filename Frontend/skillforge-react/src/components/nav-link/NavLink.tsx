@@ -1,5 +1,5 @@
+import Link from 'next/link';
 import { type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
 
 export interface INavLinkProps {
     href: string;
@@ -10,7 +10,7 @@ export interface INavLinkProps {
 export function NavLink (props: INavLinkProps) {
   return (
     <li className="nav-item">
-        <Link className={`nav-link ${props.active ? 'active' : ''}`} to={props.href}>
+        <Link className={`nav-link ${props.active ? 'active' : ''}`} href={props.href}>
             {props.children}
         </Link>
     </li>

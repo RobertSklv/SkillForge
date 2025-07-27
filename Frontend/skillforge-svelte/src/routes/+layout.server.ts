@@ -1,5 +1,5 @@
 import { getCurrentUser, getReportFormOptions } from "skillforge-common/api/client";
-import { JWT_TOKEN_COOKIE_NAME } from "$lib/auth";
+import { JWT_TOKEN_COOKIE_NAME } from "skillforge-common/auth.js";
 import type ReportFormOptions from "skillforge-common/types/ReportFormOptions.js";
 import type UserInfo from "skillforge-common/types/UserInfo.js";
 
@@ -15,8 +15,8 @@ export async function load({ fetch, cookies, depends }): Promise<any> {
             currentUserInfo,
             reportFormOptions
         ] = await Promise.all([
-            getCurrentUser(fetch, authToken),
-            getReportFormOptions(fetch, authToken),
+            getCurrentUser(authToken, fetch),
+            getReportFormOptions(authToken, fetch),
         ]);
     }
 

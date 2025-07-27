@@ -1,4 +1,4 @@
-import { useClickOutside } from 'hooks/useClickOutside';
+import { useClickOutside } from '../../hooks/useClickOutside';
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 

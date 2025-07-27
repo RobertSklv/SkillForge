@@ -1,10 +1,10 @@
-import { AuthorBox } from '@components/author-box/AuthorBox';
-import { Block } from '@components/block/Block';
-import { CommentLimited } from '@components/comment-limited/CommentLimited';
-import { Icon } from '@components/icon/Icon';
-import { Link } from '@components/link/Link';
-import { RateButtons } from '@components/rate-buttons/RateButtons';
-import { TagLink } from '@components/tag-link/TagLink';
+import { AuthorBox } from '@/components/author-box/AuthorBox';
+import { Block } from '@/components/block/Block';
+import { CommentLimited } from '@/components/comment-limited/CommentLimited';
+import { Icon } from '@/components/icon/Icon';
+import { Link } from '@/components/link/Link';
+import { RateButtons } from '@/components/rate-buttons/RateButtons';
+import { TagLink } from '@/components/tag-link/TagLink';
 import type ArticleCardType from 'skillforge-common/types/ArticleCardType';
 import { getImagePath } from 'skillforge-common/util';
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 export interface IDropdownItemProps {
     href?: string;
@@ -18,7 +18,7 @@ export function DropdownItem(props: IDropdownItemProps) {
                     {props.children}
                 </button>
             ) : props.type === 'link' ? (
-                <Link to={props.href ?? ''} className={`dropdown-item ${props.active ? 'active' : ''} ${props.disabled ? 'disabled' : ''}`}>
+                <Link href={props.href ?? ''} className={`dropdown-item ${props.active ? 'active' : ''} ${props.disabled ? 'disabled' : ''}`}>
                     {props.children}
                 </Link>
             ) : props.type === 'text' ? (

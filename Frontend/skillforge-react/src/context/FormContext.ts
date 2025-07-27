@@ -1,4 +1,4 @@
-import type FormContext from "lib/types/FormContext";
+import type FormContext from "../types/FormContext";
 import { createContext, useContext } from "react";
 
 export const FormContext = createContext<FormContext | undefined>(undefined);

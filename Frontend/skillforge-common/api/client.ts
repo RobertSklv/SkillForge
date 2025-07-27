@@ -19,7 +19,7 @@ import type ReportFormOptions from "../types/ReportFormOptions";
 import { deleteAuthToken, getAuthTokenFromBrowserCookie } from "../auth";
 import { getEnv } from "../env";
 
-export async function getCurrentUser(fetch?: SvelteFetch, authToken?: string): Promise<UserInfo | undefined> {
+export async function getCurrentUser(authToken?: string, fetch?: SvelteFetch): Promise<UserInfo | undefined> {
 	try {
 		return await requestApi('/User/Me', {
 			fetchFunction: fetch,
@@ -59,7 +59,7 @@ export function deleteComment(id: number): Promise<any> {
 		init: {
 			method: 'DELETE',
 		}
-	})
+	});
 }
 
 export function rate(id: number, rate: -1 | 0 | 1, type: 'article' | 'comment') {
@@ -140,13 +140,13 @@ export function searchArticlesAdvanced(gridState: GridState, fetch?: SvelteFetch
 	});
 }
 
-export function viewArticle(fetch: SvelteFetch, id: number): Promise<ArticlePageModel> {
+export function viewArticle(id: number, fetch?: SvelteFetch): Promise<ArticlePageModel> {
 	return requestApi(`/Article/View/${id}`, {
 		fetchFunction: fetch
 	});
 }
 
-export function loadArticleUpsertPage(fetch: SvelteFetch, authToken?: string, id?: number): Promise<ArticleUpsertPageModel> {
+export function loadArticleUpsertPage(authToken?: string, id?: number, fetch?: SvelteFetch): Promise<ArticleUpsertPageModel> {
 	return requestApi('/Article/LoadUpsertPage', {
 		fetchFunction: fetch,
 		authToken,
@@ -156,7 +156,7 @@ export function loadArticleUpsertPage(fetch: SvelteFetch, authToken?: string, id
 	});
 }
 
-export function getReportFormOptions(fetch?: SvelteFetch, authToken?: string): Promise<ReportFormOptions> {
+export function getReportFormOptions(authToken?: string, fetch?: SvelteFetch): Promise<ReportFormOptions> {
 	return requestApi('/Report/FormOptions', {
 		fetchFunction: fetch,
 		authToken
@@ -351,7 +351,7 @@ export async function request(url: string, data?: FetchData): Promise<any> {
 		_url.search = createURLSearchParams(data.query).toString();
 	}
 
-	const response = await (data?.fetchFunction ?? fetch)(_url, data?.init);
+	const response = await (data?.fetchFunction ?? fetch)(_url, data.init);
 	var text = await response.text();
 	var responseData: any;
 
@@ -367,7 +367,10 @@ export async function request(url: string, data?: FetchData): Promise<any> {
 
 	if (response.status === 401) {
 		deleteAuthToken();
-        getEnv().onAuthError?.();
+
+		if (getEnv().isBrowser) {
+			getEnv().onAuthError?.();
+		}
 	}
 
 	return responseData;

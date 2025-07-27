@@ -1,4 +1,4 @@
-import { Block } from '@components/block/Block';
+import { Block } from '@/components/block/Block';
 import { type ReactNode } from 'react';
 
 export interface IAnchorListProps<T> {

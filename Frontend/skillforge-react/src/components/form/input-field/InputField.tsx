@@ -1,4 +1,4 @@
-import { FormContext } from 'context/FormContext';
+import { FormContext } from '../../../context/FormContext';
 import { useContext } from 'react';
 import type { FieldValues, RegisterOptions } from 'react-hook-form';
 import type { InputType } from 'skillforge-common/types/InputType';

@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useClickOutside } from 'hooks/useClickOutside';
+import { useClickOutside } from '../../hooks/useClickOutside';
 import { useEffect, useState, type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 export interface INavbarProps {
     logoLink: string;
@@ -40,7 +40,7 @@ export function Navbar(props: INavbarProps) {
     return (
         <nav className="navbar navbar-expand-lg fixed-top bg-primary navbar-main" ref={useClickOutside(closeMenu)}>
             <div className="container">
-                <Link className="navbar-brand" to={props.logoLink} title="To homepage">
+                <Link className="navbar-brand" href={props.logoLink} title="To homepage">
                     {props.logoSnippet}
                 </Link>
                 <div className="d-flex justify-content-center flex-shrink-1" style={{ flexGrow: 0.5 }}>
@@ -52,7 +52,6 @@ export function Navbar(props: INavbarProps) {
                     className={`navbar-toggler ${!isOpen ? 'collapsed' : ''}`}
                     onClick={onTogglerClick}
                     type="button"
-                    aria-controlsName="navbarNavDropdown"
                     aria-expanded="false"
                     aria-label="Toggle navigation"
                 >

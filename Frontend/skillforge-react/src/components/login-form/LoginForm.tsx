@@ -1,16 +1,18 @@
+'use client'
+
 import { useState } from 'react';
 import type LoginResponse from 'skillforge-common/types/LoginResponse';
 import { storeAuthToken } from 'skillforge-common/auth';
-import { useNavigate } from 'react-router-dom';
-import { useCurrentUser } from 'hooks/useCurrentUser';
-import { Form } from '@components/form/Form';
-import { InputField } from '@components/form/input-field/InputField';
-import { Button } from '@components/button/Button';
-import { useToast } from 'hooks/useToast';
+import { useCurrentUser } from '../../hooks/useCurrentUser';
+import { Form } from '@/components/form/Form';
+import { InputField } from '@/components/form/input-field/InputField';
+import { Button } from '@/components/button/Button';
+import { useToast } from '../../hooks/useToast';
+import { useRouter } from 'next/navigation';
 
 export function LoginForm() {
     const { setCurrentUser } = useCurrentUser();
-    const navigate = useNavigate();
+    const router = useRouter();
     const { addToast } = useToast();
 
     const [usernameOrEmail, setUsernameOrEmail] = useState<string>('');
@@ -22,7 +24,7 @@ export function LoginForm() {
 
         addToast('Successfully logged in');
 
-        navigate('/user/' + response.CurrentUserInfo.Name);
+        router.push('/user/' + response.CurrentUserInfo.Name);
     }
 
     return (

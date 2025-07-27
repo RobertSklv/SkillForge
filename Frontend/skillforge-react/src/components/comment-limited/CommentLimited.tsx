@@ -1,4 +1,4 @@
-import { AuthorBox } from '@components/author-box/AuthorBox';
+import { AuthorBox } from '@/components/author-box/AuthorBox';
 import type CommentModel from 'skillforge-common/types/CommentModel';
 
 export interface ICommentLimitedProps {
