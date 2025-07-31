@@ -5,8 +5,8 @@ import { Icon } from '@/components/icon/Icon';
 import { Link } from '@/components/link/Link';
 import { RateButtons } from '@/components/rate-buttons/RateButtons';
 import { TagLink } from '@/components/tag-link/TagLink';
-import type ArticleCardType from 'skillforge-common/types/ArticleCardType';
-import { getImagePath } from 'skillforge-common/util';
+import type ArticleCardType from '@/lib/types/ArticleCardType';
+import { getImagePath } from '@/lib/util';
 
 export interface IArticleCardProps {
     data: ArticleCardType;

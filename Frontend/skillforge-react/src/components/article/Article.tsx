@@ -1,16 +1,16 @@
 'use client'
 
 import React, { useState, type ReactNode } from 'react';
-import type ArticlePageModel from 'skillforge-common/types/ArticlePageModel';
+import type ArticlePageModel from '@/lib/types/ArticlePageModel';
 import { Block } from '@/components/block/Block';
 import { AuthorBox } from '@/components/author-box/AuthorBox';
 import { Icon } from '@/components/icon/Icon';
-import { getBackendUrl } from 'skillforge-common/util';
+import { getBackendUrl } from '@/lib/util';
 import { useCurrentUser } from '../../hooks/useCurrentUser';
 import { Dropdown } from '@/components/dropdown/Dropdown';
 import { DropdownItem } from '@/components/dropdown-item/DropdownItem';
 import { DropdownDivider } from '@/components/dropdown-divider/DropdownDivider';
-import type CommentModel from 'skillforge-common/types/CommentModel';
+import type CommentModel from '@/lib/types/CommentModel';
 import { AnimatePresence, motion } from 'framer-motion';
 import { RateButtons } from '@/components/rate-buttons/RateButtons';
 import { Comment } from '@/components/comment/Comment';

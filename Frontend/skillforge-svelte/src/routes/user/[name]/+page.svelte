@@ -13,16 +13,16 @@
 		getUserFollowers,
 		getUserFollowings,
 		getUserTagFollowings
-	} from 'skillforge-common/api/client';
+	} from '$lib/api/client';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
-	import type ArticleCardType from 'skillforge-common/types/ArticleCardType';
-	import type UserPageData from 'skillforge-common/types/UserPageData';
+	import type ArticleCardType from '$lib/types/ArticleCardType';
+	import type UserPageData from '$lib/types/UserPageData';
 	import { page } from '$app/stores';
-	import type UserListItemType from 'skillforge-common/types/UserListItemType';
-	import type TagListItemType from 'skillforge-common/types/TagListItemType';
+	import type UserListItemType from '$lib/types/UserListItemType';
+	import type TagListItemType from '$lib/types/TagListItemType';
 	import FollowList from '$components/follow-list/FollowList.svelte';
 	import TagListItem from '$components/tag-list-item/TagListItem.svelte';
-	import { getFrontendUrl, getImagePath } from 'skillforge-common/util';
+	import { getFrontendUrl, getImagePath } from '$lib/util';
 	import Modal from '$components/modal/Modal.svelte';
 	import Dropdown from '$components/dropdown/Dropdown.svelte';
 	import DropdownItem from '$components/dropdown-item/DropdownItem.svelte';

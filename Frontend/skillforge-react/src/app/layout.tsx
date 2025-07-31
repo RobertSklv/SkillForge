@@ -1,28 +1,42 @@
 import type { Metadata } from "next";
 import 'bootswatch/dist/vapor/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
-import 'skillforge-common/styles/global.scss';
+import '@/styles/global.scss';
 import { Header } from "@/components/header/Header";
 import { ToastContainer } from "@/components/toast-container/ToastContainer";
-import { EnvInitializer } from "@/components/env-initializer/EnvInitializer";
-import { initEnv } from "skillforge-common/env";
+import { GlobalDataInitializer } from "@/components/global-data-initializer/GlobalDataInitializer";
+import { getCurrentUser, getReportFormOptions } from "@/lib/api/client";
+import { cookies } from "next/headers";
+import { JWT_TOKEN_COOKIE_NAME } from "@/lib/auth";
+import { revalidateTag } from "next/cache";
 
 export const metadata: Metadata = {
 	title: "SkillForge"
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
-	initEnv({
-		baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL as string,
-		backendUrl: process.env.NEXT_PUBLIC_BACKEND_DOMAIN as string,
-		assetsRelativePath: ''
-	})
+async function revalidateAuth() {
+	'use server'
+
+	revalidateTag('auth');
+}
+
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
+	const cookieContext = await cookies();
+	const authToken = cookieContext.get(JWT_TOKEN_COOKIE_NAME)?.value;
+
+	const [
+		currentUserInfo,
+		reportFormOptions
+	] = await Promise.all([
+		getCurrentUser(authToken),
+		getReportFormOptions(authToken),
+	]);
 
 	return (
 		<html lang="en" data-bs-theme="dark">
 			<body>
-				<EnvInitializer>
-					<Header />
+				<GlobalDataInitializer currentUserInfo={currentUserInfo}>
+					<Header onLogout={revalidateAuth} />
 
 					<main id="main-content" className="container pb-5">
 						{children}
@@ -30,10 +44,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
 					{/* <Footer />
 
-					<CookieConsentBanner /> */}
+						<CookieConsentBanner /> */}
 
 					<ToastContainer />
-				</EnvInitializer>
+				</GlobalDataInitializer>
 			</body>
 		</html>
 	);

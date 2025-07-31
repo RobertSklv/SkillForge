@@ -1,5 +1,5 @@
-import { loadArticleUpsertPage } from 'skillforge-common/api/client.js';
-import type ArticleUpsertPageModel from 'skillforge-common/types/ArticleUpsertPageModel';
+import { loadArticleUpsertPage } from '$lib/api/client.js';
+import type ArticleUpsertPageModel from '$lib/types/ArticleUpsertPageModel';
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ fetch, parent }): Promise<ArticleUpsertPageModel> {
@@ -9,7 +9,7 @@ export async function load({ fetch, parent }): Promise<ArticleUpsertPageModel> {
         throw redirect(302, '/join');
     }
 
-    let pageModel = await loadArticleUpsertPage(fetch, authToken);
+    let pageModel = await loadArticleUpsertPage(authToken, undefined, fetch);
 
     return pageModel;
 }

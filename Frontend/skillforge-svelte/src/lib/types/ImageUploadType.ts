@@ -1,0 +1,1 @@
+export type ImageUploadType = 'article' | 'comment' | 'avatar';

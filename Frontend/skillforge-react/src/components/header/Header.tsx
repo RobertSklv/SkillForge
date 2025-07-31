@@ -6,17 +6,22 @@ import { Icon } from '@/components/icon/Icon';
 import { NavLink } from '@/components/nav-link/NavLink';
 import { Navbar } from '@/components/navbar/Navbar';
 import { useCurrentUser } from '../../hooks/useCurrentUser';
-import { deleteAuthToken } from 'skillforge-common/auth';
-import { getImagePath } from 'skillforge-common/util';
+import { deleteAuthToken } from '@/lib/auth';
+import { getImagePath } from '@/lib/util';
 import { useRouter } from 'next/navigation';
 
-export function Header() {
+interface IHeaderProps {
+    onLogout: () => void;
+}
+
+export function Header({ onLogout }: IHeaderProps) {
     const { currentUser, logoutUser } = useCurrentUser();
     const router = useRouter();
 
     async function logout() {
         logoutUser();
         deleteAuthToken();
+        onLogout();
 
         router.push('/join');
     }

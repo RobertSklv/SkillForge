@@ -6,12 +6,12 @@
 	import 'bootswatch/dist/vapor/bootstrap.min.css';
 	import 'bootstrap-icons/font/bootstrap-icons.min.css';
 	import CookieConsentBanner from '$components/cookie-consent-banner/CookieConsentBanner.svelte';
-	import 'skillforge-common/styles/global.scss';
+	import '$styles/global.scss';
 	import { onNavigate } from '$app/navigation';
 	import ToastContainer from '$components/toast-container/ToastContainer.svelte';
-	import { getFrontendUrl } from 'skillforge-common/util';
-	import type UserInfo from 'skillforge-common/types/UserInfo';
-	import type ReportFormOptions from 'skillforge-common/types/ReportFormOptions';
+	import { getFrontendUrl } from '$lib/util';
+	import type UserInfo from '$lib/types/UserInfo';
+	import type ReportFormOptions from '$lib/types/ReportFormOptions';
 	import { reportFormOptionsStore } from '$lib/stores/reportFormOptionsStore';
 
 	onNavigate((navigation) => {

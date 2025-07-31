@@ -1,7 +1,7 @@
-import type ArticleCardType from "skillforge-common/types/ArticleCardType";
-import type TopArticleItemType from "skillforge-common/types/TopArticleItemType";
-import type UserLinkType from "skillforge-common/types/UserLinkType";
-import { getFrontendUrl, getImagePath } from "skillforge-common/util";
+import type ArticleCardType from "$lib/types/ArticleCardType";
+import type TopArticleItemType from "$lib/types/TopArticleItemType";
+import type UserLinkType from "$lib/types/UserLinkType";
+import { getFrontendUrl, getImagePath } from "$lib/util";
 
 
 export function generateArticleCardItemsSchema(items: ArticleCardType[]) {

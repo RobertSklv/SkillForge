@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type FormContext from "skillforge-common/types/FormContext";
-    import type ErrorResponse from "skillforge-common/types/ErrorResponse";
-	import type ValidationRule from "skillforge-common/types/ValidationRule";
-	import type ValidationRules from "skillforge-common/types/ValidationRules";
+	import type FormContext from "$lib/types/FormContext";
+    import type ErrorResponse from "$lib/types/ErrorResponse";
+	import type ValidationRule from "$lib/types/ValidationRule";
+	import type ValidationRules from "$lib/types/ValidationRules";
 	import { setContext, type Snippet } from "svelte";
-	import { requestApi } from "skillforge-common/api/client";
+	import { requestApi } from "$lib/api/client";
 	import { addToast } from "$lib/stores/toastStore";
 
     interface Props {

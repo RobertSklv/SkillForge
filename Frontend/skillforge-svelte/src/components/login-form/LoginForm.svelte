@@ -1,17 +1,17 @@
 <script lang="ts">
 	import Form from '../form/Form.svelte';
 	import InputField from '../form/input-field/InputField.svelte';
-	import type ValidationRules from 'skillforge-common/types/ValidationRules';
-	import { required } from 'skillforge-common/validation/rules';
-	import type UserLoginCredentials from 'skillforge-common/types/UserLoginCredentials';
+	import type ValidationRules from '$lib/types/ValidationRules';
+	import { required } from '$lib/validation/rules';
+	import type UserLoginCredentials from '$lib/types/UserLoginCredentials';
 	import { writable } from 'svelte/store';
 	import Button from '../button/Button.svelte';
-	import type UserInfo from 'skillforge-common/types/UserInfo';
+	import type UserInfo from '$lib/types/UserInfo';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
 	import { goto, invalidate } from '$app/navigation';
 	import { addToast } from '$lib/stores/toastStore';
-	import type LoginResponse from 'skillforge-common/types/LoginResponse';
-	import { storeAuthToken } from 'skillforge-common/auth';
+	import type LoginResponse from '$lib/types/LoginResponse';
+	import { storeAuthToken } from '$lib/auth';
 
 	let formData = writable<UserLoginCredentials>({
 		UsernameOrEmail: '',

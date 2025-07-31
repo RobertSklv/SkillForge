@@ -1,10 +1,10 @@
 <script lang="ts" generics="T">
 	import { goto } from '$app/navigation';
-	import { createURLSearchParams } from 'skillforge-common/api/client';
-	import type GridContext from 'skillforge-common/types/GridContext';
-	import type GridState from 'skillforge-common/types/GridState';
-	import type { GutterLevel } from 'skillforge-common/types/GutterLevel';
-	import type PaginationResponse from 'skillforge-common/types/PaginationResponse';
+	import { createURLSearchParams } from '$lib/api/client';
+	import type GridContext from '$lib/types/GridContext';
+	import type GridState from '$lib/types/GridState';
+	import type { GutterLevel } from '$lib/types/GutterLevel';
+	import type PaginationResponse from '$lib/types/PaginationResponse';
 	import { setContext, type Snippet } from 'svelte';
 	import { writable, type Writable } from 'svelte/store';
 

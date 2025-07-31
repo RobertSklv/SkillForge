@@ -6,9 +6,9 @@
 	import SearchBar from '$components/grid/filters/search-bar/SearchBar.svelte';
 	import Pagination from '$components/pagination/Pagination.svelte';
 	import { PUBLIC_BASE_URL } from '$env/static/public';
-	import type ArticleCardType from 'skillforge-common/types/ArticleCardType';
-	import type GridState from 'skillforge-common/types/GridState';
-	import type PaginationResponse from 'skillforge-common/types/PaginationResponse';
+	import type ArticleCardType from '$lib/types/ArticleCardType';
+	import type GridState from '$lib/types/GridState';
+	import type PaginationResponse from '$lib/types/PaginationResponse';
 
 	const DEFAULT_LIMIT = 9;
 

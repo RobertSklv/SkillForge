@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react';
-import type LoginResponse from 'skillforge-common/types/LoginResponse';
-import { storeAuthToken } from 'skillforge-common/auth';
+import type LoginResponse from '@/lib/types/LoginResponse';
+import { storeAuthToken } from '@/lib/auth';
 import { useCurrentUser } from '../../hooks/useCurrentUser';
 import { Form } from '@/components/form/Form';
 import { InputField } from '@/components/form/input-field/InputField';
@@ -10,7 +10,12 @@ import { Button } from '@/components/button/Button';
 import { useToast } from '../../hooks/useToast';
 import { useRouter } from 'next/navigation';
 
-export function LoginForm() {
+
+interface ILoginFormProps {
+    onLogin: () => void;
+}
+
+export function LoginForm({ onLogin }: ILoginFormProps) {
     const { setCurrentUser } = useCurrentUser();
     const router = useRouter();
     const { addToast } = useToast();
@@ -21,6 +26,7 @@ export function LoginForm() {
     async function onSuccess(response: LoginResponse) {
         setCurrentUser(response.CurrentUserInfo);
         storeAuthToken(response.AuthToken);
+        onLogin();
 
         addToast('Successfully logged in');
 

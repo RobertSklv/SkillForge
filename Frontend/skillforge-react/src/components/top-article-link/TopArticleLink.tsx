@@ -1,7 +1,7 @@
 import { Icon } from '@/components/icon/Icon';
 import moment from 'moment';
-import type TopArticleItemType from 'skillforge-common/types/TopArticleItemType';
-import { formatRelativeTime } from 'skillforge-common/util';
+import type TopArticleItemType from '@/lib/types/TopArticleItemType';
+import { formatRelativeTime } from '@/lib/util';
 
 export interface ITopArticleLinkProps {
     data: TopArticleItemType;

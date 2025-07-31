@@ -8,12 +8,12 @@
 	import ThreeColumns from '$components/layout/ThreeColumns.svelte';
 	import LoginCta from '$components/login-cta/LoginCta.svelte';
 	import UserListItem from '$components/user-list-item/UserListItem.svelte';
-	import { getLatestArticlesByTag, getTagFollowers } from 'skillforge-common/api/client';
+	import { getLatestArticlesByTag, getTagFollowers } from '$lib/api/client';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
-	import type ArticleCardType from 'skillforge-common/types/ArticleCardType';
-	import type TagPageData from 'skillforge-common/types/TagPageData';
+	import type ArticleCardType from '$lib/types/ArticleCardType';
+	import type TagPageData from '$lib/types/TagPageData';
 	import { page } from '$app/stores';
-	import type UserListItemType from 'skillforge-common/types/UserListItemType';
+	import type UserListItemType from '$lib/types/UserListItemType';
 	import FollowList from '$components/follow-list/FollowList.svelte';
 	import { PUBLIC_BASE_URL } from '$env/static/public';
 	import {

@@ -1,8 +1,8 @@
 import { Icon } from '@/components/icon/Icon';
-import type TagLinkType from 'skillforge-common/types/TagLinkType';
+import type TagLinkType from '@/lib/types/TagLinkType';
 import './_tag-link.scss';
 import { Link } from '@/components/link/Link';
-import type { BootstrapColor } from 'skillforge-common/types/BootstrapColor';
+import type { BootstrapColor } from '@/lib/types/BootstrapColor';
 
 export interface ITagLinkProps {
     data: TagLinkType;

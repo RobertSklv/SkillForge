@@ -4,8 +4,8 @@
 	import Modal from '$components/modal/Modal.svelte';
 	import ModalHeader from '$components/modal-header/ModalHeader.svelte';
 	import UserListItem from '$components/user-list-item/UserListItem.svelte';
-	import { getRating, rate } from 'skillforge-common/api/client';
-	import type RatingData from 'skillforge-common/types/RatingData';
+	import { getRating, rate } from '$lib/api/client';
+	import type RatingData from '$lib/types/RatingData';
 	import './_rate-buttons.scss';
 
 	const RATE_ITEMS_BATCH_SIZE = 15;

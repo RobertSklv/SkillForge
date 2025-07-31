@@ -1,4 +1,4 @@
-import type UserInfo from "skillforge-common/types/UserInfo";
+import type UserInfo from "$lib/types/UserInfo";
 import { writable } from "svelte/store"
 
 export function logoutUser() {

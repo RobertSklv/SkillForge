@@ -1,4 +1,4 @@
-import type { ToastType } from "skillforge-common/types/ToastType";
+import type { ToastType } from "@/lib/types/ToastType";
 import { create } from "zustand";
 
 interface Toast {

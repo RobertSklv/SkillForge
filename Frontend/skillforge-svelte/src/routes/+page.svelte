@@ -11,15 +11,15 @@
 	import UserLink from '$components/user-link/UserLink.svelte';
 	import LoginCta from '$components/login-cta/LoginCta.svelte';
 	import { PUBLIC_BASE_URL } from '$env/static/public';
-	import { getLatestArticles } from 'skillforge-common/api/client';
+	import { getLatestArticles } from '$lib/api/client';
 	import {
 		generateArticleCardItemsSchema,
 		generateTopArticleItemsSchema,
 		generateTopUserItemsSchema
 	} from '$lib/structuredDataUtil';
-	import type ArticleCardType from 'skillforge-common/types/ArticleCardType';
-	import type HomePageData from 'skillforge-common/types/HomePageData';
-	import { getFrontendUrl, getImagePath } from 'skillforge-common/util';
+	import type ArticleCardType from '$lib/types/ArticleCardType';
+	import type HomePageData from '$lib/types/HomePageData';
+	import { getFrontendUrl, getImagePath } from '$lib/util';
 
 	const BATCH_SIZE: number = 6;
 

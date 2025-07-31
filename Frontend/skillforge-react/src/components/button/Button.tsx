@@ -2,8 +2,8 @@
 
 import { FormContext } from '../../context/FormContext';
 import React, { useContext, useState, type MouseEvent, type MouseEventHandler } from 'react';
-import type { BootstrapColor } from "skillforge-common/types/BootstrapColor";
-import type { BootstrapSize } from "skillforge-common/types/BootstrapSize";
+import type { BootstrapColor } from "@/lib/types/BootstrapColor";
+import type { BootstrapSize } from "@/lib/types/BootstrapSize";
 
 export interface IButtonProps {
     color?: BootstrapColor;

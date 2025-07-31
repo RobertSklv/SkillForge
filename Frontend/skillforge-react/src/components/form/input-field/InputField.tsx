@@ -1,7 +1,6 @@
-import { FormContext } from '../../../context/FormContext';
-import { useContext } from 'react';
+import { useFormContext } from '../../../context/FormContext';
 import type { FieldValues, RegisterOptions } from 'react-hook-form';
-import type { InputType } from 'skillforge-common/types/InputType';
+import type { InputType } from '@/lib/types/InputType';
 
 export interface IInputFieldProps {
     id: string;
@@ -19,39 +18,71 @@ export interface IInputFieldProps {
     step?: any;
     classes?: string;
     disabled?: boolean;
+    validateTogether?: string[];
 }
 
-export function InputField(props: IInputFieldProps) {
-    const formContext = useContext(FormContext);
+export function InputField({
+    id,
+    name = id,
+    label = name,
+    type = 'text',
+    value,
+    onChange,
+    options,
+    placeholder,
+    min,
+    max,
+    minLength,
+    maxLength,
+    step,
+    classes,
+    disabled,
+    validateTogether,
+}: IInputFieldProps) {
+    const formContext = useFormContext();
 
-    const formClass = props.type === 'range' ? 'form-range' : 'form-control';
-    const formName: string = props.name ?? props.id;
+    const formClass = type === 'range' ? 'form-range' : 'form-control';
+    const formName: string = name ?? id;
+
+    const isInvalid = !!formContext?.form.formState.errors[formName];
+
+    function onChangePrivate(event: any) {
+        onChange?.(event.target.value);
+
+        validateTogether?.forEach(fieldName => {
+            let state = formContext.form.getFieldState(fieldName);
+
+            if (state.isDirty || state.isTouched) {
+                formContext.form.trigger(fieldName);
+            }
+        });
+    }
 
     return (
         <div className="mb-4">
-            <label htmlFor={props.id} className="form-label">{props.label}:</label>
+            <label htmlFor={id} className="form-label">{label}:</label>
             <input
-                    {...formContext?.form.register(formName, {
-                        ...props.options,
-                        onChange: e => props.onChange?.(e.target.value)
-                    })}
-                    id={props.id}
-                    type={props.type}
-                    placeholder={props.placeholder}
-                    className={`
+                {...formContext?.form.register(formName, {
+                    ...options,
+                    onChange: onChangePrivate
+                })}
+                id={id}
+                type={type}
+                placeholder={placeholder}
+                className={`
                         ${formClass}
-                        ${props.classes ?? ''}
-                        ${(!!formContext?.form.formState.errors[formName]) ? 'is-invalid' : ''}`}
-                    value={props.value}
-                    min={props.min}
-                    max={props.max}
-                    minLength={props.minLength}
-                    maxLength={props.maxLength}
-                    step={props.step}
-                    disabled={props.disabled}
+                        ${classes ?? ''}
+                        ${isInvalid ? 'is-invalid' : ''}`}
+                value={value}
+                min={min}
+                max={max}
+                minLength={minLength}
+                maxLength={maxLength}
+                step={step}
+                disabled={disabled}
             />
             <div className="invalid-feedback">
-                {formContext?.form.formState.errors[formName] && formContext?.form.formState.errors[formName]?.message as string}
+                {isInvalid && formContext?.form.formState.errors[formName]?.message as string}
             </div>
         </div>
     );

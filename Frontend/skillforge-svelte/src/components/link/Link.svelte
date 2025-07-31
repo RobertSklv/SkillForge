@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { BootstrapColor } from 'skillforge-common/types/BootstrapColor';
-	import type TagLink from 'skillforge-common/types/TagLinkType';
+	import type { BootstrapColor } from '$lib/types/BootstrapColor';
+	import type TagLink from '$lib/types/TagLinkType';
 	import type { Snippet } from 'svelte';
 
 	interface Props {

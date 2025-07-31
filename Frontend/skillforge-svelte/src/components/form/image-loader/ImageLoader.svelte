@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Icon from '$components/icon/Icon.svelte';
 	import { PUBLIC_BACKEND_DOMAIN } from '$env/static/public';
-	import { uploadImage } from 'skillforge-common/api/client';
-	import type { ImageUploadType } from 'skillforge-common/types/ImageUploadType';
+	import { uploadImage } from '$lib/api/client';
+	import type { ImageUploadType } from '$lib/types/ImageUploadType';
 	import Button from '../../button/Button.svelte';
 	import FileInputField from '../file-input-field/FileInputField.svelte';
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { FormContext } from '../../context/FormContext';
-import { requestApi } from "skillforge-common/api/client";
-import type ErrorResponse from "skillforge-common/types/ErrorResponse";
+import { requestApi } from "@/lib/api/client";
+import type ErrorResponse from "@/lib/types/ErrorResponse";
 
 export interface IFormProps<T> {
     action: string;

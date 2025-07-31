@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from "$components/icon/Icon.svelte";
-	import { formatRelativeTime, getImagePath } from "skillforge-common/util";
+	import { formatRelativeTime, getImagePath } from "$lib/util";
 	import moment from "moment";
 
     interface Props {

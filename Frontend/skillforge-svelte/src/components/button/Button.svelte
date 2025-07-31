@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { BootstrapColor } from "skillforge-common/types/BootstrapColor";
-	import type { BootstrapSize } from "skillforge-common/types/BootstrapSize";
-	import type FormContext from "skillforge-common/types/FormContext";
+	import type { BootstrapColor } from "$lib/types/BootstrapColor";
+	import type { BootstrapSize } from "$lib/types/BootstrapSize";
+	import type FormContext from "$lib/types/FormContext";
 	import { getContext, type Snippet } from "svelte";
 	import type { MouseEventHandler } from "svelte/elements";
 

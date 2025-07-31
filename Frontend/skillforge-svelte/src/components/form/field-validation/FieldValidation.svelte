@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type FormContext from 'skillforge-common/types/FormContext';
-	import type ValidationRule from 'skillforge-common/types/ValidationRule';
+	import type FormContext from '$lib/types/FormContext';
+	import type ValidationRule from '$lib/types/ValidationRule';
 	import { getContext, onMount, type Snippet } from 'svelte';
 
     interface Props {

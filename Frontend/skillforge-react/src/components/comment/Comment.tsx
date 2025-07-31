@@ -11,8 +11,8 @@ import { useArticleContext } from '../../context/ArticleContext';
 import { useCurrentUser } from '../../hooks/useCurrentUser';
 import { useToast } from '../../hooks/useToast';
 import { useState } from 'react';
-import { deleteComment } from 'skillforge-common/api/client';
-import type CommentModel from 'skillforge-common/types/CommentModel';
+import { deleteComment } from '@/lib/api/client';
+import type CommentModel from '@/lib/types/CommentModel';
 
 export interface ICommentProps {
     data: CommentModel;

@@ -4,7 +4,7 @@
 	import Modal from '$components/modal/Modal.svelte';
 	import ModalHeader from '$components/modal-header/ModalHeader.svelte';
 	import { addToast } from '$lib/stores/toastStore';
-	import type ReportFormData from 'skillforge-common/types/ReportFormData';
+	import type ReportFormData from '$lib/types/ReportFormData';
 	import { writable } from 'svelte/store';
 	import RadioGroup from '$components/form/radio-group/RadioGroup.svelte';
 	import RadioField from '$components/form/radio-field/RadioField.svelte';

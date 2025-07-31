@@ -1,4 +1,4 @@
-import type ReportFormOptions from "skillforge-common/types/ReportFormOptions";
+import type ReportFormOptions from "$lib/types/ReportFormOptions";
 import { writable } from "svelte/store";
 
 

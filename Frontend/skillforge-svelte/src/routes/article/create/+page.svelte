@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type ArticleUpsertPageModel from 'skillforge-common/types/ArticleUpsertPageModel';
+	import type ArticleUpsertPageModel from '$lib/types/ArticleUpsertPageModel';
 	import { setContext } from 'svelte';
-	import ArticleCreateForm from '$components/article-upsert-form/ArticleUpsertForm.svelte';
+	import ArticleUpsertForm from '$components/article-upsert-form/ArticleUpsertForm.svelte';
 
 	interface Props {
 		data: ArticleUpsertPageModel;
@@ -18,4 +18,4 @@
 	<meta name="robots" content="noindex,nofollow" />
 </svelte:head>
 
-<ArticleCreateForm />
+<ArticleUpsertForm />

@@ -1,5 +1,5 @@
-import { loadAccountInfoForm } from 'skillforge-common/api/client.js';
-import type AccountInfoFormData from 'skillforge-common/types/AccountInfoFormData';
+import { loadAccountInfoForm } from '$lib/api/client.js';
+import type AccountInfoFormData from '$lib/types/AccountInfoFormData';
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ parent }) {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { followTag, followUser, unfollowTag, unfollowUser } from "skillforge-common/api/client";
+	import { followTag, followUser, unfollowTag, unfollowUser } from "$lib/api/client";
 	import Button from "../button/Button.svelte";
 
     interface Props {

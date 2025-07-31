@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react';
 import { default as ReactLink } from 'next/link';
-import type { BootstrapColor } from 'skillforge-common/types/BootstrapColor';
+import type { BootstrapColor } from '@/lib/types/BootstrapColor';
 
 export interface ILinkProps {
     href: string;

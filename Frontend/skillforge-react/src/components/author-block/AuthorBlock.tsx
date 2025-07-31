@@ -4,8 +4,8 @@ import { Block } from '@/components/block/Block';
 import { FollowButton } from '@/components/follow-button/FollowButton';
 import { useCurrentUser } from '../../hooks/useCurrentUser';
 import moment from 'moment';
-import type Author from 'skillforge-common/types/Author';
-import { getImagePath } from 'skillforge-common/util';
+import type Author from '@/lib/types/Author';
+import { getImagePath } from '@/lib/util';
 
 export interface IAuthorBlockProps {
     data: Author;

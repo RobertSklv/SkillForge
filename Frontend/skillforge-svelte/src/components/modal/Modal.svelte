@@ -4,7 +4,7 @@
 	import { fade } from 'svelte/transition';
     import './_modal.scss';
 	import { clickOutside } from '$lib/svelte-util';
-	import type ModalContext from 'skillforge-common/types/ModalContext';
+	import type ModalContext from '$lib/types/ModalContext';
 
 	interface Props {
 		children?: Snippet;

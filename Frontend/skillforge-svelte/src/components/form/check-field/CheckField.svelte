@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getContext, onMount } from "svelte";
 	import FieldValidation from "../field-validation/FieldValidation.svelte";
-	import type FormContext from "skillforge-common/types/FormContext";
+	import type FormContext from "$lib/types/FormContext";
 
     interface Props {
         id: string,

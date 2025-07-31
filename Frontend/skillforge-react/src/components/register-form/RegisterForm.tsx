@@ -3,12 +3,12 @@
 import { Form } from '@/components/form/Form';
 import { InputField } from '@/components/form/input-field/InputField';
 import { useState } from 'react';
-import type RegisterResponse from 'skillforge-common/types/RegisterResponse';
-import { remote, email as validateEmail, password as validatePassword } from 'skillforge-common/validation/rules';
+import type RegisterResponse from '@/lib/types/RegisterResponse';
+import { remote, email as validateEmail, password as validatePassword } from '@/lib/validation/rules';
 import { Button } from '@/components/button/Button';
 import { useCurrentUser } from '../../hooks/useCurrentUser';
-import type UserInfo from 'skillforge-common/types/UserInfo';
-import { storeAuthToken } from 'skillforge-common/auth';
+import type UserInfo from '@/lib/types/UserInfo';
+import { storeAuthToken } from '@/lib/auth';
 import { useToast } from '../../hooks/useToast';
 import { useRouter } from 'next/navigation';
 
@@ -87,6 +87,7 @@ export function RegisterForm() {
                                 required: "Please enter a valid password.",
                                 validate: (value) => validatePassword(value) || "The password must be at least 8 characters long, contain at least one lowercase and uppercase letter, and at least one symbol."
                             }}
+                            validateTogether={['ConfirmPassword']}
                         />
                     </div>
                     <div className="col-12">
@@ -98,7 +99,7 @@ export function RegisterForm() {
                             onChange={setConfirmPassword}
                             options={{
                                 required: "Please confirm your password.",
-                                validate: (value) => value === password || "Passwords don't match."
+                                validate: (value, fieldValues) => value === fieldValues.Password || "Passwords don't match."
                             }}
                         />
                     </div>

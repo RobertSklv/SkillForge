@@ -1,0 +1,1 @@
+export type BootstrapSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'

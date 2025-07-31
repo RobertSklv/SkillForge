@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type ModalContext from "skillforge-common/types/ModalContext";
+	import type ModalContext from "$lib/types/ModalContext";
 	import { getContext } from "svelte";
 
     interface Props {

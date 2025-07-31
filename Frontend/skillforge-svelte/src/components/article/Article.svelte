@@ -12,14 +12,14 @@
 	import AuthorBox from '$components/author-box/AuthorBox.svelte';
 	import { PUBLIC_BACKEND_DOMAIN } from '$env/static/public';
 	import { currentUserStore } from '$lib/stores/currentUserStore';
-	import type ArticlePageModel from 'skillforge-common/types/ArticlePageModel';
-	import type CommentModel from 'skillforge-common/types/CommentModel';
+	import type ArticlePageModel from '$lib/types/ArticlePageModel';
+	import type CommentModel from '$lib/types/CommentModel';
 	import { writable } from 'svelte/store';
 	import Icon from '$components/icon/Icon.svelte';
 	import ReportModal from '$components/report/ReportModal.svelte';
-	import type CommentFormData from 'skillforge-common/types/CommentFormData';
+	import type CommentFormData from '$lib/types/CommentFormData';
 	import { setContext } from 'svelte';
-	import type ArticleContext from 'skillforge-common/types/ArticleContext';
+	import type ArticleContext from '$lib/types/ArticleContext';
 	import { fade } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
 	import moment from 'moment';

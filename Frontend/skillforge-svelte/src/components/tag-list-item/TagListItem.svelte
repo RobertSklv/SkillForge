@@ -2,7 +2,7 @@
 	import FollowButton from "$components/follow-button/FollowButton.svelte";
 	import TagLink from "$components/tag-link/TagLink.svelte";
 	import { currentUserStore } from "$lib/stores/currentUserStore";
-	import type TagListItemType from "skillforge-common/types/TagListItemType";
+	import type TagListItemType from "$lib/types/TagListItemType";
 
     interface Props {
         data: TagListItemType,

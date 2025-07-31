@@ -4,9 +4,9 @@ import { AuthorBlock } from "@/components/author-block/AuthorBlock";
 import { TwoColumns } from "@/components/layout/two-columns/TwoColumns";
 import { TopArticleLink } from "@/components/top-article-link/TopArticleLink";
 import { GetServerSidePropsContext, Metadata } from "next";
-import { viewArticle } from "skillforge-common/api/client";
-import type ArticlePageModel from 'skillforge-common/types/ArticlePageModel';
-import { getFrontendUrl, htmlToText, truncateText } from "skillforge-common/util";
+import { viewArticle } from "@/lib/api/client";
+import type ArticlePageModel from '@/lib/types/ArticlePageModel';
+import { getFrontendUrl, htmlToText, truncateText } from "@/lib/util";
 
 export async function generateMetadata({ params }: GetServerSidePropsContext): Promise<Metadata> {
     const data: ArticlePageModel = await viewArticle(parseInt(params?.id as string));

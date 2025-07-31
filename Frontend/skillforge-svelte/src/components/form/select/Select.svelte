@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { getContext, onMount, setContext, type Snippet } from 'svelte';
-	import type SelectFieldContext from 'skillforge-common/types/SelectFieldContext';
-    import type OptionType from 'skillforge-common/types/OptionType';
+	import type SelectFieldContext from '$lib/types/SelectFieldContext';
+    import type OptionType from '$lib/types/OptionType';
 	import Option from '../option/Option.svelte';
-	import type FormContext from 'skillforge-common/types/FormContext';
+	import type FormContext from '$lib/types/FormContext';
 
     interface Props {
         id: string,

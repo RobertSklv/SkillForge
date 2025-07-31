@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type ScrollableStore from 'skillforge-common/types/ScrollableStore';
+	import type ScrollableStore from '$lib/types/ScrollableStore';
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 

@@ -2,7 +2,7 @@
 	import FollowButton from "$components/follow-button/FollowButton.svelte";
 	import UserLink from "$components/user-link/UserLink.svelte";
 	import { currentUserStore } from "$lib/stores/currentUserStore";
-	import type UserListItemType from "skillforge-common/types/UserListItemType";
+	import type UserListItemType from "$lib/types/UserListItemType";
 
     interface Props {
         data: UserListItemType,

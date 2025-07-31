@@ -11,8 +11,7 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint .",
-		"prebuild": "pnpm -F skillforge-common build"
+		"lint": "prettier --check . && eslint ."
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
@@ -37,7 +36,6 @@
 		"bootstrap-icons": "^1.13.1",
 		"bootswatch": "^5.3.6",
 		"moment": "^2.30.1",
-		"quill": "^2.0.3",
-		"skillforge-common": "file:../skillforge-common"
+		"quill": "^2.0.3"
 	}
 }

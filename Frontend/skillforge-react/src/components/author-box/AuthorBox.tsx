@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { Icon } from '../icon/Icon';
-import { getImagePath, formatRelativeTime } from 'skillforge-common/util';
+import { getImagePath, formatRelativeTime } from '@/lib/util';
 import Link from 'next/link';
 import './_author-box.scss';
 

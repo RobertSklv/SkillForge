@@ -1,5 +1,5 @@
 import { Button } from '@/components/button/Button';
-import { followTag, followUser, unfollowTag, unfollowUser } from 'skillforge-common/api/client';
+import { followTag, followUser, unfollowTag, unfollowUser } from '@/lib/api/client';
 
 export interface IFollowButtonProps {
     subjectName: string;

@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { writable } from 'svelte/store';
-	import type ArticleUpsertFormData from 'skillforge-common/types/ArticleUpsertFormData';
+	import type ArticleUpsertFormData from '$lib/types/ArticleUpsertFormData';
 	import Form from '../form/Form.svelte';
 	import Button from '../button/Button.svelte';
 	import InputField from '../form/input-field/InputField.svelte';
 	import TextEditor from '../form/text-editor/TextEditor.svelte';
 	import ImageLoader from '../form/image-loader/ImageLoader.svelte';
 	import { getContext } from 'svelte';
-	import type ArticleUpsertPageModel from 'skillforge-common/types/ArticleUpsertPageModel';
+	import type ArticleUpsertPageModel from '$lib/types/ArticleUpsertPageModel';
 	import TagComboBox from '$components/form/tag-combo-box/TagComboBox.svelte';
-	import type ValidationRules from 'skillforge-common/types/ValidationRules';
-	import { regex, required } from 'skillforge-common/validation/rules';
+	import type ValidationRules from '$lib/types/ValidationRules';
+	import { regex, required } from '$lib/validation/rules';
 	import { addToast } from '$lib/stores/toastStore';
 	import Icon from '$components/icon/Icon.svelte';
 
@@ -18,7 +18,6 @@
 
 	let formData = writable<ArticleUpsertFormData>(
 		pageContext.CurrentState?.Model ?? {
-			CategoryId: 0,
 			Title: '',
 			Content: '',
 			Tags: []
@@ -26,12 +25,6 @@
 	);
 
 	let validationRules: ValidationRules = {
-		CategoryId: [
-			{
-				validate: (v) => v != 0,
-				message: (label) => `The ${label} field is required.`
-			}
-		],
 		Title: [
 			{
 				validate: required,
@@ -89,8 +82,6 @@
 	{onSuccess}
 	resetMode={pageContext.CurrentState?.Model.Id == 0 ? 'onsuccess' : 'never'}
 >
-	<input type="hidden" name="Id" bind:value={$formData.Id} />
-
 	<div class="row">
 		<div class="col-12 col-lg-3">
 			<ImageLoader

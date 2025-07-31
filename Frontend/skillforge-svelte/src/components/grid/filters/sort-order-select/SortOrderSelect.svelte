@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Select from "$components/form/select/Select.svelte";
-	import type GridContext from "skillforge-common/types/GridContext";
-	import type GridState from "skillforge-common/types/GridState";
-	import type OptionType from "skillforge-common/types/OptionType";
+	import type GridContext from "$lib/types/GridContext";
+	import type GridState from "$lib/types/GridState";
+	import type OptionType from "$lib/types/OptionType";
 	import { getContext } from "svelte";
 	import type { Writable } from "svelte/store";
 

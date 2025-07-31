@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type ValidatedField from 'skillforge-common/types/ValidatedField';
+	import type ValidatedField from '$lib/types/ValidatedField';
 	import { type Snippet } from 'svelte';
 	import FieldValidation from '../field-validation/FieldValidation.svelte';
-    import type OptionType from 'skillforge-common/types/OptionType';
+    import type OptionType from '$lib/types/OptionType';
 	import Select from '../select/Select.svelte';
 
     interface Props {

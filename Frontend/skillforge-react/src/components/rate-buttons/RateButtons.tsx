@@ -1,7 +1,7 @@
 import { Icon } from '@/components/icon/Icon';
 import { useState } from 'react';
-import { getRating, rate } from 'skillforge-common/api/client';
-import type RatingData from 'skillforge-common/types/RatingData';
+import { getRating, rate } from '@/lib/api/client';
+import type RatingData from '@/lib/types/RatingData';
 
 const RATE_ITEMS_BATCH_SIZE = 15;
 
