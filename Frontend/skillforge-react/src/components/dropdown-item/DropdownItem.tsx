@@ -10,20 +10,27 @@ export interface IDropdownItemProps {
     children: React.ReactNode;
 }
 
-export function DropdownItem(props: IDropdownItemProps) {
+export function DropdownItem({
+    href,
+    type = 'link',
+    onClick,
+    active,
+    disabled,
+    children
+}: IDropdownItemProps) {
     return (
         <li>
-            {props.type === 'button' ? (
-                <button onClick={props.onClick} className={`dropdown-item ${props.active ? 'active' : ''} ${props.disabled ? 'disabled' : ''}`}>
-                    {props.children}
+            {type === 'button' ? (
+                <button onClick={onClick} className={`dropdown-item ${active ? 'active' : ''} ${disabled ? 'disabled' : ''}`}>
+                    {children}
                 </button>
-            ) : props.type === 'link' ? (
-                <Link href={props.href ?? ''} className={`dropdown-item ${props.active ? 'active' : ''} ${props.disabled ? 'disabled' : ''}`}>
-                    {props.children}
+            ) : type === 'link' ? (
+                <Link href={href ?? ''} className={`dropdown-item ${active ? 'active' : ''} ${disabled ? 'disabled' : ''}`}>
+                    {children}
                 </Link>
-            ) : props.type === 'text' ? (
+            ) : type === 'text' ? (
                 <span className="dropdown-item-text">
-                    {props.children}
+                    {children}
                 </span>
             ) : ''}
         </li>
