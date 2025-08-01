@@ -8,25 +8,33 @@ export interface IFormProps<T> {
     action: string;
     method?: 'GET' | 'POST' | 'DIALOG';
     isMultipartFormData?: boolean;
+    onSubmit?: (data: any) => any;
     onSuccess: (response: T) => void;
     children: React.ReactNode;
 }
 
-export function Form<T>(props: IFormProps<T>) {
+export function Form<T>({
+    action,
+    method = 'POST',
+    isMultipartFormData = false,
+    onSubmit = data => data,
+    onSuccess,
+    children,
+}: IFormProps<T>) {
     const form = useForm({
         mode: 'onTouched'
     });
 
     async function submit(data: any) {
         let init: RequestInit = {
-            method: props.method,
+            method: method,
             credentials: 'include',
             headers: {
                 'Accept': 'application/json',
             }
         };
 
-        if (!props.isMultipartFormData) {
+        if (!isMultipartFormData) {
             init.headers = {
                 ...init.headers,
                 'Content-Type': 'application/json',
@@ -42,11 +50,11 @@ export function Form<T>(props: IFormProps<T>) {
             init.body = fd;
         }
 
-        return requestApi(props.action, {
+        return requestApi(action, {
             init
         })
             .then(r => {
-                props.onSuccess(r);
+                onSuccess(r);
             })
             .catch((e: ErrorResponse) => {
                 for (let fieldName in e.errors) {
@@ -67,12 +75,12 @@ export function Form<T>(props: IFormProps<T>) {
     }
 
     return (
-        <form onSubmit={form.handleSubmit(submit)}>
+        <form onSubmit={form.handleSubmit(data => submit(onSubmit(data)))}>
             <FormContext.Provider value={{
                 form,
-                submit: () => form.handleSubmit(submit)()
+                submit: () => form.handleSubmit(data => submit(onSubmit(data)))()
             }}>
-                {props.children}
+                {children}
             </FormContext.Provider>
         </form>
     );

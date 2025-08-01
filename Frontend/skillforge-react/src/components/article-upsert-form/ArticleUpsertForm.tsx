@@ -89,7 +89,6 @@ export function ArticleUpsertForm({ page }: IArticleUpsertFormProps) {
                     id="Content"
                     height={600}
                     content={content}
-                    onContentChange={setContent}
                     imageUploadType="article"
                 />
 

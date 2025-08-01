@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import React, { useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import type ArticlePageModel from '@/lib/types/ArticlePageModel';
 import { Block } from '@/components/block/Block';
 import { AuthorBox } from '@/components/author-box/AuthorBox';
@@ -15,65 +15,60 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { RateButtons } from '@/components/rate-buttons/RateButtons';
 import { Comment } from '@/components/comment/Comment';
 import { ArticleContext } from '@/context/ArticleContext';
-import moment from 'moment';
 import './_article.scss';
+import { Form } from '../form/Form';
+import { TextEditor } from '../form/text-editor/TextEditor';
+import { Button } from '../button/Button';
+import { LoginCta } from '../login-cta/LoginCta';
 
 export interface IArticleProps {
     data: ArticlePageModel;
 }
 
-export function Article(props: IArticleProps) {
+export function Article({ data }: IArticleProps) {
     const { currentUser } = useCurrentUser();
 
-    const [comments, setComments] = useState<CommentModel[]>(props.data.Comments);
+    const [comments, setComments] = useState<CommentModel[]>(data.Comments);
     const [showReportModal, setShowReportModal] = useState<boolean>(false);
 
-    const [commentFormContent, setCommentFormContent] = useState<string>('');
+    const [commentFormContent, setCommentFormContent] = useState<string | undefined>();
 
-	async function addComment() {
-		if (!currentUser) {
-			throw Error('User not logged in');
-		}
+    async function addComment(comment: CommentModel) {
+        if (!currentUser) {
+            throw Error('User not logged in');
+        }
 
-		let comment: CommentModel = {
-			CommentId: 0,
-			Content: commentFormContent,
-			User: {
-				Name: currentUser.Name,
-				AvatarImage: currentUser.AvatarPath
-			},
-			DateWritten: moment(new Date()).format('yyyy-MM-DD HH:mm:ss'),
-			RatingData: {
-				ThumbsUp: 0,
-				ThumbsDown: 0,
-				UserRating: 0
-			}
-		};
+        setCommentFormContent('');
+        setComments([...comments, comment]);
+    }
 
-		comments.push(comment);
-	}
+    function onCommentSubmit(commentData: any) {
+        commentData.ArticleId = data.ArticleId;
 
-	function deleteComment(id: number) {
-		setComments(comments.filter((c) => c.CommentId != id));
-	}
+        return commentData;
+    }
 
-    function header(): React.ReactNode {
+    function deleteComment(id: number) {
+        setComments(comments.filter((c) => c.CommentId != id));
+    }
+
+    function header(): ReactNode {
         return (
             <div className="row mb-3 pt-2">
                 <div className="col">
                     <AuthorBox
-                        name={props.data.Author.Link.Name}
-                        avatarImage={props.data.Author.Link.AvatarImage}
-                        date={props.data.DatePublished}
+                        name={data.Author.Link.Name}
+                        avatarImage={data.Author.Link.AvatarImage}
+                        date={data.DatePublished}
                         indent={false}
                     />
                 </div>
                 {currentUser &&
                     <div className="col-3 text-end">
                         <Dropdown menuClass="dropdown-menu-end dropdown-menu-xl-start" buttonSnippet={<Icon type="three-dots-vertical" />}>
-                            {currentUser.Name == props.data.Author.Link.Name && (
+                            {currentUser.Name == data.Author.Link.Name && (
                                 <>
-                                    <DropdownItem href="/article/{data.ArticleId}/edit">
+                                    <DropdownItem href={`/article/${data.ArticleId}/edit`}>
                                         <Icon type="pencil-square" />
                                         Edit
                                     </DropdownItem>
@@ -96,12 +91,12 @@ export function Article(props: IArticleProps) {
             <div className="row">
                 <div className="col-3 fs-5 d-flex align-items-center">
                     <Icon type="eye" classes="me-1" />
-                    <small className="text-muted">{props.data.Views}</small>
+                    <small className="text-muted">{data.Views}</small>
                 </div>
                 <div className="col-9">
                     <RateButtons
-                        data={props.data.RatingData}
-                        subjectId={props.data.ArticleId}
+                        data={data.RatingData}
+                        subjectId={data.ArticleId}
                         type="article"
                         readonly={!currentUser}
                     />
@@ -114,21 +109,21 @@ export function Article(props: IArticleProps) {
         <>
             <div className="d-flex flex-column gap-5">
                 <Block header={header()} footer={footer()}>
-                    {props.data.CoverImage &&
+                    {data.CoverImage &&
                         <div
                             className="cover-image"
                             style={{
-                                backgroundImage: `url('${getBackendUrl(props.data.CoverImage)}')`
+                                backgroundImage: `url('${getBackendUrl(data.CoverImage)}')`
                             }}
                         ></div>
                     }
 
                     <article className="card-body">
-                        {props.data.Tags.map(tag => {
+                        {data.Tags.map(tag => {
                             return <a href={`/tag/${tag}`} className="me-2" key={tag}>#{tag}</a>;
                         })}
-                        <h1 className="card-title mb-4">{props.data.Title}</h1>
-                        <div className="card-text text-break rich-text-content" dangerouslySetInnerHTML={{ __html: props.data.Content }}></div>
+                        <h1 className="card-title mb-4">{data.Title}</h1>
+                        <div className="card-text text-break rich-text-content" dangerouslySetInnerHTML={{ __html: data.Content }}></div>
                     </article>
                 </Block>
 
@@ -158,24 +153,24 @@ export function Article(props: IArticleProps) {
                 {currentUser &&
                     <Block>
                         <div className="card-body">
-                            {/* <Form
-                        action="/Comment/Upsert"
-                        onSuccess={addComment}
-                        resetMode="onsuccess"
-                    >
-                        <TextEditor
-                            id="CommentContent"
-                            name="Content"
-                            label={null}
-                            height={200}
-                            bind:content={$commentFormData.Content}
-                            imageUploadType="comment"
-                        />
+                            <Form<CommentModel>
+                                action="/Comment/Upsert"
+                                onSubmit={onCommentSubmit}
+                                onSuccess={addComment}
+                            >
+                                <TextEditor
+                                    id="CommentContent"
+                                    name="Content"
+                                    label={null}
+                                    height={200}
+                                    content={commentFormContent}
+                                    imageUploadType="comment"
+                                />
 
-                        <div className="text-center">
-                            <Button isSubmitButton={true}>Comment</Button>
-                        </div>
-                    </Form> */}
+                                <div className="text-center">
+                                    <Button isSubmitButton={true}>Comment</Button>
+                                </div>
+                            </Form>
                         </div>
                     </Block>
                 }

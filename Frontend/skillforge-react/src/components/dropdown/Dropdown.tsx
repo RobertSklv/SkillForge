@@ -1,6 +1,7 @@
 import { useClickOutside } from '../../hooks/useClickOutside';
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import styles from './Dropdown.module.scss';
 
 export interface IDropdownProps {
     menuClass?: string;
@@ -25,7 +26,7 @@ export function Dropdown(props: IDropdownProps) {
             <>
                 {isOpen &&
                     <AnimatePresence>
-                        <motion.ul className={`dropdown-menu show ${props.menuClass}`}
+                        <motion.ul className={`dropdown-menu ${styles['dropdown-menu']} show ${props.menuClass}`}
                             data-bs-popper="static"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -45,7 +46,7 @@ export function Dropdown(props: IDropdownProps) {
             {props.isNav ? (
                 <li className="dropdown nav-item">
                     <button
-                        className="dropdown-toggle nav-link text-start w-100"
+                        className={`dropdown-toggle ${styles['dropdown-toggle']} nav-link text-start w-100`}
                         onClick={onClick}
                         type="button"
                         aria-label="Button"
@@ -59,7 +60,7 @@ export function Dropdown(props: IDropdownProps) {
             ) : (
                 <div className="btn-group">
                     <button
-                        className="dropdown-toggle btn btn-outline-primary rounded-3 border-1"
+                        className={`dropdown-toggle ${styles['dropdown-toggle']} btn btn-outline-primary rounded-3 border-1`}
                         onClick={onClick}
                         type="button"
                         aria-label="Button"

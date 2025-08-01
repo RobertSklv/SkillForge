@@ -1,3 +1,5 @@
+'use client'
+
 import { useFormContext } from '@/context/FormContext';
 import { useEffect, useRef } from 'react';
 import { uploadImage } from '@/lib/api/client';
@@ -31,14 +33,31 @@ export function TextEditor({
     const isInvalid = !!formContext?.form.formState.errors[id];
 
     let editorWrapperElement = useRef<HTMLDivElement>(null);
-    let quillEditor: any;
+    let quillEditor = useRef<any>(null);
+
+    const privateContent = useRef<string | undefined>(undefined);
 
     function onTextChange() {
-        content = quillEditor.getSemanticHTML();
+        privateContent.current = quillEditor.current.getSemanticHTML();
+        onContentChange?.(privateContent.current);
 
-        onContentChange?.(content);
+        formContext.form.setValue(name, privateContent.current, {
+            shouldValidate: true
+        });
+    }
 
-        formContext.form.setValue(name, content, {
+    function updateEditorContent() {
+        if (!content) {
+            content = '';
+        }
+
+        privateContent.current = content;
+        let convertedContent = quillEditor.current.clipboard.convert({
+            html: privateContent.current
+        });
+        quillEditor.current.setContents(convertedContent);
+
+        formContext.form.setValue(name, privateContent.current, {
             shouldValidate: true
         });
     }
@@ -68,22 +87,23 @@ export function TextEditor({
             ['clean']                                         // remove formatting button
         ];
 
-        quillEditor = new Quill('#' + id, {
+        quillEditor.current = new Quill('#' + id, {
             modules: {
                 toolbar: toolbarOptions
             },
             theme: 'snow',
         });
 
-        let convertedContent = quillEditor.clipboard.convert({
-            html: content
+        privateContent.current = content;
+        let convertedContent = quillEditor.current.clipboard.convert({
+            html: privateContent.current
         });
-        quillEditor.setContents(convertedContent);
+        quillEditor.current.setContents(convertedContent);
 
-        quillEditor.on('text-change', onTextChange);
-        quillEditor.on('selection-change', onSelectionChange);
+        quillEditor.current.on('text-change', onTextChange);
+        quillEditor.current.on('selection-change', onSelectionChange);
 
-        quillEditor.getModule('toolbar').addHandler('image', () => {
+        quillEditor.current.getModule('toolbar').addHandler('image', () => {
             const input = document.createElement('input');
             input.setAttribute('type', 'file');
             input.setAttribute('accept', '.jpg, .jpeg, .png');
@@ -94,9 +114,9 @@ export function TextEditor({
                 if (file) {
                     const url = process.env.NEXT_PUBLIC_BACKEND_DOMAIN + (await uploadImage(file, imageUploadType));
 
-                    const range = quillEditor.getSelection();
+                    const range = quillEditor.current.getSelection();
                     if (range) {
-                        quillEditor.insertEmbed(range.index, 'image', url);
+                        quillEditor.current.insertEmbed(range.index, 'image', url);
                     }
                 }
             };
@@ -111,6 +131,12 @@ export function TextEditor({
             }
         };
     }, []);
+
+    useEffect(() => {
+        if (quillEditor && content !== privateContent.current) {
+            updateEditorContent();
+        }
+    }, [quillEditor, content]);
 
     return (
         <div className="mb-4">

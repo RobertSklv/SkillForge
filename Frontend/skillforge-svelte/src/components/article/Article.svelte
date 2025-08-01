@@ -22,7 +22,6 @@
 	import type ArticleContext from '$lib/types/ArticleContext';
 	import { fade } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
-	import moment from 'moment';
 
 	interface Props {
 		data: ArticlePageModel;
@@ -43,25 +42,10 @@
 		deleteComment
 	});
 
-	async function addComment() {
+	async function addComment(comment: CommentModel) {
 		if (!$currentUserStore) {
 			throw Error('User not logged in');
 		}
-
-		let comment: CommentModel = {
-			CommentId: 0,
-			Content: $commentFormData.Content,
-			User: {
-				Name: $currentUserStore.Name,
-				AvatarImage: $currentUserStore.AvatarPath
-			},
-			DateWritten: moment(new Date()).format('yyyy-MM-DD HH:mm:ss'),
-			RatingData: {
-				ThumbsUp: 0,
-				ThumbsDown: 0,
-				UserRating: 0
-			}
-		};
 
 		comments.push(comment);
 	}
