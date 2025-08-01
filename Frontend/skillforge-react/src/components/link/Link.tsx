@@ -13,13 +13,22 @@ export interface ILinkProps {
     children: ReactNode;
 }
 
-export function Link(props: ILinkProps) {
+export function Link({
+    href,
+    size = 'normal',
+    background = 'outline',
+    classes,
+    color = 'primary',
+    borderRadius = 3,
+    muted,
+    children
+}: ILinkProps) {
 
-    const fullClass = `${props.classes} ${props.size === 'normal' ? 'ps-2 py-1' : 'p-0 pe-1'} btn btn${props.background === 'outline' ? '-outline' : ''}-${props.color} rounded-${props.borderRadius} border-1 shadow-none ${props.muted ? 'opacity-50' : ''}`;
+    const fullClass = `${classes} ${size === 'normal' ? 'ps-2 py-1' : 'p-0 pe-1'} btn btn${background === 'outline' ? '-outline' : ''}-${color} rounded-${borderRadius} border-1 shadow-none ${muted ? 'opacity-50' : ''}`;
 
     return (
-        <ReactLink href={props.href} className={fullClass}>
-            {props.children}
+        <ReactLink href={href} className={fullClass}>
+            {children}
         </ReactLink>
     );
 }

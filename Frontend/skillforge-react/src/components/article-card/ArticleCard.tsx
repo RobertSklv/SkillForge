@@ -32,14 +32,14 @@ export function ArticleCard({ data, showComments = true, classes }: IArticleCard
             <div className="card-body mx-5">
                 <div className="d-flex align-items-start">
                     <h2 className="card-title fw-bold">
-                        <a href="/article/{data.ArticleId}" className="text-decoration-none">{data.Title}</a>
+                        <a href={`/article/${data.ArticleId}`} className="text-decoration-none">{data.Title}</a>
                     </h2>
                 </div>
                 <div className="row justify-content-between">
                     <div className="col-12 col-md-6">
                         <div className="tags d-flex flex-wrap flex-md-nowrap gap-1 justify-content-center justify-content-md-start">
                             {data.Tags.map(tag => {
-                                return <TagLink size="small" background="fill" muted={true} data={tag} />;
+                                return <TagLink size="small" background="fill" muted={true} data={tag} key={tag.Name} />;
                             })}
                         </div>
                     </div>
@@ -52,7 +52,7 @@ export function ArticleCard({ data, showComments = true, classes }: IArticleCard
                                 type="article"
                                 readonly={true}
                             />
-                            {data.Comments.length &&
+                            {!!data.Comments.length &&
                                 <div className="text-primary ms-3">
                                     <Icon type="chat" classes="fs-6" />
                                     <small>{data.TotalComments}</small>
@@ -66,7 +66,7 @@ export function ArticleCard({ data, showComments = true, classes }: IArticleCard
                 <>
                     <div>
                         {data.Comments.map(comment => {
-                            return <CommentLimited data={comment} />;
+                            return <CommentLimited data={comment} key={comment.CommentId} />;
                         })}
                     </div>
                     {(data.Comments.length < data.TotalComments) &&

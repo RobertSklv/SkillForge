@@ -1,7 +1,10 @@
+'use client'
+
 import { Icon } from '@/components/icon/Icon';
 import { useState } from 'react';
 import { getRating, rate } from '@/lib/api/client';
 import type RatingData from '@/lib/types/RatingData';
+import styles from './RateButtons.module.scss';
 
 const RATE_ITEMS_BATCH_SIZE = 15;
 
@@ -72,7 +75,7 @@ export function RateButtons({ data, subjectId, type, size = 'normal', readonly }
         <div className="text-end">
             <button
                 type="button"
-                className="rate-btn rate-btn__positive bg-transparent border-0 text-primary pe-0"
+                className={`${styles['rate-btn']} ${styles['rate-btn__positive']} bg-transparent border-0 text-primary pe-0`}
                 aria-label="Thumbs up"
                 title="Thumbs up"
                 onClick={toggleThumbsUp}
@@ -119,7 +122,7 @@ export function RateButtons({ data, subjectId, type, size = 'normal', readonly }
 
             <button
                 type="button"
-                className="rate-btn rate-btn__negative bg-transparent border-0 text-primary pe-0 ms-2"
+                className={`${styles['rate-btn']} ${styles['rate-btn__negative']} bg-transparent border-0 text-primary pe-0 ms-2`}
                 aria-label="Thumbs down"
                 title="Thumbs down"
                 onClick={toggleThumbsDown}

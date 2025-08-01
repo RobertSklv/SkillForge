@@ -2,7 +2,7 @@ import moment from 'moment';
 import { Icon } from '../icon/Icon';
 import { getImagePath, formatRelativeTime } from '@/lib/util';
 import Link from 'next/link';
-import './_author-box.scss';
+import styles from './AuthorBox.module.scss';
 
 export interface IAuthorBoxProps {
     name: string;
@@ -19,18 +19,18 @@ export function AuthorBox({
     avatarImage,
     date,
     editedDate,
-    classes,
+    classes = '',
     size = 'normal',
     indent = true,
 }: IAuthorBoxProps) {
     return (
-        <div className={`author-box d-flex gap-2 size-${size} ${classes} ${indent ? 'ms-2' : ''}`}>
-            <div className={`author-box__image-wrapper d-flex flex-column justify-content-start align-items-end ${!indent ? 'w-auto' : ''}`}>
+        <div className={`${styles['author-box']} d-flex gap-2 ${styles[`size-${size}`]} ${classes} ${indent ? 'ms-2' : ''}`}>
+            <div className={`${styles['author-box__image-wrapper']} d-flex flex-column justify-content-start align-items-end ${!indent ? 'w-auto' : ''}`}>
                 <Link href={`/user/${name}`} className="text-decoration-none">
-                    <img src={getImagePath(avatarImage)} className="author-box__image round-image" alt="Robert profile" />
+                    <img src={getImagePath(avatarImage)} className={`${styles['author-box__image']} round-image`} alt="Robert profile" />
                 </Link>
             </div>
-            <div className="author-box__info-col d-flex flex-column">
+            <div className={`${styles['author-box__info-col']} d-flex flex-column`}>
                 <Link href={`/user/${name}`} className="text-decoration-none">{name}</Link>
                 <div className="small text-tertiary">
                     <time dateTime={moment(date).format('YYYY-MM-DD HH:mm')}>

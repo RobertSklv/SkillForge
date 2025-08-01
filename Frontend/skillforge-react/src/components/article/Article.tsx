@@ -180,7 +180,7 @@ export function Article(props: IArticleProps) {
                     </Block>
                 }
 
-                {/* <LoginCta ctaText="Log in" description="to comment and rate content." inline={true} /> */}
+                <LoginCta ctaText="Log in" description="to comment and rate content." inline={true} />
             </div>
 
             {/* <ReportModal entityId={data.ArticleId} action="/ArticleReport/Create" bind:show={showReportModal} /> */}

@@ -1,0 +1,24 @@
+.author-box {
+    &__image {
+        &-wrapper {
+            width: 48px;
+            height: 45px;
+        }
+    }
+
+    &.size-normal {
+        .author-box__image {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    &.size-small {
+        font-size: 14px;
+
+        .author-box__image {
+            width: 30px;
+            height: 30px;
+        }
+    }
+}
