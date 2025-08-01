@@ -1,0 +1,10 @@
+.avatar-image-wrapper {
+    width: 130px;
+    height: 130px;
+}
+
+@media (min-width: 992px) {
+    .avatar-image-wrapper {
+        margin-top: -50px;
+    }
+}

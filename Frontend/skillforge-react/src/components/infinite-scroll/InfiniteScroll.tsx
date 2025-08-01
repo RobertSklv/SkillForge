@@ -99,7 +99,7 @@ export function InfiniteScroll<T>({
                 window.removeEventListener('scroll', onScroll);
             }
         };
-    });
+    }, []);
 
     return (
         <div ref={containerElement} className={`d-flex flex-${listDirection} gap-${gap} ${classes}`}>

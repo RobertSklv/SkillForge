@@ -18,7 +18,7 @@ export function LoginCta({
 }: ILoginCtaProps) {
 	const currentUser = useCurrentUser();
 
-	if (!!currentUser) return '';
+	if (!!currentUser) return null;
 
 	return (
 		<Block>
