@@ -20,6 +20,7 @@ import { Form } from '../form/Form';
 import { TextEditor } from '../form/text-editor/TextEditor';
 import { Button } from '../button/Button';
 import { LoginCta } from '../login-cta/LoginCta';
+import { ReportModal } from '../report-modal/ReportModal';
 
 export interface IArticleProps {
     data: ArticlePageModel;
@@ -178,7 +179,13 @@ export function Article({ data }: IArticleProps) {
                 <LoginCta ctaText="Log in" description="to comment and rate content." inline={true} />
             </div>
 
-            {/* <ReportModal entityId={data.ArticleId} action="/ArticleReport/Create" bind:show={showReportModal} /> */}
+            <ReportModal
+                title="Report article"
+                entityId={data.ArticleId}
+                action="/ArticleReport/Create"
+                show={showReportModal}
+                setShow={setShowReportModal}
+            />
         </>
     );
 }

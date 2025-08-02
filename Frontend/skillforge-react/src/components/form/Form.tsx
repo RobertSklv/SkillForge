@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { FormContext } from '../../context/FormContext';
 import { requestApi } from "@/lib/api/client";
 import type ErrorResponse from "@/lib/types/ErrorResponse";
+import { useToast } from '@/hooks/useToast';
 
 export interface IFormProps<T> {
     action: string;
@@ -24,6 +25,7 @@ export function Form<T>({
     const form = useForm({
         mode: 'onTouched'
     });
+    const { addToast } = useToast();
 
     async function submit(data: any) {
         let init: RequestInit = {
@@ -70,6 +72,7 @@ export function Form<T>({
 
                 if (e.detail || e.title) {
                     console.error(e.detail ?? e.title);
+                    addToast(e.detail ?? e.title, 'danger');
                 }
             });
     }

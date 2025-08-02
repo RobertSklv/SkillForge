@@ -58,7 +58,7 @@
 					{/each}
 				</RadioGroup>
 
-				{#if $formData.Reason === 8}
+				{#if $formData.Reason == 7}
 					<TextAreaField
 						id="Message"
 						rows="4"

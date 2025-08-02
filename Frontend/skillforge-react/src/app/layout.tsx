@@ -35,7 +35,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 	return (
 		<html lang="en" data-bs-theme="dark">
 			<body>
-				<GlobalDataInitializer currentUserInfo={currentUserInfo}>
+				<GlobalDataInitializer currentUserInfo={currentUserInfo} reportFromOptions={reportFormOptions}>
 					<Header onLogout={revalidateAuth} />
 
 					<main id="main-content" className="container pb-5">

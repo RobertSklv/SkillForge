@@ -3,7 +3,7 @@ import { Scrollable } from "../scrollable/Scrollable";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { AnimatePresence, motion } from "framer-motion";
 import { ModalContext } from "@/context/ModalContext";
-import styles from './Modal.module.scss';
+import './_modal.scss';
 
 export interface IModalProps {
     children?: ReactNode;
@@ -51,17 +51,17 @@ export function Modal({
                     close
                 }}>
                     <div
-                        className={`${styles['modal-dialog']} modal-dialog modal-fullscreen-sm-down ${size === 'default' ? '' : `modal-${size}`} ${verticallyCentered ? 'modal-dialog-centered' : ''} ${scrollable ? `modal-dialog-scrollable ${styles['modal-dialog-scrollable']}` : ''}`}
+                        className={`modal-dialog modal-fullscreen-sm-down ${size === 'default' ? '' : `modal-${size}`} ${verticallyCentered ? 'modal-dialog-centered' : ''} ${scrollable ? 'modal-dialog-scrollable' : ''}`}
                         ref={clickOutsideRef}
                     >
                         <div className="modal-content">
                             {header}
                             {scrollable ? (
-                                <Scrollable className={`modal-body ${styles['modal-body']}`}>
+                                <Scrollable className="modal-body">
                                     {children}
                                 </Scrollable>
                             ) : (
-                                <div className={`modal-body ${styles['modal-body']}`}>
+                                <div className="modal-body">
                                     {children}
                                 </div>
                             )}

@@ -26,6 +26,7 @@ import { TagListItem } from '../tag-list-item/TagListItem';
 import { Modal } from '../modal/Modal';
 import { FollowButton } from '../follow-button/FollowButton';
 import styles from './UserPage.module.css';
+import { ReportModal } from '../report-modal/ReportModal';
 
 const ARTICLE_BATCH_SIZE: number = 4;
 const FOLLOW_LIST_BATCH_SIZE: number = 15;
@@ -218,11 +219,13 @@ export function UserPage({ data }: IUserPageProps) {
                 ) : <OutOfArticlesBlock message="No articles published yet." />}
             </ThreeColumns>
 
-            {/* <ReportModal
+            <ReportModal
+                title="Report user"
                 entityName={data.Name}
                 action="/UserReport/Create"
-                bind:show={showReportModal}
-            /> */}
+                show={showReportModal}
+                setShow={setShowReportModal}
+            />
         </>
     );
 }

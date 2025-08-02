@@ -42,9 +42,8 @@ export function InputField({
     const formContext = useFormContext();
 
     const formClass = type === 'range' ? 'form-range' : 'form-control';
-    const formName: string = name ?? id;
 
-    const isInvalid = !!formContext?.form.formState.errors[formName];
+    const isInvalid = !!formContext?.form.formState.errors[name];
 
     function onChangePrivate(event: any) {
         onChange?.(event.target.value);
@@ -62,7 +61,7 @@ export function InputField({
         <div className="mb-4">
             <label htmlFor={id} className="form-label">{label}:</label>
             <input
-                {...formContext?.form.register(formName, {
+                {...formContext?.form.register(name, {
                     ...options,
                     onChange: onChangePrivate
                 })}
@@ -82,7 +81,7 @@ export function InputField({
                 disabled={disabled}
             />
             <div className="invalid-feedback">
-                {isInvalid && formContext?.form.formState.errors[formName]?.message as string}
+                {isInvalid && formContext?.form.formState.errors[name]?.message as string}
             </div>
         </div>
     );
