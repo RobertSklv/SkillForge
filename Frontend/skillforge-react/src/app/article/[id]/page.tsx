@@ -7,6 +7,8 @@ import { GetServerSidePropsContext, Metadata } from "next";
 import { viewArticle } from "@/lib/api/client";
 import type ArticlePageModel from '@/lib/types/ArticlePageModel';
 import { getFrontendUrl, htmlToText, truncateText } from "@/lib/util";
+import { cookies } from "next/headers";
+import { JWT_TOKEN_COOKIE_NAME } from "@/lib/auth";
 
 export async function generateMetadata({ params }: GetServerSidePropsContext): Promise<Metadata> {
     const data: ArticlePageModel = await viewArticle(parseInt(params?.id as string));
@@ -22,7 +24,9 @@ export async function generateMetadata({ params }: GetServerSidePropsContext): P
 }
 
 export default async function ArticleView({ params }: GetServerSidePropsContext) {
-    const data: ArticlePageModel = await viewArticle(parseInt(params?.id as string));
+    const cookieContext = await cookies();
+    const authToken = cookieContext.get(JWT_TOKEN_COOKIE_NAME)?.value;
+    const data: ArticlePageModel = await viewArticle(parseInt(params?.id as string), authToken);
 
     function leftColumn() {
         return (

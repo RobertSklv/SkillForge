@@ -142,8 +142,10 @@ export function searchArticlesAdvanced(gridState: GridState): Promise<Pagination
 	});
 }
 
-export function viewArticle(id: number): Promise<ArticlePageModel> {
-	return requestApi(`/Article/View/${id}`);
+export function viewArticle(id: number, authToken?: string): Promise<ArticlePageModel> {
+	return requestApi(`/Article/View/${id}`, {
+		authToken
+	});
 }
 
 export function loadArticleUpsertPage(authToken?: string, id?: number): Promise<ArticleUpsertPageModel> {
