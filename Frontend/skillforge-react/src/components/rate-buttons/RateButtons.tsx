@@ -1,10 +1,15 @@
-'use client'
+'use client';
 
 import { Icon } from '@/components/icon/Icon';
 import { useState } from 'react';
 import { getRating, rate } from '@/lib/api/client';
 import type RatingData from '@/lib/types/RatingData';
 import styles from './RateButtons.module.scss';
+import { Modal } from '../modal/Modal';
+import { ModalHeader } from '../modal-header/ModalHeader';
+import { InfiniteScroll } from '../infinite-scroll/InfiniteScroll';
+import { UserListItem } from '../user-list-item/UserListItem';
+import UserListItemType from '@/lib/types/UserListItemType';
 
 const RATE_ITEMS_BATCH_SIZE = 15;
 
@@ -67,7 +72,7 @@ export function RateButtons({ data, subjectId, type, size = 'normal', readonly }
         });
     }
 
-    function loadMoreRates(batchIndex: number, rateType: 'positive' | 'negative') {
+    function loadMoreRates(batchIndex: number, rateType: 'positive' | 'negative'): Promise<UserListItemType[]> {
         return getRating(subjectId, rateType, type, batchIndex, RATE_ITEMS_BATCH_SIZE);
     }
 
@@ -96,29 +101,29 @@ export function RateButtons({ data, subjectId, type, size = 'normal', readonly }
             >
                 {thumbsUp}
             </button>
-            {/* {(data.ThumbsUp > 0 && !readonly) &&
-            <Modal bind:show={isThumbsUpModalOpen} verticallyCentered scrollable>
-                {#snippet header()}
-                    <ModalHeader title="Thumbs up"></ModalHeader>
-                {/snippet}
-                <InfiniteScroll
-                    batchSize={RATE_ITEMS_BATCH_SIZE}
-                    loadMore={(i) => loadMoreRates(i, 'positive')}
-                    autoLoadOnMount
+            {(data.ThumbsUp > 0 && !readonly) &&
+                <Modal
+                    show={isThumbsUpModalOpen}
+                    setShow={setIsThumbsUpModalOpen}
+                    header={<ModalHeader title="Thumbs up"></ModalHeader>}
+                    verticallyCentered
+                    scrollable
                 >
-                    {#snippet itemSnippet(item)}
-                        <UserListItem data={item} />
-                    {/snippet}
-                    {#snippet placeholderSnippet()}
-                        <div className="d-flex justify-content-center">
-                            <div className="spinner-border" role="status">
-                                <span className="visually-hidden">Loading...</span>
+                    <InfiniteScroll<UserListItemType>
+                        batchSize={RATE_ITEMS_BATCH_SIZE}
+                        loadMore={(i) => loadMoreRates(i, 'positive')}
+                        itemSnippet={item => <UserListItem data={item} key={item.Link.Name} />}
+                        placeholderSnippet={(
+                            <div className="d-flex justify-content-center">
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
                             </div>
-                        </div>
-                    {/snippet}
-                </InfiniteScroll>
-            </Modal>
-        } */}
+                        )}
+                        autoLoadOnMount
+                    />
+                </Modal>
+            }
 
             <button
                 type="button"
@@ -143,29 +148,29 @@ export function RateButtons({ data, subjectId, type, size = 'normal', readonly }
             >
                 {thumbsDown}
             </button>
-            {/* {(data.ThumbsDown > 0 && !readonly) &&
-            <Modal bind:show={isThumbsDownModalOpen} verticallyCentered scrollable>
-                {#snippet header()}
-                    <ModalHeader title="Thumbs down"></ModalHeader>
-                {/snippet}
-                <InfiniteScroll
-                    batchSize={RATE_ITEMS_BATCH_SIZE}
-                    loadMore={(i) => loadMoreRates(i, 'negative')}
-                    autoLoadOnMount
+            {(data.ThumbsDown > 0 && !readonly) &&
+                <Modal
+                    show={isThumbsDownModalOpen}
+                    setShow={setIsThumbsDownModalOpen}
+                    header={<ModalHeader title="Thumbs down"></ModalHeader>}
+                    verticallyCentered
+                    scrollable
                 >
-                    {#snippet itemSnippet(item)}
-                        <UserListItem data={item} />
-                    {/snippet}
-                    {#snippet placeholderSnippet()}
-                        <div className="d-flex justify-content-center">
-                            <div className="spinner-border" role="status">
-                                <span className="visually-hidden">Loading...</span>
+                    <InfiniteScroll<UserListItemType>
+                        batchSize={RATE_ITEMS_BATCH_SIZE}
+                        loadMore={(i) => loadMoreRates(i, 'negative')}
+                        itemSnippet={item => <UserListItem data={item} key={item.Link.Name} />}
+                        placeholderSnippet={(
+                            <div className="d-flex justify-content-center">
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
                             </div>
-                        </div>
-                    {/snippet}
-                </InfiniteScroll>
-            </Modal>
-        } */}
+                        )}
+                        autoLoadOnMount
+                    />
+                </Modal>
+            }
         </div>
     );
 }
