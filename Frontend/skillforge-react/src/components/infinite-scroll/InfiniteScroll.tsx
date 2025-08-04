@@ -29,10 +29,10 @@ export function InfiniteScroll<T>({
     placeholderSnippet,
     outOfItemsSnippet
 }: IInfiniteScrollProps<T>) {
-
     const [items, setItems] = useState<T[]>(preloadedBatches?.flat() ?? []);
     const [batchIndex, setBatchIndex] = useState<number>(preloadedBatches?.length ?? 0);
     const [outOfItems, setOutOfItems] = useState<boolean>(false);
+    const outOfItemsRef = useRef<boolean>(outOfItems);
     const containerElement = useRef<HTMLDivElement>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -55,13 +55,14 @@ export function InfiniteScroll<T>({
 
         if (newItems.length < batchSize) {
             setOutOfItems(true);
+            outOfItemsRef.current = true;
         }
 
         setBatchIndex(batchIndex + 1);
     }
 
     async function loadMoreAndUpdateItemList() {
-        if (isLoading) {
+        if (isLoading || outOfItemsRef.current) {
             return;
         }
 
@@ -74,7 +75,7 @@ export function InfiniteScroll<T>({
     }
 
     async function onScroll() {
-        if (outOfItems) {
+        if (outOfItemsRef.current) {
             return;
         }
 
@@ -95,9 +96,7 @@ export function InfiniteScroll<T>({
         }
 
         return () => {
-            if (typeof window !== 'undefined') {
-                window.removeEventListener('scroll', onScroll);
-            }
+            window.removeEventListener('scroll', onScroll);
         };
     }, []);
 
