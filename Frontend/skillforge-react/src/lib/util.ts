@@ -32,10 +32,10 @@ export function formatRelativeTime(date: string): string {
 
 export function getFrontendUrl(relativePath: string | null = null): string {
 	if (!relativePath) {
-		return process.env.NEXT_PUBLIC_API_BASE_URL as string;
+		return process.env.NEXT_PUBLIC_BASE_URL as string;
 	}
 
-	return process.env.NEXT_PUBLIC_API_BASE_URL + relativePath;
+	return process.env.NEXT_PUBLIC_BASE_URL + relativePath;
 }
 
 export function getBackendUrl(relativePath: string | null = null): string {

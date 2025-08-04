@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     description: 'Discover and share high-quality articles on technology, development, and more. Follow tags and authors, engage with the community, and explore trending content.',
     robots: 'index,follow',
     alternates: {
-        canonical: process.env.NEXT_PUBLIC_API_BASE_URL
+        canonical: process.env.NEXT_PUBLIC_BASE_URL
     }
 }
 

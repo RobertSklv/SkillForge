@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: GetServerSidePropsContext): P
         description: `Edit article '${data.CurrentState?.Model.Title}'`,
         robots: 'noindex,nofollow',
         alternates: {
-            canonical: `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/${data.CurrentState?.Model.Id}`
+            canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/article/${data.CurrentState?.Model.Id}`
         }
     };
 }
