@@ -70,14 +70,14 @@ export function Article({ data }: IArticleProps) {
                             {currentUser.Name == data.Author.Link.Name && (
                                 <>
                                     <DropdownItem href={`/article/${data.ArticleId}/edit`}>
-                                        <Icon type="pencil-square" />
+                                        <Icon type="pencil-square" classes='me-2' />
                                         Edit
                                     </DropdownItem>
                                     <DropdownDivider />
                                 </>
                             )}
                             <DropdownItem type="button" onClick={() => (setShowReportModal(true))}>
-                                <Icon type="exclamation-triangle" />
+                                <Icon type="exclamation-triangle" classes='me-2' />
                                 Report
                             </DropdownItem>
                         </Dropdown>

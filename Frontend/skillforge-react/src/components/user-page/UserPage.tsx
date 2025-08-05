@@ -50,12 +50,12 @@ export function UserPage({ data }: IUserPageProps) {
                     <Dropdown menuClass="dropdown-menu-end dropdown-menu-xl-start" buttonSnippet={<Icon type="three-dots-vertical" />} hideChevron>
                         {currentUser.Name == data.Name ? (
                             <DropdownItem href="/account">
-                                <Icon type="pencil-square" />
+                                <Icon type="pencil-square" classes='me-2' />
                                 Edit
                             </DropdownItem>
                         ) : (
                             <DropdownItem type="button" onClick={() => setShowReportModal(true)}>
-                                <Icon type="exclamation-triangle" />
+                                <Icon type="exclamation-triangle" classes='me-2' />
                                 Report
                             </DropdownItem>
                         )}
