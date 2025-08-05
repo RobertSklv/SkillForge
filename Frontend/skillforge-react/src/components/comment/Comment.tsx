@@ -13,6 +13,8 @@ import { useToast } from '../../hooks/useToast';
 import { useState } from 'react';
 import { deleteComment } from '@/lib/api/client';
 import type CommentModel from '@/lib/types/CommentModel';
+import { TextEditor } from '../form/text-editor/TextEditor';
+import { ReportModal } from '../report-modal/ReportModal';
 
 export interface ICommentProps {
     data: CommentModel;
@@ -28,46 +30,50 @@ export function Comment({ data }: ICommentProps) {
 
     const { deleteComment: deleteCommentFromArticleContext } = useArticleContext();
 
-	function onEditSuccess(response: CommentModel) {
+    function onEditSuccess(response: CommentModel) {
         setEditMode(false);
-		data.Content = response.Content;
-		setEditCommentContent(response.Content);
-		data.DateWritten = response.DateWritten;
-		data.DateEdited = response.DateEdited;
+        data.Content = response.Content;
+        setEditCommentContent(response.Content);
+        data.DateWritten = response.DateWritten;
+        data.DateEdited = response.DateEdited;
 
-		addToast('Comment edited successfully');
-	}
+        addToast('Comment edited successfully');
+    }
 
-	function cancelEdit() {
+    function cancelEdit() {
         setEditMode(false);
-		setEditCommentContent(data.Content);
-	}
+        setEditCommentContent(data.Content);
+    }
 
-	async function onDelete() {
-		let commentId = data.CommentId;
-		await deleteComment(commentId).then((r) => {
-			deleteCommentFromArticleContext(commentId);
-			addToast('Comment deleted successfully');
-		});
-	}
+    async function onDelete() {
+        let commentId = data.CommentId;
+        await deleteComment(commentId).then((r) => {
+            deleteCommentFromArticleContext(commentId);
+            addToast('Comment deleted successfully');
+        });
+    }
 
     function header() {
         return (
-            
-                <div className="row mb-3 pt-2">
-                    <div className="col">
-                        <AuthorBox
-                            name={data.User.Name}
-                            avatarImage={data.User.AvatarImage}
-                            date={data.DateWritten}
-                            editedDate={data.DateEdited}
-                            size="small"
-                            indent={false}
-                        />
-                    </div>
-                    {currentUser &&
+
+            <div className="row mb-3 pt-2">
+                <div className="col">
+                    <AuthorBox
+                        name={data.User.Name}
+                        avatarImage={data.User.AvatarImage}
+                        date={data.DateWritten}
+                        editedDate={data.DateEdited}
+                        size="small"
+                        indent={false}
+                    />
+                </div>
+                {currentUser &&
                     <div className="col-3 text-end">
-                        <Dropdown menuClass="dropdown-menu-end dropdown-menu-xl-start" buttonSnippet={<Icon type="three-dots-vertical" />} hideChevron>
+                        <Dropdown
+                            menuClass="dropdown-menu-end dropdown-menu-xl-start"
+                            buttonSnippet={<Icon type="three-dots-vertical" />}
+                            hideChevron
+                        >
                             {(currentUser.Name == data.User.Name) && (
                                 <>
                                     <DropdownItem type="button" onClick={() => (setEditMode(true))}>
@@ -87,43 +93,43 @@ export function Comment({ data }: ICommentProps) {
                             </DropdownItem>
                         </Dropdown>
                     </div>
-                    }
-                </div>
-        )
+                }
+            </div>
+        );
     }
 
     function footer() {
         return (
-                <RateButtons
-                    data={data.RatingData}
-                    subjectId={data.CommentId}
-                    type="comment"
-                    readonly={!currentUser}
-                />
-        )
+            <RateButtons
+                data={data.RatingData}
+                subjectId={data.CommentId}
+                type="comment"
+                readonly={!currentUser}
+            />
+        );
     }
 
     return (
         <>
             <Block header={header()} footer={footer()}>
                 {editMode ? (
-                <div className="card-body">
-                    {/* <Form action="/Comment/Upsert" onSuccess={onEditSuccess}>
-                        <TextEditor
-                            id="CommentEditContent-{data.CommentId}"
-                            name="Content"
-                            label={null}
-                            height={200}
-                            bind:content={$editFormData.Content}
-                            imageUploadType="comment"
-                        />
+                    <div className="card-body">
+                        <Form action="/Comment/Upsert" onSuccess={onEditSuccess}>
+                            <TextEditor
+                                id={`CommentEditContent-${data.CommentId}`}
+                                name="Content"
+                                label={null}
+                                height={200}
+                                content={editCommentContent}
+                                imageUploadType="comment"
+                            />
 
-                        <div className="text-center">
-                            <Button color="secondary" onClick={cancelEdit} classes="me-3">Cancel</Button>
-                            <Button isSubmitButton={true}>Edit</Button>
-                        </div>
-                    </Form> */}
-                </div>
+                            <div className="text-center">
+                                <Button color="secondary" onClick={cancelEdit} classes="me-3">Cancel</Button>
+                                <Button isSubmitButton={true}>Edit</Button>
+                            </div>
+                        </Form>
+                    </div>
                 ) : (
                     <div className="card-body">
                         <div className="text-break rich-text-content" dangerouslySetInnerHTML={{ __html: data.Content }}></div>
@@ -131,7 +137,13 @@ export function Comment({ data }: ICommentProps) {
                 )}
             </Block>
 
-            {/* <ReportModal entityId={data.CommentId} action="/CommentReport/Create" bind:show={showReportModal} /> */}
+            <ReportModal
+                title="Report comment"
+                entityId={data.CommentId}
+                action="/CommentReport/Create"
+                show={showReportModal}
+                setShow={setShowReportModal}
+            />
         </>
     );
 }
