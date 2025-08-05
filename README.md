@@ -20,13 +20,14 @@ SkillForge aims to foster a community-driven environment where developers can bo
 - ASP.NET Core MVC
 - Entity Framework Core
 - Hangfire
-- SvelteKit
-- TypeScript
+- SvelteKit + TypeScript
+- React + Next.js + TypeScript
 - Bootstrap
 - SASS
 
 Features:
 - Headless SPA
+- SSR
 - Authentication & Authorization
 - Testable Service and Repository layers
 - CRUD functionality
@@ -43,11 +44,12 @@ Features:
 git clone https://github.com/RobertSklv/SkillForge.git
 ```
 
-### 2. Setup Svelte
+### 2. Setup the Frontend
 
+#### SvelteKit
 - Navigate to Svelte's root directory and instantiate the environment file.
 ```powershell
-cd Frontend/skillforge
+cd Frontend/skillforge-svelte
 copy .env.example .env
 ```
 
@@ -61,6 +63,21 @@ npm run dev -- --open
 ```
 
 You might want to run `$env:NODE_TLS_REJECT_UNAUTHORIZED=0` before opening the project in browser though, since the backend and frontend use different domains with this guide.
+
+#### React + Next.js
+- Navigate to React's root directory and instantiate the environment file.
+```powershell
+cd Frontend/skillforge-react
+copy .env.example .env
+```
+
+- Open the newly created `.env` file and fill in the frontend and backend base URLs.
+- Add `NODE_TLS_REJECT_UNAUTHORIZED=0` in the `.env` file to prevent errors about the self-signed certificate.
+
+```powershell
+npm install
+npm run dev
+```
 
 ### 3. Install SQL Server
 
