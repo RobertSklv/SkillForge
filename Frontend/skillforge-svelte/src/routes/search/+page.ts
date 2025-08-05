@@ -1,5 +1,6 @@
 import { searchArticlesAdvanced } from '$lib/api/client.js';
 import type GridState from '$lib/types/GridState.js';
+import { redirect } from '@sveltejs/kit';
 
 export async function load({ fetch, url }) {
     let pageParam = url.searchParams.get('p');
@@ -12,6 +13,10 @@ export async function load({ fetch, url }) {
         sortBy: url.searchParams.get('sortBy'),
         sortOrder: url.searchParams.get('sortOrder'),
     };
+
+    if (!gridState.q) {
+        throw redirect(302, '/');
+    }
 
     let response = await searchArticlesAdvanced(gridState, fetch);
 

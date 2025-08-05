@@ -79,7 +79,7 @@ export function HeaderSearchBar({ classes = '' }: IHeaderSearchBarProps) {
                     onBlur={onBlur}
                     onKeyDown={onKeyDown}
                 />
-                <button className="btn btn-light rounded-end-3" type="button" id="search_button" onClick={search}>
+                <button className="btn btn-light rounded-end-3" type="button" id="search_button" onClick={search} disabled={!inputValue}>
                     <Icon type="search" classes="d-block d-sm-none" />
                     <span className="d-none d-sm-block">Search</span>
                 </button>

@@ -44,5 +44,5 @@
         {onkeydown}
         bind:value={inputValue}
     />
-    <button class="btn btn-light rounded-end-3" type="button" id="search_button" onclick={search}>Search</button>
+    <button class="btn btn-light rounded-end-3" type="button" id="search_button" onclick={search} disabled={!inputValue}>Search</button>
 </div>

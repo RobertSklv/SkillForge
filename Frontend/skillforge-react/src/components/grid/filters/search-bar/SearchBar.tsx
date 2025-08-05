@@ -19,6 +19,7 @@ export function SearchBar({
                     aria-label="Search articles..."
                     aria-describedby="search_button"
                     autoComplete="off"
+                    required
                 />
                 <button className="btn btn-light rounded-end-3" type="submit" id="search_button">Search</button>
             </div>

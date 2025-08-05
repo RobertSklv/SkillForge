@@ -9,6 +9,7 @@ import ArticleCardType from '@/lib/types/ArticleCardType';
 import DefaultGridState from '@/lib/types/DefaultGridState';
 import GridState from '@/lib/types/GridState';
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
 const DEFAULT_LIMIT = 9;
 
@@ -43,6 +44,10 @@ export default async function SearchPage({ searchParams }: ISearchPageProps) {
         sortBy: searchParams.sortBy,
         sortOrder: searchParams.sortOrder,
     };
+
+    if (!gridState.q) {
+        throw redirect('/');
+    }
 
     let response = await searchArticlesAdvanced(gridState);
 

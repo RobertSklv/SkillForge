@@ -80,7 +80,7 @@
 			{onkeydown}
 			bind:value={inputValue}
 		/>
-		<button class="btn btn-light rounded-end-3" type="button" id="search_button" onclick={search}>
+		<button class="btn btn-light rounded-end-3" type="button" id="search_button" onclick={search} disabled={!inputValue}>
 			<Icon type="search" mod="d-block d-sm-none" />
 			<span class="d-none d-sm-block">Search</span>
 		</button>
