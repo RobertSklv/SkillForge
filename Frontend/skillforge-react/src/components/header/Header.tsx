@@ -10,6 +10,7 @@ import { deleteAuthToken } from '@/lib/auth';
 import { getImagePath } from '@/lib/util';
 import { usePathname, useRouter } from 'next/navigation';
 import { HeaderSearchBar } from '../header-search-bar/HeaderSearchBar';
+import Image from 'next/image';
 
 interface IHeaderProps {
     onLogout: () => void;
@@ -31,7 +32,7 @@ export function Header({ onLogout }: IHeaderProps) {
     function renderLogo() {
         return (
             <div className="d-flex justify-content-center align-items-center">
-                <img src="/logo.png" className="me-1" style={{ height: '22px' }} alt="Logo" />
+                <Image src="/logo.png" className="me-1" width={40} height={22} alt="Logo" />
                 <span className="d-none d-md-block">SkillForge</span>
             </div>
         );
@@ -46,7 +47,13 @@ export function Header({ onLogout }: IHeaderProps) {
                         <Dropdown isNav hideChevron buttonSnippet={(
                             <>
                                 <span>{currentUser.Name}</span>
-                                <img src={getImagePath(currentUser.AvatarPath)} width="20" height="20" className="rounded-circle border-1 ms-1 object-fit-cover" alt="Your avatar" />
+                                <Image
+                                    src={getImagePath(currentUser.AvatarPath)}
+                                    width={20}
+                                    height={20}
+                                    className="rounded-circle border-1 ms-1 object-fit-cover"
+                                    alt="Your avatar"
+                                />
                             </>
                         )}>
                             <DropdownItem href={`/user/${currentUser.Name}`}>Account</DropdownItem>

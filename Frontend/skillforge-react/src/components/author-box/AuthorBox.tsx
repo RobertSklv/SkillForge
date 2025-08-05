@@ -3,6 +3,7 @@ import { Icon } from '../icon/Icon';
 import { getImagePath, formatRelativeTime } from '@/lib/util';
 import Link from 'next/link';
 import styles from './AuthorBox.module.scss';
+import Image from 'next/image';
 
 export interface IAuthorBoxProps {
     name: string;
@@ -23,11 +24,19 @@ export function AuthorBox({
     size = 'normal',
     indent = true,
 }: IAuthorBoxProps) {
+    const imgSize = size === 'normal' ? 40 : 30;
+
     return (
         <div className={`${styles['author-box']} d-flex gap-2 ${styles[`size-${size}`]} ${classes} ${indent ? 'ms-2' : ''}`}>
             <div className={`${styles['author-box__image-wrapper']} d-flex flex-column justify-content-start align-items-end ${!indent ? 'w-auto' : ''}`}>
                 <Link href={`/user/${name}`} className="text-decoration-none">
-                    <img src={getImagePath(avatarImage)} className={`${styles['author-box__image']} round-image`} alt="Robert profile" />
+                    <Image
+                        src={getImagePath(avatarImage)}
+                        className={`${styles['author-box__image']} round-image`}
+                        alt={`${name} profile`}
+                        width={imgSize}
+                        height={imgSize}
+                    />
                 </Link>
             </div>
             <div className={`${styles['author-box__info-col']} d-flex flex-column`}>

@@ -6,6 +6,7 @@ import { ImageUploadType } from '@/lib/types/ImageUploadType';
 import { getBackendUrl } from '@/lib/util';
 import { FileInputField } from '../file-input-field/FileInputField';
 import { useFormContext } from '@/context/FormContext';
+import Image from 'next/image';
 
 export interface IImageLoaderProps {
     id: string;
@@ -74,7 +75,12 @@ export function ImageLoader({
                 : hasFile ?
                     <div className="m-4 d-flex justify-content-center">
                         <div className="position-relative">
-                            <img src={getBackendUrl(url)} alt={imageAlt} className="rounded preview-image" style={{ maxWidth: '250px' }} />
+                            <Image
+                                src={getBackendUrl(url)}
+                                alt={imageAlt}
+                                className="rounded preview-image"
+                                style={{ maxWidth: '250px' }}
+                            />
                             <div className="d-flex justify-content-end position-absolute start-0 top-0 end-0">
                                 <Button color="danger" onClick={onRemoveClick}>
                                     <Icon type="trash-fill" />
