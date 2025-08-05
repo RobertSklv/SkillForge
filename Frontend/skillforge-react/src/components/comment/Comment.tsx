@@ -26,9 +26,15 @@ export function Comment({ data }: ICommentProps) {
 
     const [showReportModal, setShowReportModal] = useState<boolean>(false);
     const [editMode, setEditMode] = useState<boolean>(false);
-    const [editCommentContent, setEditCommentContent] = useState<string>('');
+    const [editCommentContent, setEditCommentContent] = useState<string>(data.Content);
 
     const { deleteComment: deleteCommentFromArticleContext } = useArticleContext();
+
+    function onEditSubmit(formData: any) {
+        formData.CommentId = data.CommentId;
+
+        return formData;
+    }
 
     function onEditSuccess(response: CommentModel) {
         setEditMode(false);
@@ -74,23 +80,25 @@ export function Comment({ data }: ICommentProps) {
                             buttonSnippet={<Icon type="three-dots-vertical" />}
                             hideChevron
                         >
-                            {(currentUser.Name == data.User.Name) && (
+                            {(currentUser.Name == data.User.Name) ? (
                                 <>
-                                    <DropdownItem type="button" onClick={() => (setEditMode(true))}>
-                                        <Icon type="pencil-square" />
+                                    <DropdownItem type="button" onClick={() => setEditMode(true)} disabled={editMode}>
+                                        <Icon type="pencil-square" classes='me-2' />
                                         Edit
                                     </DropdownItem>
                                     <DropdownItem type="button" onClick={onDelete}>
-                                        <Icon type="trash" />
+                                        <Icon type="trash" classes='me-2' />
                                         Delete
                                     </DropdownItem>
-                                    <DropdownDivider />
+                                </>
+                            ) : (
+                                <>
+                                    <DropdownItem type="button" onClick={() => setShowReportModal(true)}>
+                                        <Icon type="exclamation-triangle" classes='me-2' />
+                                        Report
+                                    </DropdownItem>
                                 </>
                             )}
-                            <DropdownItem type="button" onClick={() => (setShowReportModal(true))}>
-                                <Icon type="exclamation-triangle" />
-                                Report
-                            </DropdownItem>
                         </Dropdown>
                     </div>
                 }
@@ -114,7 +122,7 @@ export function Comment({ data }: ICommentProps) {
             <Block header={header()} footer={footer()}>
                 {editMode ? (
                     <div className="card-body">
-                        <Form action="/Comment/Upsert" onSuccess={onEditSuccess}>
+                        <Form action="/Comment/Upsert" onSubmit={onEditSubmit} onSuccess={onEditSuccess}>
                             <TextEditor
                                 id={`CommentEditContent-${data.CommentId}`}
                                 name="Content"

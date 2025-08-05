@@ -69,10 +69,10 @@ export function TextEditor({
         }
 
         privateContent.current = content;
-        let convertedContent = quillEditor.current.clipboard.convert({
+        let convertedContent = quillEditor.current?.clipboard.convert({
             html: privateContent.current
         });
-        quillEditor.current.setContents(convertedContent);
+        quillEditor.current?.setContents(convertedContent);
 
         formContext.form.setValue(name, privateContent.current, {
             shouldValidate: true
