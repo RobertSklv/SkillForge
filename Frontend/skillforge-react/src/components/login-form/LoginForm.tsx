@@ -10,7 +10,6 @@ import { Button } from '@/components/button/Button';
 import { useToast } from '../../hooks/useToast';
 import { useRouter } from 'next/navigation';
 
-
 interface ILoginFormProps {
     onLogin: () => void;
 }
