@@ -1,12 +1,29 @@
-'use client'
+'use client';
 
 import { useFormContext } from '@/context/FormContext';
 import { useEffect, useRef } from 'react';
 import { uploadImage } from '@/lib/api/client';
 import { ImageUploadType } from '@/lib/types/ImageUploadType';
-import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import { FieldValues, RegisterOptions } from 'react-hook-form';
+
+const toolbarOptions = [
+    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+    ['blockquote', 'code-block'],
+    ['link', 'image', 'formula'],
+
+    [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
+    [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+    [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
+    [{ 'direction': 'rtl' }],                         // text direction
+
+    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+    [{ 'color': [] }],                                // dropdown with defaults from theme
+
+    ['clean']                                         // remove formatting button
+];
 
 export interface ITextEditorProps {
     id: string;
@@ -69,66 +86,63 @@ export function TextEditor({
     useEffect(() => {
         formContext.form.register(name, options);
 
-        const toolbarOptions = [
-            ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-            ['blockquote', 'code-block'],
-            ['link', 'image', 'formula'],
+        const initQuill = async () => {
+            // Quill must be dynamically imported because the module relies on the DOM and throws an error during SSR.
+            let Quill: any = (await import('quill')).default;
 
-            [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
-            [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
-            [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
-            [{ 'direction': 'rtl' }],                         // text direction
+            quillEditor.current = new Quill('#' + id, {
+                modules: {
+                    toolbar: toolbarOptions
+                },
+                theme: 'snow',
+            });
 
-            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            privateContent.current = content;
+            let convertedContent = quillEditor.current.clipboard.convert({
+                html: privateContent.current
+            });
+            quillEditor.current.setContents(convertedContent);
 
-            [{ 'color': [] }],                                // dropdown with defaults from theme
+            quillEditor.current.on('text-change', onTextChange);
+            quillEditor.current.on('selection-change', onSelectionChange);
 
-            ['clean']                                         // remove formatting button
-        ];
+            quillEditor.current.getModule('toolbar').addHandler('image', () => {
+                const input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', '.jpg, .jpeg, .png');
+                input.click();
 
-        quillEditor.current = new Quill('#' + id, {
-            modules: {
-                toolbar: toolbarOptions
-            },
-            theme: 'snow',
-        });
+                input.onchange = async () => {
+                    const file = input.files?.[0];
+                    if (file) {
+                        const url = process.env.NEXT_PUBLIC_BACKEND_DOMAIN + (await uploadImage(file, imageUploadType));
 
-        privateContent.current = content;
-        let convertedContent = quillEditor.current.clipboard.convert({
-            html: privateContent.current
-        });
-        quillEditor.current.setContents(convertedContent);
-
-        quillEditor.current.on('text-change', onTextChange);
-        quillEditor.current.on('selection-change', onSelectionChange);
-
-        quillEditor.current.getModule('toolbar').addHandler('image', () => {
-            const input = document.createElement('input');
-            input.setAttribute('type', 'file');
-            input.setAttribute('accept', '.jpg, .jpeg, .png');
-            input.click();
-
-            input.onchange = async () => {
-                const file = input.files?.[0];
-                if (file) {
-                    const url = process.env.NEXT_PUBLIC_BACKEND_DOMAIN + (await uploadImage(file, imageUploadType));
-
-                    const range = quillEditor.current.getSelection();
-                    if (range) {
-                        quillEditor.current.insertEmbed(range.index, 'image', url);
+                        const range = quillEditor.current.getSelection();
+                        if (range) {
+                            quillEditor.current.insertEmbed(range.index, 'image', url);
+                        }
                     }
-                }
-            };
-        });
+                };
+            });
+        };
+
+        initQuill();
 
         return () => {
             formContext.form.unregister(name);
-            let editorElement = document.getElementById(id);
 
-            if (editorElement && editorElement.parentElement) {
-                editorElement.parentElement.innerHTML = `<div id="${id}" style="height: ${height}px"></div>`;
-            }
+            const destroyQuill = async () => {
+                //Quill import must be awaited here so that the editor element can be reset after it was initialized in React strict mode.
+                await import('quill');
+
+                let editorElement = document.getElementById(id);
+
+                if (editorElement && editorElement.parentElement) {
+                    editorElement.parentElement.innerHTML = `<div id="${id}" style="height: ${height}px"></div>`;
+                }
+            };
+
+            destroyQuill();
         };
     }, []);
 
