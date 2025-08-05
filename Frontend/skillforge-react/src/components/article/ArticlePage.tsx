@@ -15,7 +15,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { RateButtons } from '@/components/rate-buttons/RateButtons';
 import { Comment } from '@/components/comment/Comment';
 import { ArticleContext } from '@/context/ArticleContext';
-import './_article.scss';
+import './_article-page.scss';
 import { Form } from '../form/Form';
 import { TextEditor } from '../form/text-editor/TextEditor';
 import { Button } from '../button/Button';

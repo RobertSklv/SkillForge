@@ -1,5 +1,5 @@
 import { AnchorList } from "@/components/anchor-list/AnchorList";
-import { Article } from "@/components/article/Article";
+import { Article } from "@/components/article/ArticlePage";
 import { AuthorBlock } from "@/components/author-block/AuthorBlock";
 import { TwoColumns } from "@/components/layout/two-columns/TwoColumns";
 import { TopArticleLink } from "@/components/top-article-link/TopArticleLink";
