@@ -6,8 +6,10 @@ import { TagLink } from "@/components/tag-link/TagLink";
 import { TopArticleLink } from "@/components/top-article-link/TopArticleLink";
 import { UserLink } from "@/components/user-link/UserLink";
 import { loadHomePage } from "@/lib/api/client";
+import { JWT_TOKEN_COOKIE_NAME } from "@/lib/auth";
 import HomePageData from "@/lib/types/HomePageData";
 import { Metadata } from "next";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
     title: 'SkillForge | Home',
@@ -19,7 +21,9 @@ export const metadata: Metadata = {
 }
 
 export default async function Home() {
-    let data: HomePageData = await loadHomePage();
+    const cookieContext = await cookies();
+    const authToken = cookieContext.get(JWT_TOKEN_COOKIE_NAME)?.value;
+    let data: HomePageData = await loadHomePage(authToken);
 
     async function leftColumn() {
         'use server'

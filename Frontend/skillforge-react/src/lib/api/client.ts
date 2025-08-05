@@ -163,8 +163,10 @@ export function getReportFormOptions(authToken?: string): Promise<ReportFormOpti
 	});
 }
 
-export function loadHomePage(): Promise<HomePageData> {
-	return requestApi('/Home/Load');
+export function loadHomePage(authToken?: string): Promise<HomePageData> {
+	return requestApi('/Home/Load', {
+		authToken
+	});
 }
 
 export function loadUserPage(name: string, authToken?: string): Promise<UserPageData> {
