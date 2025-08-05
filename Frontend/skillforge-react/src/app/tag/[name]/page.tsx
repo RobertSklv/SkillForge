@@ -2,14 +2,21 @@ import { TagPage } from '@/components/tag-page/TagPage';
 import { loadTagPage } from '@/lib/api/client';
 import { JWT_TOKEN_COOKIE_NAME } from '@/lib/auth';
 import TagPageData from '@/lib/types/TagPageData';
-import { GetServerSidePropsContext, Metadata } from 'next';
+import { Metadata } from 'next';
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 
-export async function generateMetadata({ params }: GetServerSidePropsContext): Promise<Metadata> {
+export interface IProps {
+    params: {
+        name: string;
+    };
+}
+
+export async function generateMetadata({ params }: IProps): Promise<Metadata> {
     const cookieContext = await cookies();
     const authToken = cookieContext.get(JWT_TOKEN_COOKIE_NAME)?.value;
-    let data: TagPageData = await loadTagPage(params?.name as string, authToken);
+
+    const { name } = await params;
+    let data: TagPageData = await loadTagPage(name, authToken);
 
     return {
         title: `SkillForge | #${params?.name}`,
@@ -21,15 +28,13 @@ export async function generateMetadata({ params }: GetServerSidePropsContext): P
     };
 }
 
-export default async function TagView({ params }: GetServerSidePropsContext) {
+export default async function TagView({ params }: IProps) {
     const cookieContext = await cookies();
     const authToken = cookieContext.get(JWT_TOKEN_COOKIE_NAME)?.value;
 
-    if (!params) {
-        throw redirect('/');
-    }
+    const { name } = await params;
 
-    let data: TagPageData = await loadTagPage(params.name as string, authToken);
+    let data: TagPageData = await loadTagPage(name, authToken);
 
     return <TagPage data={data} />;
 }

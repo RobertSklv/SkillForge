@@ -1,14 +1,22 @@
 import { ArticleUpsertForm } from "@/components/article-upsert-form/ArticleUpsertForm";
-import { GetServerSidePropsContext, Metadata } from "next";
+import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getCurrentUser, loadArticleUpsertPage } from "@/lib/api/client";
 import { JWT_TOKEN_COOKIE_NAME } from "@/lib/auth";
 
-export async function generateMetadata({ params }: GetServerSidePropsContext): Promise<Metadata> {
+export interface IProps {
+    params: {
+        id: number;
+    };
+}
+
+export async function generateMetadata({ params }: IProps): Promise<Metadata> {
     const cookieContext = await cookies();
     const authToken = cookieContext.get(JWT_TOKEN_COOKIE_NAME)?.value;
-    let data = await loadArticleUpsertPage(authToken, parseInt(params?.id as string));
+
+    const { id } = await params;
+    let data = await loadArticleUpsertPage(authToken, id);
 
     return {
         title: `SkillForge | Edit article '${data.CurrentState?.Model.Title}'`,
@@ -20,7 +28,7 @@ export async function generateMetadata({ params }: GetServerSidePropsContext): P
     };
 }
 
-export default async function ArticleEdit({ params }: GetServerSidePropsContext) {
+export default async function ArticleEdit({ params }: IProps) {
     const cookieContext = await cookies();
     const authToken = cookieContext.get(JWT_TOKEN_COOKIE_NAME)?.value;
 
@@ -30,7 +38,9 @@ export default async function ArticleEdit({ params }: GetServerSidePropsContext)
         throw redirect('/join');
     }
 
-    let pageModel = await loadArticleUpsertPage(authToken, parseInt(params?.id as string));
+    const { id } = await params;
 
-    return <ArticleUpsertForm page={pageModel} />
+    let pageModel = await loadArticleUpsertPage(authToken, id);
+
+    return <ArticleUpsertForm page={pageModel} />;
 }

@@ -36,12 +36,9 @@ export async function generateMetadata({ searchParams }: ISearchPageProps): Prom
 }
 
 export default async function SearchPage({ searchParams }: ISearchPageProps) {
-    let pageParam = searchParams.p;
-    let limitParam = searchParams.limit;
-
     let gridState: GridState = {
-        p: pageParam,
-        limit: limitParam,
+        p: searchParams.p,
+        limit: searchParams.limit,
         q: searchParams.q,
         sortBy: searchParams.sortBy,
         sortOrder: searchParams.sortOrder,

@@ -3,15 +3,22 @@ import { Article } from "@/components/article/ArticlePage";
 import { AuthorBlock } from "@/components/author-block/AuthorBlock";
 import { TwoColumns } from "@/components/layout/two-columns/TwoColumns";
 import { TopArticleLink } from "@/components/top-article-link/TopArticleLink";
-import { GetServerSidePropsContext, Metadata } from "next";
+import { Metadata } from "next";
 import { viewArticle } from "@/lib/api/client";
 import type ArticlePageModel from '@/lib/types/ArticlePageModel';
 import { getFrontendUrl, htmlToText, truncateText } from "@/lib/util";
 import { cookies } from "next/headers";
 import { JWT_TOKEN_COOKIE_NAME } from "@/lib/auth";
 
-export async function generateMetadata({ params }: GetServerSidePropsContext): Promise<Metadata> {
-    const data: ArticlePageModel = await viewArticle(parseInt(params?.id as string));
+export interface IProps {
+    params: {
+        id: number;
+    };
+}
+
+export async function generateMetadata({ params }: IProps): Promise<Metadata> {
+    const { id } = await params;
+    const data: ArticlePageModel = await viewArticle(id);
 
     return {
         title: `SkillForge | ${data.Title}`,
@@ -23,10 +30,12 @@ export async function generateMetadata({ params }: GetServerSidePropsContext): P
     };
 }
 
-export default async function ArticleView({ params }: GetServerSidePropsContext) {
+export default async function ArticleView({ params }: IProps) {
     const cookieContext = await cookies();
     const authToken = cookieContext.get(JWT_TOKEN_COOKIE_NAME)?.value;
-    const data: ArticlePageModel = await viewArticle(parseInt(params?.id as string), authToken);
+
+    const { id } = await params;
+    const data: ArticlePageModel = await viewArticle(id, authToken);
 
     function leftColumn() {
         return (
