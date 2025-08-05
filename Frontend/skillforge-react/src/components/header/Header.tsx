@@ -42,7 +42,7 @@ export function Header({ onLogout }: IHeaderProps) {
             <>
                 {currentUser ? (
                     <>
-                        <NavLink href="/article/create">Create Article</NavLink>
+                        <NavLink href="/article/create" active={pathname.startsWith('/article/create')}>Create Article</NavLink>
                         <Dropdown isNav hideChevron buttonSnippet={(
                             <>
                                 <span>{currentUser.Name}</span>

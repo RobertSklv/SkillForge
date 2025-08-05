@@ -35,7 +35,7 @@
 
 		{#snippet linksSnippet()}
 			{#if $currentUserStore}
-				<NavLink href="/article/create">Create Article</NavLink>
+				<NavLink href="/article/create" active={page.url.pathname.startsWith('/article/create')}>Create Article</NavLink>
 			{/if}
 			{#if $currentUserStore}
 				<Dropdown isNav={true}>
