@@ -67,7 +67,7 @@ export function Comment({ data }: ICommentProps) {
                     </div>
                     {currentUser &&
                     <div className="col-3 text-end">
-                        <Dropdown menuClass="dropdown-menu-end dropdown-menu-xl-start" buttonSnippet={<Icon type="three-dots-vertical" />}>
+                        <Dropdown menuClass="dropdown-menu-end dropdown-menu-xl-start" buttonSnippet={<Icon type="three-dots-vertical" />} hideChevron>
                             {(currentUser.Name == data.User.Name) && (
                                 <>
                                     <DropdownItem type="button" onClick={() => (setEditMode(true))}>

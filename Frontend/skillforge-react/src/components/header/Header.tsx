@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { DropdownItem } from '@/components/dropdown-item/DropdownItem';
 import { Dropdown } from '@/components/dropdown/Dropdown';
@@ -8,7 +8,8 @@ import { Navbar } from '@/components/navbar/Navbar';
 import { useCurrentUser } from '../../hooks/useCurrentUser';
 import { deleteAuthToken } from '@/lib/auth';
 import { getImagePath } from '@/lib/util';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { HeaderSearchBar } from '../header-search-bar/HeaderSearchBar';
 
 interface IHeaderProps {
     onLogout: () => void;
@@ -17,6 +18,7 @@ interface IHeaderProps {
 export function Header({ onLogout }: IHeaderProps) {
     const { currentUser, logoutUser } = useCurrentUser();
     const router = useRouter();
+    const pathname = usePathname();
 
     async function logout() {
         logoutUser();
@@ -41,7 +43,7 @@ export function Header({ onLogout }: IHeaderProps) {
                 {currentUser ? (
                     <>
                         <NavLink href="/article/create">Create Article</NavLink>
-                        <Dropdown isNav={true} buttonSnippet={(
+                        <Dropdown isNav hideChevron buttonSnippet={(
                             <>
                                 <span>{currentUser.Name}</span>
                                 <img src={getImagePath(currentUser.AvatarPath)} width="20" height="20" className="rounded-circle border-1 ms-1 object-fit-cover" alt="Your avatar" />
@@ -66,9 +68,7 @@ export function Header({ onLogout }: IHeaderProps) {
     return (
         <header>
             <Navbar logoLink="/" logoSnippet={renderLogo()} linksSnippet={renderLinks}>
-                {/* {#if page.url.pathname !== '/search'}
-                    <HeaderSearchBar />
-                {/if} */}
+                {pathname !== '/search' && <HeaderSearchBar />}
             </Navbar>
         </header>
     );

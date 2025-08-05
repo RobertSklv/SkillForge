@@ -66,7 +66,7 @@ export function Article({ data }: IArticleProps) {
                 </div>
                 {currentUser &&
                     <div className="col-3 text-end">
-                        <Dropdown menuClass="dropdown-menu-end dropdown-menu-xl-start" buttonSnippet={<Icon type="three-dots-vertical" />}>
+                        <Dropdown menuClass="dropdown-menu-end dropdown-menu-xl-start" buttonSnippet={<Icon type="three-dots-vertical" />} hideChevron>
                             {currentUser.Name == data.Author.Link.Name && (
                                 <>
                                     <DropdownItem href={`/article/${data.ArticleId}/edit`}>

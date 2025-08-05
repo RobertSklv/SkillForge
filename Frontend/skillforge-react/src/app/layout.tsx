@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 async function revalidateAuth() {
-	'use server'
+	'use server';
 
 	revalidateTag('auth');
 }
@@ -35,19 +35,18 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 	return (
 		<html lang="en" data-bs-theme="dark">
 			<body>
-				<GlobalDataInitializer currentUserInfo={currentUserInfo} reportFromOptions={reportFormOptions}>
-					<Header onLogout={revalidateAuth} />
+				<GlobalDataInitializer currentUserInfo={currentUserInfo} reportFromOptions={reportFormOptions} />
+				<Header onLogout={revalidateAuth} />
 
-					<main id="main-content" className="container pb-5">
-						{children}
-					</main>
+				<main id="main-content" className="container pb-5">
+					{children}
+				</main>
 
-					{/* <Footer />
+				{/* <Footer />
 
 						<CookieConsentBanner /> */}
 
-					<ToastContainer />
-				</GlobalDataInitializer>
+				<ToastContainer />
 			</body>
 		</html>
 	);

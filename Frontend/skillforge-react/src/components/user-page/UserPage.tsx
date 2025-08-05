@@ -47,7 +47,7 @@ export function UserPage({ data }: IUserPageProps) {
             </div>
             {currentUser &&
                 <div className="col-3 text-end">
-                    <Dropdown menuClass="dropdown-menu-end dropdown-menu-xl-start" buttonSnippet={<Icon type="three-dots-vertical" />}>
+                    <Dropdown menuClass="dropdown-menu-end dropdown-menu-xl-start" buttonSnippet={<Icon type="three-dots-vertical" />} hideChevron>
                         {currentUser.Name == data.Name ? (
                             <DropdownItem href="/account">
                                 <Icon type="pencil-square" />
