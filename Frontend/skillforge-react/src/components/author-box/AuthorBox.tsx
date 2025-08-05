@@ -1,3 +1,5 @@
+'use client';
+
 import moment from 'moment';
 import { Icon } from '../icon/Icon';
 import { getImagePath, formatRelativeTime } from '@/lib/util';
