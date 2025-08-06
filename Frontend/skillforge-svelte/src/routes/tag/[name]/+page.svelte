@@ -67,7 +67,7 @@
 
 	<div class="card-body">
 		<div class="row align-items-center">
-			<div class="col-6">
+			<div class="col-12 col-md-6">
 				{#if backendData.Description}
 					<p>{backendData.Description}</p>
 				{/if}

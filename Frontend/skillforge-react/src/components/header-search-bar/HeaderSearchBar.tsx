@@ -7,6 +7,7 @@ import ArticleSearchItemType from '@/lib/types/ArticleSearchItemType';
 import { searchArticles } from '@/lib/api/client';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
+import styles from './HeaderSearchBar.module.scss';
 
 export interface IHeaderSearchBarProps {
     classes?: string;
@@ -63,7 +64,7 @@ export function HeaderSearchBar({ classes = '' }: IHeaderSearchBarProps) {
     }
 
     return (
-        <div className={`position-relative ${classes}`}>
+        <div className={`position-relative ${classes} ${styles['header-search-bar']}`}>
             <div className="input-group search-bar mx-auto my-0">
                 <input
                     id="search"

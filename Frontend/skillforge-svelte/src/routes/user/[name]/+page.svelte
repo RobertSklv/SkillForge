@@ -123,7 +123,7 @@
 
 	<div class="card-body">
 		<div class="row align-items-center">
-			<div class="col-4 col-lg-2 d-flex justify-content-center">
+			<div class="col-12 col-md-4 col-lg-2 d-flex justify-content-center">
 				<button
 					class="bg-transparent border-0 rounded-circle avatar-image-wrapper"
 					type="button"
@@ -143,7 +143,7 @@
 					/>
 				</Modal>
 			</div>
-			<div class="col-8 col-lg-4">
+			<div class="col-12 col-md-8 col-lg-4 text-center text-md-start mt-3 mt-md-0">
 				{#if backendData.Bio}
 					<p>{backendData.Bio}</p>
 				{/if}

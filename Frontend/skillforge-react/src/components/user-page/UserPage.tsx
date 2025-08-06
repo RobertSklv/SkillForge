@@ -149,7 +149,7 @@ export function UserPage({ data }: IUserPageProps) {
             <Block classes="mb-4" header={header()}>
                 <div className="card-body">
                     <div className="row align-items-center">
-                        <div className="col-4 col-lg-2 d-flex justify-content-center">
+                        <div className="col-12 col-md-4 col-lg-2 d-flex justify-content-center">
                             <button
                                 className={`bg-transparent border-0 rounded-circle ${styles['avatar-image-wrapper']}`}
                                 type="button"
@@ -169,7 +169,7 @@ export function UserPage({ data }: IUserPageProps) {
                                 />
                             </Modal>
                         </div>
-                        <div className="col-8 col-lg-4">
+                        <div className="col-12 col-md-8 col-lg-4 text-center text-md-start mt-3 mt-md-0">
                             {data.Bio && <p>{data.Bio}</p>}
                         </div>
                         <div className="col text-center">
