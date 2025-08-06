@@ -122,6 +122,8 @@ builder.Services.AddScoped<ICommentReportService, CommentReportService>();
 builder.Services.AddScoped<ICommentReportRepository, CommentReportRepository>();
 builder.Services.AddScoped<IUserReportService, UserReportService>();
 builder.Services.AddScoped<IUserReportRepository, UserReportRepository>();
+builder.Services.AddScoped<IGuestArticleViewService, GuestArticleViewService>();
+builder.Services.AddScoped<IGuestArticleViewRepository, GuestArticleViewRepository>();
 builder.Services.AddScoped<IArticleTagMtmRepository, ArticleTagMtmRepository>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();

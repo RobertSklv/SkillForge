@@ -16,6 +16,7 @@ import type GridState from "../types/GridState";
 import type PaginationResponse from "../types/PaginationResponse";
 import type ReportFormOptions from "../types/ReportFormOptions";
 import { deleteAuthToken, getAuthTokenFromBrowserCookie } from "../auth";
+import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 export async function getCurrentUser(authToken?: string): Promise<UserInfo | undefined> {
 	try {
@@ -142,9 +143,14 @@ export function searchArticlesAdvanced(gridState: GridState): Promise<Pagination
 	});
 }
 
-export function viewArticle(id: number, authToken?: string): Promise<ArticlePageModel> {
+export function viewArticle(id: number, authToken?: string, cookies?: RequestCookie[]): Promise<ArticlePageModel> {
 	return requestApi(`/Article/View/${id}`, {
-		authToken
+		authToken,
+		init: {
+			headers: {
+				Cookie: cookies ? cookies.map(c => `${c.name}=${c.value}`).join('; ') : ''
+			}
+		}
 	});
 }
 

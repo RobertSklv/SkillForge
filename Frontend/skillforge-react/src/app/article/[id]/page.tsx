@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: IProps): Promise<Metadata> {
         description: `${truncateText(htmlToText(data.Content), 120)}, Tags: ${data.Tags.join(', ')}`,
         robots: 'index,follow',
         alternates: {
-            canonical: getFrontendUrl(`/article/${params?.id}`)
+            canonical: getFrontendUrl(`/article/${id}`)
         }
     };
 }
@@ -33,9 +33,15 @@ export async function generateMetadata({ params }: IProps): Promise<Metadata> {
 export default async function ArticleView({ params }: IProps) {
     const cookieContext = await cookies();
     const authToken = cookieContext.get(JWT_TOKEN_COOKIE_NAME)?.value;
+    const cookieConsent = cookieContext.get('cookie_consent');
+    const guestId = cookieContext.get('guest_id');
+
+    const forwardedCookies = [];
+    if (cookieConsent) forwardedCookies.push(cookieConsent);
+    if (guestId) forwardedCookies.push(guestId);
 
     const { id } = await params;
-    const data: ArticlePageModel = await viewArticle(id, authToken);
+    const data: ArticlePageModel = await viewArticle(id, authToken, forwardedCookies);
 
     function leftColumn() {
         return (
