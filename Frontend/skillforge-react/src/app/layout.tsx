@@ -9,6 +9,7 @@ import { getCurrentUser, getReportFormOptions } from "@/lib/api/client";
 import { cookies } from "next/headers";
 import { JWT_TOKEN_COOKIE_NAME } from "@/lib/auth";
 import { revalidateTag } from "next/cache";
+import { CookieConsentBanner } from "@/components/cookie-consent-banner/CookieConsentBanner";
 
 export const metadata: Metadata = {
 	title: "SkillForge"
@@ -42,9 +43,11 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 					{children}
 				</main>
 
-				{/* <Footer />
+				<footer className="text-center p-3">
+					&copy; 2025 - SkillForge 
+				</footer>
 
-						<CookieConsentBanner /> */}
+				<CookieConsentBanner />
 
 				<ToastContainer />
 			</body>

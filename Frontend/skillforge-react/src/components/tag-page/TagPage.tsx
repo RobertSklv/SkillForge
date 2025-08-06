@@ -75,7 +75,7 @@ export function TagPage({ data }: ITagPageProps) {
             <Block classes="mb-4" header={<h1 className="h2">#{data.Name}</h1>}>
                 <div className="card-body">
                     <div className="row align-items-center">
-                        <div className="col-6">
+                        <div className="col-12 col-md-6">
                             {data.Description && <p>{data.Description}</p>}
                         </div>
                         <div className="col text-center">

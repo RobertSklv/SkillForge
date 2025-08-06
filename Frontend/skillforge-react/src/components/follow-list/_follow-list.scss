@@ -1,8 +1,13 @@
-
-
 .follow-list {
+
     .user-link,
     .tag-link {
         max-width: 115px;
+    }
+
+    @media (max-width: 992px) {
+        .follow-button {
+            display: none;
+        }
     }
 }

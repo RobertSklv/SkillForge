@@ -1,0 +1,12 @@
+﻿@using SkillForge.Areas.Admin.Models.DTOs
+@using SkillForge.Models.Database
+
+@model ListingModel<GuestArticleView>
+
+@{
+    Layout = "_AdminPageLayout";
+    ViewData["Title"] = "Guest Article Views";
+    ViewData["PageHeading"] = ViewData["Title"];
+}
+
+<partial name="_Table" model="@Model.Table" />
