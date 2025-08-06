@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type GridContext from "$lib/types/GridContext";
 	import type GridState from '$lib/types/GridState';
-	import { clamp } from '$lib/svelte-util';
+	import { clamp } from "$lib/util";
 	import { getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
 
