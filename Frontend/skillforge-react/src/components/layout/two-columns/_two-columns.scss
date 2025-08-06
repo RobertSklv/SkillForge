@@ -1,0 +1,9 @@
+@media (min-width: 992px) {
+    .left-column {
+        flex-basis: 25%;
+    }
+
+    .main-column {
+        flex-basis: 75%;
+    }
+}

@@ -1,0 +1,12 @@
+.user-link {
+    max-width: 200px;
+    font-size: 14px;
+
+    &__image {
+        height: 20px;
+    }
+
+    @media (min-width: 1400px) {
+        font-size: 16px;
+    }
+}

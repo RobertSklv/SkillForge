@@ -1,0 +1,6 @@
+.rate-btn {
+    &:not(:disabled):not(:active):hover {
+        scale: 1.1;
+        color: var(--bs-primary-text-emphasis) !important;
+    }
+}
